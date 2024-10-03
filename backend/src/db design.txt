@@ -1,0 +1,52 @@
+https://fulltime.thefa.com/displayTeam.html?id=241558678
+
+teams
+- team_id : uuid
+- sport : sport_id
+- external_team_id : string
+
+team_names
+- team_id : uuid
+- name : string
+- default_name : boolean
+
+player_match_performances
+- player_id : player_id
+- match_id : match_id
+- metric : metric_id
+- value : float
+
+data_sources
+- data_source_id : uuid
+- url : string
+
+competitions
+- competition_id : uuid
+- data_source : data_source_id
+- competition_name : string
+- season_id : season_id
+
+players
+- player_id : uuid
+- team_id : team_id
+- platform_player_name : string
+- better_name : string
+
+seasons
+- season_id : uuid
+- team_id : team_id
+- season_name : string
+- external_season_id : string
+
+matches
+- match_id : uuid
+- competition_id : competition_id
+- goals_for : int
+- goals_against : int
+- goal_difference : int
+- opposition : string
+- result : string (W/L/D)
+- date : date
+- time : time
+- location : string
+- home_away_neutral : string (H/A/N)
