@@ -1,4 +1,4 @@
-from src.scraping import Scraper
+from src.scraping.Scraper import Scraper
 
 class FixtureScraper(Scraper):
 

@@ -1,4 +1,4 @@
-from scraping.fixtures import FixtureScraper
+from src.scraping.fixtures.FixtureScraper import FixtureScraper
 from bs4 import BeautifulSoup
 from datetime import datetime
 
@@ -6,12 +6,14 @@ class FootballAssociationFixtureScraper(FixtureScraper):
 
     def __init__(
         self,
-        fixture_id:str,
+        soup,
+        # fixture_id:str,
         team_names:list[str]
     ):
         super(FixtureScraper).__init__()
-        self.fixture_id = fixture_id
+        # self.fixture_id = fixture_id
         self.team_names = team_names
+        self.soup = soup
         self.expected_column_headers = [
             'Time',
             'Team',
@@ -24,10 +26,10 @@ class FootballAssociationFixtureScraper(FixtureScraper):
         return f"https://fulltime.thefa.com/displayFixture.html?id={self.fixture_id}"
     
     def scrape(self):
-        soup = self.get_soup(self.build_url())
+        # soup = self.get_soup(self.build_url())
         return {
-            "player_data" : self.get_player_data(soup),
-            "match_info" : self.get_match_info(soup)
+            "player_data" : self.get_player_data(self.soup),
+            "match_info" : self.get_match_info(self.soup)
         }
     
     def get_match_info(
