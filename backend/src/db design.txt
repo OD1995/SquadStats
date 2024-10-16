@@ -50,3 +50,16 @@ matches
 - time : time
 - location : string
 - home_away_neutral : string (H/A/N)
+
+external season ids
+    <option value="522003046">2014-15</option>
+    <option value="33661501">2015-16</option>
+    <option value="135342810">2016-17</option>
+    <option value="437929229">2017-18</option>
+    <option value="892568399">2018-19</option>
+    <option value="38503878">2019-20</option>
+    <option value="209449379">2020-21</option>
+    <option value="602021467">2021-22</option>
+    <option value="803175700">2022-23</option>
+    <option value="438891715">2023-24</option>
+    <option value="66783998">2024-25</option>
