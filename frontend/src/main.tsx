@@ -9,8 +9,8 @@ const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
 createRoot(document.getElementById('root')!).render(
 	<StrictMode>
-		<Provider store={}>
+		{/* <Provider store={}> */}
     		<App isDesktop={!isMobile}/>
-		</Provider>
+		{/* </Provider> */}
   	</StrictMode>,
 )
