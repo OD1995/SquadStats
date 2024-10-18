@@ -7,7 +7,7 @@ interface AppProps {
 	isDesktop : boolean
 }
 
-const App = (props : AppProps) => {
+const App = (props:AppProps) => {
 	return (
 		<div>
 			<Router>
