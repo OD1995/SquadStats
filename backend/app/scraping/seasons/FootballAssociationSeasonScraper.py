@@ -4,8 +4,8 @@ from multiprocessing import Pool
 import aiohttp
 from bs4 import BeautifulSoup
 import requests
-from src.scraping.fixtures.FootballAssociationFixtureScraper import FootballAssociationFixtureScraper
-from src.scraping.seasons.SeasonScraper import SeasonScraper
+from app.scraping.fixtures.FootballAssociationFixtureScraper import FootballAssociationFixtureScraper
+from app.scraping.seasons.SeasonScraper import SeasonScraper
 
 class FootballAssociationSeasonScraper(SeasonScraper):
 

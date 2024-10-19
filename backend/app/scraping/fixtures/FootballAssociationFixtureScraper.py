@@ -1,4 +1,4 @@
-from src.scraping.fixtures.FixtureScraper import FixtureScraper
+from app.scraping.fixtures.FixtureScraper import FixtureScraper
 from bs4 import BeautifulSoup
 from datetime import datetime
 

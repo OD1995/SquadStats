@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Float, String, Table, Uuid
-from src.db import metadata
+from app.models import metadata
 
 # - player_id : player_id
 # - match_id : match_id

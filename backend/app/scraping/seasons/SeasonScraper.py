@@ -1,4 +1,4 @@
-from src.scraping.Scraper import Scraper
+from app.scraping.Scraper import Scraper
 
 class SeasonScraper(Scraper):
 

@@ -1,12 +1,10 @@
+from datetime import datetime
+from app.scraping.fixtures.FootballAssociationFixtureScraper import FootballAssociationFixtureScraper
+from app.scraping.seasons.FootballAssociationSeasonScraper import FootballAssociationSeasonScraper
+from app.scraping.teams.FootballAssociationTeamScraper import FootballAssociationTeamScraper
 import asyncio
 from time import sleep
-from datetime import datetime
-from flask import Flask
-from src.scraping.fixtures.FootballAssociationFixtureScraper import FootballAssociationFixtureScraper
-from src.scraping.seasons.FootballAssociationSeasonScraper import FootballAssociationSeasonScraper
-from src.scraping.teams.FootballAssociationTeamScraper import FootballAssociationTeamScraper
 
-app = Flask(__name__)
 
 @app.route("/test")
 def hello_world():

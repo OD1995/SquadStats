@@ -38,6 +38,13 @@ seasons
 - season_name : string
 - external_season_id : string
 
+abrordob_markers
+- marker_id : string
+- colour : string
+- latitude : float
+- longitude : float
+- text : string
+
 matches
 - match_id : uuid
 - competition_id : competition_id

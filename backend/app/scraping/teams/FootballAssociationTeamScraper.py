@@ -1,4 +1,4 @@
-from src.scraping.teams.TeamScraper import TeamScraper
+from app.scraping.teams.TeamScraper import TeamScraper
 
 
 class FootballAssociationTeamScraper(TeamScraper):
