@@ -1,0 +1,1 @@
+from app.api.setup import setup_bp

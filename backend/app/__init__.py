@@ -33,6 +33,9 @@ def create_app(config_class=Config):
 
     db.init_app(app)
     migrate.init_app(app, db)
-    
+
+    from app.api import setup_bp
+
+    app.register_blueprint(setup_bp)
 
     return app
