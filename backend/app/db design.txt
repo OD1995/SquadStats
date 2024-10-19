@@ -3,11 +3,15 @@ https://fulltime.thefa.com/displayTeam.html?id=241558678
 teams
 - team_id : uuid
 - sport : sport_id
-- external_team_id : string
+- data_source_team_id : string
+
+sports
+- sport_id : uuid
+- sport_name : string
 
 team_names
 - team_id : uuid
-- name : string
+- team_name : string
 - default_name : boolean
 
 player_match_performances
@@ -16,8 +20,14 @@ player_match_performances
 - metric : metric_id
 - value : float
 
+metrics
+- metric_id : uuid
+- data_source_id : data_source_id
+- metric_name : string
+
 data_sources
 - data_source_id : uuid
+- data_source_name : string
 - url : string
 
 competitions
@@ -28,15 +38,19 @@ competitions
 
 players
 - player_id : uuid
-- team_id : team_id
-- platform_player_name : string
+- club_id : club_id
+- data_source_player_name : string
 - better_name : string
+
+clubs
+- club_id : uuid
+- club_name : string
 
 seasons
 - season_id : uuid
 - team_id : team_id
 - season_name : string
-- external_season_id : string
+- data_source_season_id : string
 
 abrordob_markers
 - marker_id : string
@@ -51,7 +65,7 @@ matches
 - goals_for : int
 - goals_against : int
 - goal_difference : int
-- opposition : string
+- opposition_team_name : string
 - result : string (W/L/D)
 - date : date
 - time : time

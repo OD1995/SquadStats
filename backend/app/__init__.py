@@ -15,7 +15,21 @@ def create_app(config_class=Config):
     )
     app.config.from_object(config_class)
 
-    from app.models import AbrordobMarker, TeamNames
+    from app.models import (
+        AbrordobMarker,
+        Club,
+        Sport,
+        Team,
+        TeamName,
+        Season,
+        TeamSeason,
+        Competition,
+        DataSource,
+        Metric,
+        Match,
+        Player,
+        PlayerMatchPerformance,
+    )
 
     db.init_app(app)
     migrate.init_app(app, db)

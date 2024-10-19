@@ -1,10 +1,6 @@
 from sqlalchemy import String
 from app import db
-# import sqlalchemy.orm as so
 from sqlalchemy.orm import Mapped, mapped_column
-# from sqlalchemy.ext.declarative import declarative_base
-
-# Base = declarative_base()
 
 class AbrordobMarker(db.Model):
     __tablename__ = "abrordob_markers"
