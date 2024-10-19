@@ -2,7 +2,9 @@ from uuid import UUID, uuid4
 from sqlalchemy import String
 from app import db
 from sqlalchemy.orm import Mapped, mapped_column
+from dataclasses import dataclass
 
+@dataclass
 class Club(db.Model):
     __tablename__ = 'clubs'
 
