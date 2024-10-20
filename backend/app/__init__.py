@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 
@@ -14,6 +15,7 @@ def create_app(config_class=Config):
         instance_relative_config=True
     )
     app.config.from_object(config_class)
+    CORS(app)
 
     from app.models import (
         AbrordobMarker,
@@ -34,8 +36,9 @@ def create_app(config_class=Config):
     db.init_app(app)
     migrate.init_app(app, db)
 
-    from app.api import setup_bp
+    from app.api import setup_bp, other_bp
 
     app.register_blueprint(setup_bp)
+    app.register_blueprint(other_bp)
 
     return app

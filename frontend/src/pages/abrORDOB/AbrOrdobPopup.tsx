@@ -3,7 +3,7 @@ import './AbrOrdobPopup.css';
 interface AbrOrdobPopupProps {
     markerId: string
     text: string
-    setShowPopup: Function
+    handlePopupClose: Function
 }
 
 export const AbrOrdobPopup = (props:AbrOrdobPopupProps) => {
@@ -26,7 +26,7 @@ export const AbrOrdobPopup = (props:AbrOrdobPopupProps) => {
     return (
         <div
             id='abrordob-popup-parent'
-            onClick={() => props.setShowPopup(false)}
+            onClick={() => props.handlePopupClose()}
         >
             <div
                 id='abrordob-popup-content'
@@ -35,7 +35,7 @@ export const AbrOrdobPopup = (props:AbrOrdobPopupProps) => {
                 <div id='abrordob-top'>
                     <span
                         id='abrordob-popup-close'
-                        onClick={() => props.setShowPopup(false)}
+                        onClick={() => props.handlePopupClose()}
                     >
                         &times;
                     </span>
