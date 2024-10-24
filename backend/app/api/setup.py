@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify
+import flask_praetorian
 from app import db
 from app.models.Club import Club
 
@@ -9,6 +10,7 @@ setup_bp = Blueprint(
 )
 
 @setup_bp.route("/create-club", methods=['POST'])
+@flask_praetorian.auth_required
 def create_club():
     club = Club("Test Club")
     db.session.add(club)

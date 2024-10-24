@@ -12,4 +12,3 @@ other_bp = Blueprint(
 def get_abrordob_markers():
     abrordob_markers = AbrordobMarker.query.all()
     return jsonify(abrordob_markers)
-    # return 1

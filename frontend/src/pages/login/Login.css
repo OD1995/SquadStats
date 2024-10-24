@@ -1,0 +1,60 @@
+#login-parent-div {
+    width: 100%;
+}
+
+#login-input-parent-div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 5vh;
+}
+
+.login-input-div {
+    display: flex;
+}
+
+.login-input {
+    width: 20vw;
+    text-align: center;
+}
+
+.login-error {
+    margin-top: 4vh;
+    margin-bottom: 4vh;
+}
+
+#login-input-grid {
+    display: grid;
+    grid-template-columns: 15vw 25vw;
+    grid-template-rows: repeat(5,8vh);
+    text-align: center;
+    justify-content: center;
+    justify-items: center;
+    justify-self: center;
+    align-items: center;
+    align-self: center;
+    align-content: center;
+    /* border: 1px solid green; */
+}
+
+@media only screen and (max-width: 1000px) {
+    #login-input-grid {
+        grid-template-columns: repeat(2,50vw)
+    }
+    .login-input {
+        width: 40vw;
+    }
+}
+
+#login-title {
+    margin-left: 5vw;
+    margin-bottom: 5vh;
+}
+
+#login-button {
+    margin-top: 2vh;
+}
+
+#login-error {
+    margin-top: 5vh;
+}

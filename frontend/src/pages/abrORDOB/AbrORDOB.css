@@ -1,0 +1,13 @@
+#abrordob-parent {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 90vw;
+    /* width: 100%; */
+    flex-direction: column;
+}
+
+#abrordob-map {
+    width: 85vw !important;
+    height: 90vh !important;
+}
