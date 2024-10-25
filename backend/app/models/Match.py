@@ -8,7 +8,10 @@ class Match(db.Model):
     __tablename__ = 'matches'
     
     match_id: Mapped[UUID] = mapped_column(primary_key=True)
-    competition_id: Mapped[UUID] = mapped_column(ForeignKey("competitions.competition_id"))
+    competition_id: Mapped[UUID] = mapped_column(
+        ForeignKey("competitions.competition_id", name="fk_competitions_competition_id"),
+        index=True    
+    )
     goals_for: Mapped[int]
     goals_against: Mapped[int]
     goal_difference: Mapped[int]

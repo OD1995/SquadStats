@@ -7,6 +7,15 @@ class TeamSeason(db.Model):
     __tablename__ = 'team_seasons'
 
     team_season_id: Mapped[UUID] = mapped_column(primary_key=True)
-    team_id: Mapped[UUID] = mapped_column(ForeignKey("teams.team_id"))
-    season_id: Mapped[UUID] = mapped_column(ForeignKey("seasons.season_id"))
-    data_source_id: Mapped[UUID] = mapped_column(ForeignKey("data_sources.data_source_id"))
+    team_id: Mapped[UUID] = mapped_column(
+        ForeignKey("teams.team_id", name="fk_teams_team_id"),
+        index=True
+    )
+    season_id: Mapped[UUID] = mapped_column(
+        ForeignKey("seasons.season_id", name="fk_seasons_season_id"),
+        index=True
+    )
+    data_source_id: Mapped[UUID] = mapped_column(
+        ForeignKey("data_sources.data_source_id", name='fk_data_sources_data_source_id'),
+        index=True
+    )
