@@ -55,18 +55,27 @@ export async function makeGetRequest(
 
 export async function makePostRequest(
     url: string,
-    init?: RequestInit
+    body: string
 ) {
-    const response: Response = await instance.post(
-        url,
-        {
-            ...init,
-            headers: getAuthHeader()
+    var backendResponse: BackendResponse;
+    try {
+        const response = await instance.post(
+            url,
+            body,
+            {
+                headers: getAuthHeader()
+            }
+        );
+        backendResponse = {
+            success: true,
+            data: response.data
         }
-    );
-    var backendResponse: BackendResponse = {
-        success: response.ok,
-        data: response.ok ? await response.json() : await response.text()
+    } catch (err:any) {
+        const errorMessage = err?.response?.data?.message ?? err.message;
+        backendResponse = {
+            success: false,
+            data: { message: errorMessage }
+        }
     }
     return backendResponse;
 }

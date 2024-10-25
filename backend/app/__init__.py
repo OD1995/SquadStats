@@ -32,18 +32,18 @@ def create_app(config_class=Config):
         Match,
         Player,
         PlayerMatchPerformance,
-        # User
+        User
     )
-
     db.init_app(app)
     migrate.init_app(app, db)
-    # guard.init_app(app, User)
+    from app.models.User import User
+    guard.init_app(app, User)
 
 
-    from app.api import setup_bp, other_bp
-    # from app.api import parent_bp
-    # app.register_blueprint(parent_bp)
+    # from app.api import setup_bp, other_bp
     # app.register_blueprint(setup_bp)
-    app.register_blueprint(other_bp)
+    # app.register_blueprint(other_bp)
+    from app.api import parent_bp
+    app.register_blueprint(parent_bp)
 
     return app

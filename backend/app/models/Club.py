@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 from uuid import UUID, uuid4
 from sqlalchemy import String
 from app import db
@@ -10,6 +11,7 @@ class Club(db.Model):
 
     club_id: Mapped[UUID] = mapped_column(primary_key=True)
     club_name: Mapped[str] = mapped_column(String(50))
+    time_created: Mapped[datetime]
 
     def __init__(
         self,
@@ -17,3 +19,4 @@ class Club(db.Model):
     ):
         self.club_id = uuid4()
         self.club_name = club_name
+        self.time_created = datetime.now(timezone.utc)

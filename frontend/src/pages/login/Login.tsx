@@ -1,14 +1,9 @@
 import { ChangeEvent, useEffect, useState } from "react";
-// import { useDispatch, useSelector } from "react-redux";
 import { Navigate, useSearchParams } from "react-router-dom";
-
-// import AuthService from "../../services/AuthService";
-// import { LOGIN_SUCCESS } from "../../actions/types";
-// import TokenService from "../../services/Token.service";
 import './Login.css';
 import { getUserFromLocalStorage } from "../../services/api";
-import AccountManagentService from "../../services/AccountManagentService";
 import { BackendResponse } from "../../types/BackendResponse";
+import UserManagementService from "../../services/UserManagementService";
 
 
 
@@ -43,13 +38,13 @@ export const Login = () => {
     // const dispatch = useDispatch();
 
     async function loginProcess() {
-        AccountManagentService.login(
+        UserManagementService.login(
             email,
             password
         ).then(
             (res:BackendResponse) => {
                 if (res.success) {
-                    localStorage.setItem("ss_user",res.data);
+                    localStorage.setItem("ss_user",res.data.ss_user);
                 } else {
                     setLoginError(res.data);
                     return false;
@@ -104,7 +99,7 @@ export const Login = () => {
 
     return (
         <div id="login-parent-div">
-            <h1 id='login-title' className="big-h1-title">
+            <h1 className="big-h1-title">
                 Login
             </h1>
             <div id="login-input-parent-div">

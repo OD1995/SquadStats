@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 from app import guard, db
-from app.models import User
+from app.models.User import User
 
 user_management_bp = Blueprint(
     "user_management",
@@ -11,11 +11,22 @@ user_management_bp = Blueprint(
 @user_management_bp.route("/register", methods=['POST'])
 def register():
     req = request.get_json(force=True)
-    error_messages = []
     email = req.get('email')
     password = req.get('password')
+    email_used_already = User.query.filter_by(email=email).count() >= 1
+    if email_used_already:
+        return {
+            "message" : "Email already registered"
+        }, 400
+    new_user = User(
+        email=email,
+        password=guard.hash_password(password)
+    )
+    db.session.add(new_user)
+    db.session.commit()
     return {
-        "message" : "User registered"
+        "message" : "User registered",
+        "ss_user" : new_user.get_ss_user_data()
     }, 200
 
 @user_management_bp.route("/login", methods=['POST'])
@@ -23,9 +34,9 @@ def login():
     req = request.get_json(force=True)
     email = req.get('email')
     password = req.get('password')
-    user = guard.authenticate(email, password)
+    user:User = guard.authenticate(email, password)
     return {
-        'access_token' : guard.encode_jwt_token(user)
+        'ss_user' : user.get_ss_user_data()
     }, 200
 
 @user_management_bp.route("/refresh", methods=['POST'])
@@ -37,8 +48,7 @@ def refresh():
     }, 200
 
 @user_management_bp.route("/reset-password")
-def reset_password():
-    
+def reset_password():    
     req = request.get_json(force=True)
     email = req.get('email', None)
     new_password = req.get('password', None)    

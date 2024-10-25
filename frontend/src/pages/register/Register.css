@@ -1,0 +1,75 @@
+#register-parent-div {
+    width: 100%;
+}
+
+#register-input-parent-div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.register-input-div {
+    display: flex;
+}
+
+.register-input {
+    /* margin-left: 3vw; */
+    width: 20vw;
+    text-align: center;
+}
+
+.register-error {
+    margin-top: 4vh;
+    margin-bottom: 4vh;
+}
+
+#register-input-grid {
+    display: grid;
+    grid-template-columns: 15vw 25vw;
+    grid-template-rows: repeat(5,8vh);
+    text-align: center;
+    justify-content: center;
+    justify-items: center;
+    justify-self: center;
+    align-items: center;
+    align-self: center;
+    align-content: center;
+    /* border: 1px solid green; */
+}
+
+#register-button {
+    margin-top: 2vh;
+}
+
+@media only screen and (max-width: 1000px) {
+    #register-input-grid {
+        grid-template-columns: repeat(2,50vw);
+    }
+    .register-input {
+        width: 40vw;
+    }
+}
+
+
+#register-result-div {
+    /* border: 1px solid green; */
+    /* position: relative; */
+    /* text-align: center; */
+    display: grid;
+    grid-template-columns: 80vw;
+    grid-template-rows: 5h;
+    justify-items: center;
+    margin-top: 5vh;
+    text-align: center;
+}
+
+.register-result {
+    /* margin-top: 5vh; */
+    /* position: absolute; */
+    /* right: 0; */
+    /* top: 0; */
+    /* width: 0%; */
+    /* height: 50px; */
+    /* border: 1px solid purple ; */
+    /* background: blue; */
+}

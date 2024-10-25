@@ -23,3 +23,9 @@
 .disabled-button {
     cursor: not-allowed;
 }
+
+.big-h1-title {
+    margin-left: 5vw;
+    font-size: 200%;
+    margin-bottom: 5vh;
+}

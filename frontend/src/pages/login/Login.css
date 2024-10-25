@@ -6,7 +6,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 5vh;
 }
 
 .login-input-div {
@@ -46,10 +45,10 @@
     }
 }
 
-#login-title {
+/* #login-title {
     margin-left: 5vw;
-    margin-bottom: 5vh;
-}
+    margin-bottom: 5vh; */
+/* } */
 
 #login-button {
     margin-top: 2vh;
