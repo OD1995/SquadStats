@@ -20,6 +20,13 @@
 	cursor: pointer;
 }
 
+.ss-green-button {
+	background-color: green;
+	color: white;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
 .disabled-button {
     cursor: not-allowed;
 }

@@ -15,12 +15,6 @@ export const NavigationBar = () => {
         dispatch(setUser(null))
     }
 
-    if (user) {
-        console.log("logged in")
-    } else {
-        console.log("logged out")
-    }
-
     return (
         <div id='navigation-bar-parent'>
             <img
@@ -45,8 +39,11 @@ export const NavigationBar = () => {
                         <Link to="/about" onClick={() => handleLogoutClick()}  className="navigation-bar-link">
                             Logout
                         </Link>
-                        <Link to="/my-teams" className="navigation-bar-link">
-                            My Teams
+                        <Link to="/my-clubs" className="navigation-bar-link">
+                            My Clubs
+                        </Link>
+                        <Link to="/add-club" className="navigation-bar-link">
+                            Add Club
                         </Link>
                     </>
                 )

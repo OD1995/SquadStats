@@ -34,7 +34,6 @@
     align-items: center;
     align-self: center;
     align-content: center;
-    /* border: 1px solid green; */
 }
 
 #register-button {
@@ -52,9 +51,6 @@
 
 
 #register-result-div {
-    /* border: 1px solid green; */
-    /* position: relative; */
-    /* text-align: center; */
     display: grid;
     grid-template-columns: 80vw;
     grid-template-rows: 5h;
@@ -64,12 +60,4 @@
 }
 
 .register-result {
-    /* margin-top: 5vh; */
-    /* position: absolute; */
-    /* right: 0; */
-    /* top: 0; */
-    /* width: 0%; */
-    /* height: 50px; */
-    /* border: 1px solid purple ; */
-    /* background: blue; */
 }

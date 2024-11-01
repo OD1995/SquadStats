@@ -48,13 +48,13 @@ export async function makeGetRequest(
 
 export async function makePostRequest(
     url: string,
-    body: string
+    data: object
 ) {
     var backendResponse: BackendResponse;
     try {
         const response = await instance.post(
             url,
-            body,
+            JSON.stringify(data),
             {
                 headers: getAuthHeader()
             }

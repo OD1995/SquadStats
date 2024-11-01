@@ -1,0 +1,16 @@
+#new-club-type-parent {
+    display: flex;
+    flex-direction: row;
+}
+
+
+.new-club-entry-parent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.label-with-question-mark-icon {
+    display: flex;
+    flex-direction: row;
+}

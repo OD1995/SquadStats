@@ -5,6 +5,7 @@ import { AbrORDOB } from './pages/abrORDOB/AbrORDOB';
 import { NavigationBar } from './pages/navigation-bar/NavigationBar';
 import { Login } from './pages/login/Login';
 import { Register } from './pages/register/Register';
+import { AddClub } from './pages/add-club/AddClub';
 
 interface AppProps {
 	isDesktop : boolean
@@ -23,6 +24,7 @@ const App = (props:AppProps) => {
 						<Route path='/abrORDOB' element={<AbrORDOB/>}/>
 						<Route path='/register' element={<Register/>}/>
 						<Route path='/login' element={<Login/>}/>
+						<Route path='/add-club' element={<AddClub/>}/>
 					</Routes>
 				</div>
 			</Router>
