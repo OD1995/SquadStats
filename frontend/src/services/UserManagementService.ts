@@ -1,3 +1,5 @@
+import { setUser } from "../store/slices/userSlice"
+import { User } from "../types/User"
 import { makePostRequest } from "./api"
 
 class UserManagementService {
@@ -22,10 +24,6 @@ class UserManagementService {
                 password
             })
         )
-    }
-
-    logout() {
-        localStorage.removeItem("ss_user");
     }
 }
 

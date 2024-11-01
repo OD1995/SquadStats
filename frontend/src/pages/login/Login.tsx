@@ -1,9 +1,10 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { Navigate, useSearchParams } from "react-router-dom";
 import './Login.css';
-import { getUserFromLocalStorage } from "../../services/api";
 import { BackendResponse } from "../../types/BackendResponse";
 import UserManagementService from "../../services/UserManagementService";
+import { setUser, userSelector } from "../../store/slices/userSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 
 
@@ -17,8 +18,11 @@ export const Login = () => {
     const [loginErrorColour, setLoginErrorColour] = useState("black");
     const [buttonDisabled, setButtonDisabled] = useState(false);
 
-    const isLoggedIn = getUserFromLocalStorage() != null;
     const [searchParams, setSearchParams] = useSearchParams();
+    
+    const dispatch = useDispatch();
+
+    const user = useSelector(userSelector);
 
     useEffect(
         () => {
@@ -34,8 +38,6 @@ export const Login = () => {
             }
         }
     )
-    
-    // const dispatch = useDispatch();
 
     async function loginProcess() {
         UserManagementService.login(
@@ -44,9 +46,10 @@ export const Login = () => {
         ).then(
             (res:BackendResponse) => {
                 if (res.success) {
-                    localStorage.setItem("ss_user",res.data.ss_user);
+                    dispatch(setUser(res.data.ss_user));
                 } else {
-                    setLoginError(res.data);
+                    setLoginErrorColour("red");
+                    setLoginError(res.data.message);
                     return false;
                 }
             }
@@ -88,12 +91,12 @@ export const Login = () => {
     }
 
     // This is the part that does the navigation once the login is successful
-    if (isLoggedIn) {
+    if (user) {
         const nextVal = searchParams.get("next");
         if (nextVal !== null) {
             return <Navigate to={nextVal}/>
         } else {
-            return <Navigate to="/qb-predictions"/>
+            return <Navigate to="/about"/>
         }
     }
 

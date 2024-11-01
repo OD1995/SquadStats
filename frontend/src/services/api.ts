@@ -1,5 +1,7 @@
 import axios from "axios";
 import { BackendResponse } from "../types/BackendResponse";
+import { useSelector } from "react-redux";
+import { userSelector } from "../store/slices/userSlice";
 
 const instance = axios.create(
     {
@@ -7,16 +9,8 @@ const instance = axios.create(
     }
 );
 
-export const getUserFromLocalStorage = () => {
-    const userStr = localStorage.getItem("ss_user");
-    if (userStr) {
-        return JSON.parse(userStr);
-    }
-    return null;
-}
-
 const getAuthHeader = () => {
-    const user = getUserFromLocalStorage();
+    const user = useSelector(userSelector);
     if (user && user.access_token) {
         return {
             Authorization: 'Bearer ' + user.access_token,

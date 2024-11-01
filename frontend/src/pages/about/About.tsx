@@ -1,13 +1,13 @@
-import { getUserFromLocalStorage } from "../../services/api"
+import { useSelector } from "react-redux";
+import { userSelector } from "../../store/slices/userSlice";
 
 export const About = () => {
 
-    const a = JSON.stringify(getUserFromLocalStorage());
-    const b = 1; 
+    const user = useSelector(userSelector);
 
     return (
         <div>
-            {a}
+            {user?.access_token}
         </div>
     )
 }

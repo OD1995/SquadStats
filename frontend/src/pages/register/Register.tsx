@@ -4,6 +4,8 @@ import { isEmail } from "validator";
 import "./Register.css";
 import UserManagementService from "../../services/UserManagementService";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../store/slices/userSlice";
 
 
 export const Register = () => {
@@ -16,6 +18,7 @@ export const Register = () => {
     const [registerResultColour, setRegisterResultColour] = useState("black");
     const [buttonDisabled, setButtonDisabled] = useState(false);
 
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     
     useEffect(() => {
@@ -61,7 +64,7 @@ export const Register = () => {
                 (res:BackendResponse) => {
                     if (res.success) {
                         setRegisterResultColour("green");
-                        localStorage.setItem('ss_user', JSON.stringify(res.data.ss_user))
+                        dispatch(setUser(res.data.ss_user));
                         navigate("/about");
                     } else {
                         setRegisterResult("red");    
