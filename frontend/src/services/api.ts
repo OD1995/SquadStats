@@ -1,7 +1,6 @@
 import axios from "axios";
 import { BackendResponse } from "../types/BackendResponse";
-import { useSelector } from "react-redux";
-import { userSelector } from "../store/slices/userSlice";
+import store from "../store/store";
 
 const instance = axios.create(
     {
@@ -10,7 +9,7 @@ const instance = axios.create(
 );
 
 const getAuthHeader = () => {
-    const user = useSelector(userSelector);
+    const user = store.getState().userSlice.user;
     if (user && user.access_token) {
         return {
             Authorization: 'Bearer ' + user.access_token,
