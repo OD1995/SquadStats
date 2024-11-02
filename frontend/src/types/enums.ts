@@ -7,3 +7,8 @@ export enum DATA_SOURCE {
     FOOTBALL_ASSOCIATION = 'football-association',
     MANUAL = 'manual'
 }
+
+export enum PAGE_TYPE {
+    LOGIN = 'Login',
+    REGISTER = 'Register'
+}

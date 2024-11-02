@@ -1,39 +1,25 @@
-import { useState, useEffect, ChangeEvent } from "react";
+import { Dispatch } from "react";
 import { BackendResponse } from "../../types/BackendResponse";
 import { isEmail } from "validator";
-import "./Register.css";
 import UserManagementService from "../../services/UserManagementService";
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import { setUser } from "../../store/slices/userSlice";
+import { LoginOrRegister } from "../../generic/LoginOrRegister";
+import { PAGE_TYPE } from "../../types/enums";
+import { UnknownAction } from "@reduxjs/toolkit";
 
 
 export const Register = () => {
 
-    const [email, setEmail] = useState("");
-    const [emailError, setEmailError] = useState("");
-    const [password, setPassword] = useState("");
-    const [passwordError, setPasswordError] = useState("")
-    const [registerResult, setRegisterResult] = useState("");
-    const [registerResultColour, setRegisterResultColour] = useState("black");
-    const [buttonDisabled, setButtonDisabled] = useState(false);
-
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-    
-    useEffect(() => {
-        document.title = "Register";
-    },[])
-
-    const onChangeEmail = (e:ChangeEvent<HTMLInputElement>) => {
-        setEmail(e.target.value);
-    };
-
-    const onChangePassword = (e:ChangeEvent<HTMLInputElement>) => {
-        setPassword(e.target.value);
-    };
-
-    const handleRegister = () => {
+    const handleRegister = (
+        setButtonDisabled:Function,
+        dispatch:Dispatch<UnknownAction>,
+        setEmailError:Function,
+        setPasswordError:Function,
+        email:string,
+        password:string,
+        setRegisterResultColour:Function,
+        setRegisterResult:Function
+    ) => {
         setButtonDisabled(true);
         setEmailError("");
         setPasswordError("");
@@ -65,9 +51,8 @@ export const Register = () => {
                     if (res.success) {
                         setRegisterResultColour("green");
                         dispatch(setUser(res.data.ss_user));
-                        navigate("/about");
                     } else {
-                        setRegisterResult("red");    
+                        setRegisterResultColour("red");    
                     }
                     setRegisterResult(res.data.message);                    
                 }
@@ -82,87 +67,9 @@ export const Register = () => {
     }
 
     return (
-        <div id="register-parent-div">
-            <h1 className="big-h1-title">
-                Register
-            </h1>
-            <div id="register-input-parent-div">
-                <div id="register-input-grid">
-                    <h5
-                        style={{
-                            gridRow: 1,
-                            gridColumn: 1
-                        }}
-                    >
-                        Email
-                    </h5>
-                    <input
-                        onChange={onChangeEmail}
-                        className="register-input"
-                        style={{
-                            gridRow: 1,
-                            gridColumn: 2
-                        }}
-                    />
-                    <p
-                        className="ss-red-error"
-                        style={{
-                            gridRow: 2,
-                            gridColumnStart: 1,
-                            gridColumnEnd: 3
-                        }}
-                    >
-                        {emailError}
-                    </p>
-                    <h5
-                        style={{
-                            gridRow: 3,
-                            gridColumn: 1
-                        }}
-                    >
-                        Password
-                    </h5>
-                    <input
-                        onChange={onChangePassword}
-                        className="register-input"
-                        style={{
-                            gridRow: 3,
-                            gridColumn: 2
-                        }}
-                        type='password'
-                    />
-                    <p
-                        className="ss-red-error"
-                        style={{
-                            gridRow: 4,
-                            gridColumnStart: 1,
-                            gridColumnEnd: 3
-                        }}
-                    >
-                        {passwordError}
-                    </p>
-                </div>
-                <button
-                    id="register-button"
-                    className={"ss-black-button" + (buttonDisabled ? " disabled-button" : "")}
-                    onClick={handleRegister} 
-                    disabled={buttonDisabled}                   
-                >
-                    Register
-                </button>
-                <div
-                    id="register-result-div"
-                >
-                    <p
-                        style={{
-                            color: registerResultColour
-                        }}
-                    >
-                        {registerResult}
-                    </p>
-                </div>
-
-            </div>
-        </div>
+        <LoginOrRegister
+            pageType={PAGE_TYPE.REGISTER}
+            handleSubmitButton={handleRegister}
+        />
     );
 };

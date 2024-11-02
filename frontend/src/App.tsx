@@ -2,23 +2,32 @@ import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
 import './App.css';
 import { About } from './pages/about/About';
 import { AbrORDOB } from './pages/abrORDOB/AbrORDOB';
-import { NavigationBar } from './pages/navigation-bar/NavigationBar';
-import { Login } from './pages/login/Login';
-import { Register } from './pages/register/Register';
+import { NavigationBar } from './navigation-bar/NavigationBar';
 import { AddClub } from './pages/add-club/AddClub';
+import { isWiderThanHigher } from './helpers/windowDimensions';
+import { Register } from './pages/register/Register';
+import { Login } from './pages/login/Login';
 
 interface AppProps {
-	isDesktop : boolean
+	// isDesktop : boolean
 }
 
 const App = (props:AppProps) => {
+
+	const isDesktop = isWiderThanHigher();
+
 	return (
-		<div id='app-parent'>
+		<div
+			id={(isDesktop ? 'desktop-' : 'mobile-') + 'app-parent'}
+			className='app-parent'
+		>
 			<Router>
 				<div id='navigation-bar'>
-					<NavigationBar/>
+					<NavigationBar
+						// isDesktop={props.isDesktop}
+					/>
 				</div>
-				<div id='page-content'>
+				<div id={(isDesktop ? 'desktop-' : 'mobile-') + 'page-content'} className='page-content'>
 					<Routes>
 						<Route index path='/about' element={<About/>}/>
 						<Route path='/abrORDOB' element={<AbrORDOB/>}/>

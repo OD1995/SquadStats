@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import OtherService from '../../services/OtherService';
 import { BackendResponse } from '../../types/BackendResponse';
 import { useLocation, useNavigate } from 'react-router-dom';
-import useWindowDimensions from '../../helpers/useWindowDimensions';
+import { isWiderThanHigher } from '../../helpers/windowDimensions';
 
 export const AbrORDOB = () => {
 
@@ -18,21 +18,10 @@ export const AbrORDOB = () => {
 
     const { hash } = useLocation();
     const navigate = useNavigate();
-    const { height, width } = useWindowDimensions();
-
-    const isLongerThanWider = (height:number|null, width:number|null) => {
-        // return true;
-        if (typeof height === "number") {
-            if (typeof width === "number") {
-                return height > width;
-            }
-        }
-        return false;
-    }
 
     // const isMobile = isLongerThanWider(height, width);
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    const tellUserToRotate = isMobile && isLongerThanWider(height, width);
+    const tellUserToRotate = isMobile && isWiderThanHigher();
     const zoomVal = isMobile ? 0.1 : 1.5;
     // const txt = isMobile ? "yes mobile" : "no mobile";
     const txt = "";

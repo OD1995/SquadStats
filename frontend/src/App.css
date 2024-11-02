@@ -1,11 +1,30 @@
-#app-parent {
+.app-parent {
 	display: flex;
+	flex-direction: row;
+	height: 100vh;
+	width: 100vw;
+}
+
+#desktop-app-parent {
 	flex-direction: row;
 }
 
-#page-content {
+#mobile-app-parent {
+	flex-direction: column;
+}
+
+.page-content {
 	display: flex;
+}
+
+#desktop-page-content {
 	width: 90vw;
+	height: 100vh;	
+}
+
+#mobile-page-content {
+	width: 100vw;
+	height: 90vh;	
 }
 
 .ss-red-error {

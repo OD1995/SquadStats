@@ -1,28 +1,29 @@
-#login-parent-div {
+#lor-parent-div {
     width: 100%;
 }
 
-#login-input-parent-div {
+#lor-input-parent-div {
     display: flex;
     flex-direction: column;
     align-items: center;
+    /* width: 85%; */
 }
 
-.login-input-div {
+.lor-input-div {
     display: flex;
 }
 
-.login-input {
-    width: 20vw;
+.lor-input {
+    width: 80%;
     text-align: center;
 }
 
-.login-error {
+.lor-error {
     margin-top: 4vh;
     margin-bottom: 4vh;
 }
 
-#login-input-grid {
+#lor-input-grid {
     display: grid;
     grid-template-columns: 15vw 25vw;
     grid-template-rows: repeat(5,8vh);
@@ -36,23 +37,23 @@
 }
 
 @media only screen and (max-width: 1000px) {
-    #login-input-grid {
-        grid-template-columns: repeat(2,50vw)
+    #lor-input-grid {
+        grid-template-columns: 25vw 75vw;
     }
-    .login-input {
-        width: 40vw;
+    .lor-input {
+        /* width: 40vw; */
     }
 }
 
-/* #login-title {
+/* #lor-title {
     margin-left: 5vw;
     margin-bottom: 5vh; */
 /* } */
 
-#login-button {
+#submit-button {
     margin-top: 2vh;
 }
 
-#login-error {
+#submit-error {
     margin-top: 5vh;
 }

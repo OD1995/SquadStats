@@ -1,6 +1,19 @@
 import { useState, useEffect } from 'react';
 
-export default function useWindowDimensions() {
+export const isWiderThanHigher = (
+    // height:number|null, width:number|null
+) => {
+    const { height, width } = useWindowDimensions();
+    // return true;
+    if (typeof height === "number") {
+        if (typeof width === "number") {
+            return width > height;
+        }
+    }
+    return false;
+}
+
+function useWindowDimensions() {
 
     const hasWindow = typeof window !== 'undefined';
 
