@@ -16,7 +16,7 @@ export const DataSource = (props:DataSourceProps) => {
     return (
         <div id='data-source-parent'>
             <FormControl>
-                <FormLabel>
+                <FormLabel disabled={true}>
                     What will your data source be?
                 </FormLabel>
                 <RadioGroup

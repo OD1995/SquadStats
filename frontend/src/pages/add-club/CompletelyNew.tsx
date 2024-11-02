@@ -9,7 +9,10 @@ export const CompletelyNew = () => {
     const [dataSource, setDataSource] = useState<string>("");
 
     return (
-        <div id='completely-new-parent'>
+        <div
+            id='completely-new-parent'
+            className="add-club-section"
+        >
             <DataSource
                 dataSource={dataSource}
                 setDataSource={setDataSource}
@@ -27,7 +30,7 @@ export const CompletelyNew = () => {
             {
                 (dataSource == DATA_SOURCE.MANUAL) && (
                     <NewClubSubmit
-                        labelText="Enter the club ID"
+                        labelText="Enter the club's name"
                         modalContent={<FootballAssociationClub/>}
                         clubType={CLUB_TYPE.COMPLETELY_NEW}
                         dataSource={dataSource}

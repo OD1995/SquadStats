@@ -14,9 +14,12 @@ export const NewClubType = (props:NewClubTypeProps) => {
     }
 
     return (
-        <div id='new-club-type-parent'>
+        <div
+            id='new-club-type-parent'
+            className="add-club-section"
+        >
             <FormControl>
-                <FormLabel>
+                <FormLabel disabled={true}>
                     What type of new club do you want to add?
                 </FormLabel>
                 <RadioGroup

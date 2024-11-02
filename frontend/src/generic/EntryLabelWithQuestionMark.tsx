@@ -14,10 +14,11 @@ export const EntryLabelWithQuestionMark = (props:EntryLabelWithQuestionMarkProps
 
     return (
         <div className='label-with-question-mark-icon'>
-            <FormLabel>
+            <FormLabel disabled={true}>
                 {props.labelText}
             </FormLabel>
             <QuestionMark
+                className="ss-icon question-mark-icon"
                 onClick={() => setShowModal(true)}
             />
             {

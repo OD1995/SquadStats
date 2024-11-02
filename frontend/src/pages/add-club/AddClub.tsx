@@ -15,25 +15,27 @@ export const AddClub = () => {
             <h1 className="big-h1-title">
                 Add Club
             </h1>
-            <NewClubType
-                newClubType={newClubType}
-                setNewClubType={setNewClubType}
-            />
-            {
-                (newClubType == CLUB_TYPE.ALREADY_EXISTS) && (
-                    <NewClubSubmit
-                        labelText="Enter the clubs's unique ID"
-                        clubType={CLUB_TYPE.ALREADY_EXISTS}
-                        modalContent={<AlreadyExistsClub/>}
-                        dataSource={null}
-                    />
-                )
-            }
-            {
-                (newClubType == CLUB_TYPE.COMPLETELY_NEW) && (
-                    <CompletelyNew/>
-                )
-            }
+            <div id='add-club-entry-parent'>
+                <NewClubType
+                    newClubType={newClubType}
+                    setNewClubType={setNewClubType}
+                />
+                {
+                    (newClubType == CLUB_TYPE.ALREADY_EXISTS) && (
+                        <NewClubSubmit
+                            labelText="Enter the clubs's unique ID"
+                            clubType={CLUB_TYPE.ALREADY_EXISTS}
+                            modalContent={<AlreadyExistsClub/>}
+                            dataSource={null}
+                        />
+                    )
+                }
+                {
+                    (newClubType == CLUB_TYPE.COMPLETELY_NEW) && (
+                        <CompletelyNew/>
+                    )
+                }
+            </div>
         </div>
     )
 }

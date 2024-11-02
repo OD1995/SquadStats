@@ -22,11 +22,9 @@ const App = (props:AppProps) => {
 			className='app-parent'
 		>
 			<Router>
-				<div id='navigation-bar'>
-					<NavigationBar
-						// isDesktop={props.isDesktop}
-					/>
-				</div>
+				<NavigationBar
+					// isDesktop={props.isDesktop}
+				/>
 				<div id={(isDesktop ? 'desktop-' : 'mobile-') + 'page-content'} className='page-content'>
 					<Routes>
 						<Route index path='/about' element={<About/>}/>

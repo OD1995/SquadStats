@@ -19,7 +19,9 @@
 
 #desktop-page-content {
 	width: 90vw;
-	height: 100vh;	
+	height: 100vh;
+	max-height: 100vh;
+	overflow-y: scroll;
 }
 
 #mobile-page-content {
@@ -54,4 +56,12 @@
     margin-left: 5vw;
     font-size: 200%;
     margin-bottom: 5vh;
+}
+
+.ss-icon {
+	cursor: pointer;
+}
+
+.question-mark-icon {
+	margin-left: 1vw;
 }

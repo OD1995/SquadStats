@@ -36,8 +36,13 @@ export const NewClubSubmit = (props:NewClubSubmitProps) => {
     }
 
     return (
-        <div id='new-club-submit-parent' className="new-club-entry-parent">
-            <FormControl>
+        <div
+            id='new-club-submit-parent'
+            className="new-club-entry-parent add-club-section"
+        >
+            <FormControl
+                id='new-club-submit-form'
+            >
                 <EntryLabelWithQuestionMark
                     labelText={props.labelText}
                     modalContent={props.modalContent}
