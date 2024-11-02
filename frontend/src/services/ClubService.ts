@@ -1,4 +1,4 @@
-import { CLUB_TYPE } from "../types/enums.ts";
+import { CLUB_TYPE, DATA_SOURCE } from "../types/enums.ts";
 import { makeGetRequest, makePostRequest } from "./api.ts";
 
 class ClubService {
@@ -7,13 +7,17 @@ class ClubService {
 
     createNewClub(
         clubType:CLUB_TYPE,
-        clubId:string|null
+        dataSource:DATA_SOURCE|null,
+        clubId:string|null,
+        clubName:string|null
     ) {
         return makePostRequest(
             this.base_url + "/create",
             {
                 clubType,
-                clubId
+                dataSource,
+                clubId,
+                clubName
             }
         )
     }

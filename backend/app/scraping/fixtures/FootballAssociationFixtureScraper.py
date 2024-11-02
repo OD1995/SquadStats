@@ -26,7 +26,7 @@ class FootballAssociationFixtureScraper(FixtureScraper):
         return f"https://fulltime.thefa.com/displayFixture.html?id={self.fixture_id}"
     
     def scrape(self):
-        # soup = self.get_soup(self.build_url())
+        soup = self.get_soup(self.build_url())
         return {
             "player_data" : self.get_player_data(self.soup),
             "match_info" : self.get_match_info(self.soup)

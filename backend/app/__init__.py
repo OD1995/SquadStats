@@ -32,7 +32,8 @@ def create_app(config_class=Config):
         Match,
         Player,
         PlayerMatchPerformance,
-        User
+        User,
+        ClubAdmin
     )
     db.init_app(app)
     migrate.init_app(app, db)

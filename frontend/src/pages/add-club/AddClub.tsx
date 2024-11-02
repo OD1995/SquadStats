@@ -25,6 +25,7 @@ export const AddClub = () => {
                         labelText="Enter the clubs's unique ID"
                         clubType={CLUB_TYPE.ALREADY_EXISTS}
                         modalContent={<AlreadyExistsClub/>}
+                        dataSource={null}
                     />
                 )
             }
