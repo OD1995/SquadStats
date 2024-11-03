@@ -1,5 +1,5 @@
 import { ChangeEvent, useEffect, useState } from "react";
-import { Navigate, useSearchParams } from "react-router-dom";
+import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { PAGE_TYPE } from "../types/enums";
 import './LoginOrRegster.css';
 // import { BackendResponse } from "../../types/BackendResponse";
@@ -23,10 +23,10 @@ export const LoginOrRegister = (props:LoginOrRegisterProps) => {
     const [submitErrorColour, setSubmitErrorColour] = useState("black");
     const [buttonDisabled, setButtonDisabled] = useState(false);
 
-    const [searchParams, setSearchParams] = useSearchParams();    
+    const [searchParams, setSearchParams] = useSearchParams();   
+    const navigate = useNavigate(); 
     const dispatch = useDispatch();
     const user = useSelector(userSelector);
-    const isDesktop = isWiderThanHigher();
     
     useEffect(
         () => {
@@ -42,49 +42,6 @@ export const LoginOrRegister = (props:LoginOrRegisterProps) => {
             }
         }
     )
-
-    // async function loginProcess() {
-    //     UserManagementService.login(
-    //         email,
-    //         password
-    //     ).then(
-    //         (res:BackendResponse) => {
-    //             if (res.success) {
-    //                 dispatch(setUser(res.data.ss_user));
-    //             } else {
-    //                 setLoginErrorColour("red");
-    //                 setLoginError(res.data.message);
-    //                 return false;
-    //             }
-    //         }
-    //     )
-    // }
-
-    // async function handleLogin() {
-    //     setButtonDisabled(true);
-    //     setEmailError("");
-    //     setPasswordError("");
-    //     var email_ok = true;
-    //     if (email.length === 0) {
-    //         setEmailError(
-    //             "Please provide your email"
-    //         );
-    //         email_ok = false;
-    //     }
-    //     var password_ok = true;
-    //     if (password.length === 0) {
-    //         setPasswordError(
-    //             "Please provide your password"
-    //         )
-    //         password_ok = false;
-    //     }
-    //     if (email_ok && password_ok) {
-    //         setLoginErrorColour("black");
-    //         setLoginError("Loading..");
-    //         await loginProcess();            
-    //     }
-    //     setButtonDisabled(false);
-    // }
 
     const onChangeEmail = (e:ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);
@@ -113,7 +70,8 @@ export const LoginOrRegister = (props:LoginOrRegisterProps) => {
             email,
             password,
             setSubmitErrorColour,
-            setSubmitError
+            setSubmitError,
+            navigate
         )
     }
 

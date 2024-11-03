@@ -39,17 +39,24 @@ def create_club():
         db.session.add(new_club_admin)
         db.session.commit()
         return jsonify(success=True)
-    elif data_source == DataSource.FOOTBALL_ASSOCIATION:
+    elif data_source == DataSource.FOOTBALL_ASSOCIATION.value:
         club_scraper = FootballAssociationClubScraper(
             club_id=club_id
         )
         club_name = club_scraper.get_club_name()
-    elif data_source == DataSource.MANUAL:
+    elif data_source == DataSource.MANUAL.value:
         club_name = req.get("clubName")
     new_club = Club(
         club_name=club_name,
         data_source_club_id=club_id
     )
+    user_id = flask_praetorian.current_user_id()
+    new_club_admin = ClubAdmin(
+        club_id=new_club.club_id,
+        user_id=user_id
+    )
     db.session.add(new_club)
+    db.session.commit()
+    db.session.add(new_club_admin)
     db.session.commit()
     return jsonify(success=True)

@@ -23,6 +23,15 @@ class UserManagementService {
             }
         )
     }
+
+    refreshAccessToken(access_token:string|undefined) {
+        return makePostRequest(
+            this.base_url + "/refresh",
+            {
+                access_token
+            }
+        )
+    }
 }
 
 export default new UserManagementService();

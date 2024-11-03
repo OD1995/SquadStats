@@ -16,7 +16,8 @@ export const Login = () => {
         dispatch:Dispatch<UnknownAction>,
         setUser:Function,
         setLoginError:Function,
-        setLoginErrorColour:Function
+        setLoginErrorColour:Function,
+        navigate:Function
     ) {
         UserManagementService.login(
             email,
@@ -25,6 +26,7 @@ export const Login = () => {
             (res:BackendResponse) => {
                 if (res.success) {
                     dispatch(setUser(res.data.ss_user));
+                    navigate("/home")
                 } else {
                     setLoginErrorColour("red");
                     setLoginError(res.data.message);
@@ -35,7 +37,6 @@ export const Login = () => {
     }
 
     async function handleLogin(
-        // setButtonDisabled:Dispatch<SetStateAction<boolean>>,
         setButtonDisabled:Function,
         dispatch:Dispatch<UnknownAction>,
         setEmailError:Function,
@@ -43,7 +44,8 @@ export const Login = () => {
         email:string,
         password:string,
         setLoginErrorColour:Function,
-        setLoginError:Function
+        setLoginError:Function,
+        navigate:Function
     ) {
         setButtonDisabled(true);
         setEmailError("");
@@ -71,7 +73,8 @@ export const Login = () => {
                 dispatch,
                 setUser,
                 setLoginError,
-                setLoginErrorColour
+                setLoginErrorColour,
+                navigate
             );            
         }
         setButtonDisabled(false);

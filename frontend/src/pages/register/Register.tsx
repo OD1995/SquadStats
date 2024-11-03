@@ -18,7 +18,8 @@ export const Register = () => {
         email:string,
         password:string,
         setRegisterResultColour:Function,
-        setRegisterResult:Function
+        setRegisterResult:Function,
+        navigate:Function
     ) => {
         setButtonDisabled(true);
         setEmailError("");
@@ -51,6 +52,7 @@ export const Register = () => {
                     if (res.success) {
                         setRegisterResultColour("green");
                         dispatch(setUser(res.data.ss_user));
+                        navigate("/get-started");
                     } else {
                         setRegisterResultColour("red");    
                     }

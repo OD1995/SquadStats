@@ -1,4 +1,5 @@
 from flask import Blueprint, request
+import flask_praetorian
 from app import guard, db
 from app.models.User import User
 
@@ -40,14 +41,17 @@ def login():
     }, 200
 
 @user_management_bp.route("/refresh", methods=['POST'])
+@flask_praetorian.auth_required
 def refresh():
     old_token = request.get_data()
     new_token = guard.refresh_jwt_token(old_token)
+    user = guard.get_user_from_registration_token(new_token)
     return {
-        'access_token' : new_token
+        'ss_user' : user.get_ss_user_data()
     }, 200
 
 @user_management_bp.route("/reset-password")
+@flask_praetorian.auth_required
 def reset_password():    
     req = request.get_json(force=True)
     email = req.get('email', None)

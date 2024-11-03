@@ -7,12 +7,11 @@ import { AddClub } from './pages/add-club/AddClub';
 import { isWiderThanHigher } from './helpers/windowDimensions';
 import { Register } from './pages/register/Register';
 import { Login } from './pages/login/Login';
+import { GetStarted } from './pages/get-started/GetStarted';
+import { Home } from './pages/home/Home';
 
-interface AppProps {
-	// isDesktop : boolean
-}
 
-const App = (props:AppProps) => {
+const App = () => {
 
 	const isDesktop = isWiderThanHigher();
 
@@ -22,16 +21,16 @@ const App = (props:AppProps) => {
 			className='app-parent'
 		>
 			<Router>
-				<NavigationBar
-					// isDesktop={props.isDesktop}
-				/>
+				<NavigationBar/>
 				<div id={(isDesktop ? 'desktop-' : 'mobile-') + 'page-content'} className='page-content'>
 					<Routes>
 						<Route index path='/about' element={<About/>}/>
+						<Route path='/home' element={<Home/>}/>
 						<Route path='/abrORDOB' element={<AbrORDOB/>}/>
 						<Route path='/register' element={<Register/>}/>
 						<Route path='/login' element={<Login/>}/>
-						<Route path='/add-club' element={<AddClub/>}/>
+						<Route path='/get-started' element={<GetStarted/>}/>
+						<Route path='/add-club' element={<AddClub includeHeirachy={false}/>}/>
 					</Routes>
 				</div>
 			</Router>

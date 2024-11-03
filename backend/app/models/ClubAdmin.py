@@ -17,7 +17,6 @@ class ClubAdmin(db.Model):
         index=True,
         primary_key=True
     )
-    better_player_name: Mapped[str] = mapped_column(String(100))
     time_created: Mapped[datetime]
 
     def __init__(

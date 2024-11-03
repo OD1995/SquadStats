@@ -4,6 +4,9 @@ from app import db, guard
 from sqlalchemy.orm import Mapped, mapped_column
 from uuid import UUID, uuid4
 
+from app.models.Club import Club
+from app.models.ClubAdmin import ClubAdmin
+
 class User(db.Model):
     __tablename__ = 'users'
 
@@ -37,8 +40,16 @@ class User(db.Model):
     @property
     def rolenames(self):
         return []
+    
+    def get_clubs(self):
+        return db.session \
+            .query(Club) \
+            .join(ClubAdmin) \
+            .filter(ClubAdmin.user_id == self.user_id) \
+            .all()
 
     def get_ss_user_data(self):
         return {
-            'access_token' : guard.encode_jwt_token(self)
+            'access_token' : guard.encode_jwt_token(self),
+            'clubs' : self.get_clubs()
         }

@@ -5,37 +5,60 @@ import { CLUB_TYPE } from "../../types/enums";
 import { CompletelyNew } from "./CompletelyNew";
 import { NewClubSubmit } from "./NewClubSubmit";
 import { AlreadyExistsClub } from "../../how-to/AlreadExistsClub";
+import { HeirachyDescription } from "../../how-to/HeirachyDescription";
+import { useSelector } from "react-redux";
+import { userSelector } from "../../store/slices/userSlice";
+import { Link } from "react-router-dom";
 
-export const AddClub = () => {
+interface AddClubProps {
+    includeHeirachy:boolean
+}
 
-    const [newClubType, setNewClubType] = useState<string>("")
+export const AddClub = (props:AddClubProps) => {
 
-    return (
-        <div id='add-club-parent'>
-            <h1 className="big-h1-title">
-                Add Club
-            </h1>
-            <div id='add-club-entry-parent'>
-                <NewClubType
-                    newClubType={newClubType}
-                    setNewClubType={setNewClubType}
-                />
+    const [newClubType, setNewClubType] = useState<string>("");
+
+    const user = useSelector(userSelector);
+
+    if (user) {
+        return (
+            <div id='add-club-parent'>
+                <h1 className="big-h1-title">
+                    Add Club
+                </h1>
                 {
-                    (newClubType == CLUB_TYPE.ALREADY_EXISTS) && (
-                        <NewClubSubmit
-                            labelText="Enter the clubs's unique ID"
-                            clubType={CLUB_TYPE.ALREADY_EXISTS}
-                            modalContent={<AlreadyExistsClub/>}
-                            dataSource={null}
-                        />
+                    props.includeHeirachy && (
+                        <HeirachyDescription/>
                     )
                 }
-                {
-                    (newClubType == CLUB_TYPE.COMPLETELY_NEW) && (
-                        <CompletelyNew/>
-                    )
-                }
+                <div id='add-club-entry-parent'>
+                    <NewClubType
+                        newClubType={newClubType}
+                        setNewClubType={setNewClubType}
+                    />
+                    {
+                        (newClubType == CLUB_TYPE.ALREADY_EXISTS) && (
+                            <NewClubSubmit
+                                labelText="Enter the clubs's unique ID"
+                                clubType={CLUB_TYPE.ALREADY_EXISTS}
+                                modalContent={<AlreadyExistsClub/>}
+                                dataSource={null}
+                            />
+                        )
+                    }
+                    {
+                        (newClubType == CLUB_TYPE.COMPLETELY_NEW) && (
+                            <CompletelyNew/>
+                        )
+                    }
+                </div>
             </div>
-        </div>
-    )
+        )
+    } else {
+        return (
+            <Link
+                to='/about'
+            />
+        )
+    }
 }

@@ -23,3 +23,6 @@ class Club(db.Model):
         self.club_name = club_name
         self.data_source_club_id = data_source_club_id
         self.time_created = datetime.now(timezone.utc)
+
+    def get_club_id(self):
+        return str(self.club_id)

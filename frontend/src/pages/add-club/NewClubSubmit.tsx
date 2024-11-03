@@ -22,8 +22,8 @@ export const NewClubSubmit = (props:NewClubSubmitProps) => {
         ClubService.createNewClub(
             props.clubType,
             props.dataSource,
-            (props.dataSource == DATA_SOURCE.MANUAL) ? textValue : null,
-            (props.dataSource != DATA_SOURCE.MANUAL) ? textValue : null
+            (props.dataSource != DATA_SOURCE.MANUAL) ? textValue : null,
+            (props.dataSource == DATA_SOURCE.MANUAL) ? textValue : null
         ).then(
             (res:BackendResponse) => {
 
