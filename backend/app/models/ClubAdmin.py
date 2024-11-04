@@ -1,6 +1,6 @@
-from datetime import date, datetime, timezone
-from uuid import UUID
-from sqlalchemy import ForeignKey, String
+from datetime import datetime, timezone
+from sqlalchemy.types import UUID
+from sqlalchemy import ForeignKey
 from app import db
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -8,11 +8,13 @@ class ClubAdmin(db.Model):
     __tablename__ = 'club_admins'
 
     club_id: Mapped[UUID] = mapped_column(
+        UUID(as_uuid=True),
         ForeignKey("clubs.club_id", name='fk_clubs_club_id'),
         index=True,
         primary_key=True
     )
     user_id: Mapped[UUID] = mapped_column(
+        UUID(as_uuid=True),
         ForeignKey("users.user_id", name='fk_users_user_id'),
         index=True,
         primary_key=True

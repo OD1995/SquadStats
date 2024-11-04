@@ -1,3 +1,4 @@
+from uuid import UUID
 from flask import Blueprint, jsonify, request
 import flask_praetorian
 from app import db
@@ -53,7 +54,7 @@ def create_club():
     user_id = flask_praetorian.current_user_id()
     new_club_admin = ClubAdmin(
         club_id=new_club.club_id,
-        user_id=user_id
+        user_id=UUID(user_id)
     )
     db.session.add(new_club)
     db.session.commit()
