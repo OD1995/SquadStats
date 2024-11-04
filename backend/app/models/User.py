@@ -3,12 +3,14 @@ from sqlalchemy import String
 from app import db, guard
 from sqlalchemy.orm import Mapped, mapped_column
 from uuid import UUID, uuid4
-
+from app.models import Base
 from app.models.Club import Club
 from app.models.ClubAdmin import ClubAdmin
 
-class User(db.Model):
+
+class User(Base):
     __tablename__ = 'users'
+    __table_args__ = {"mysql_engine": "InnoDB"}
 
     user_id: Mapped[UUID] = mapped_column(primary_key=True)
     email: Mapped[str] = mapped_column(String(50))

@@ -1,10 +1,11 @@
 from uuid import UUID
 from sqlalchemy import ForeignKey
-from app import db
+from app.models import Base
 from sqlalchemy.orm import Mapped, mapped_column
 
-class PlayerMatchPerformance(db.Model):
+class PlayerMatchPerformance(Base):
     __tablename__ = "player_match_performances"
+    __table_args__ = {"mysql_engine": "InnoDB"}
 
     player_id: Mapped[UUID] = mapped_column(
         ForeignKey("players.player_id", name='fk_players_player_id'), 

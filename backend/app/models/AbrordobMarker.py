@@ -1,12 +1,13 @@
 from dataclasses import dataclass
 from sqlalchemy import String
-from app import db
+from app.models import Base
 from sqlalchemy.orm import Mapped, mapped_column
 from datetime import datetime
 
 @dataclass
-class AbrordobMarker(db.Model):
+class AbrordobMarker(Base):
     __tablename__ = "abrordob_markers"
+    __table_args__ = {"mysql_engine": "InnoDB"}
     
     marker_id: Mapped[str] = mapped_column(String(20), primary_key=True)
     colour: Mapped[str] = mapped_column(String(20))

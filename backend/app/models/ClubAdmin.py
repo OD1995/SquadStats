@@ -1,20 +1,19 @@
 from datetime import datetime, timezone
 from sqlalchemy.types import UUID
 from sqlalchemy import ForeignKey
-from app import db
+from app.models import Base
 from sqlalchemy.orm import Mapped, mapped_column
 
-class ClubAdmin(db.Model):
+class ClubAdmin(Base):
     __tablename__ = 'club_admins'
+    __table_args__ = {"mysql_engine": "InnoDB"}
 
     club_id: Mapped[UUID] = mapped_column(
-        UUID(as_uuid=True),
         ForeignKey("clubs.club_id", name='fk_clubs_club_id'),
         index=True,
         primary_key=True
     )
     user_id: Mapped[UUID] = mapped_column(
-        UUID(as_uuid=True),
         ForeignKey("users.user_id", name='fk_users_user_id'),
         index=True,
         primary_key=True

@@ -15,7 +15,6 @@ Flask==3.0.3
 flask-buzz==3.1.0
 Flask-Cors==5.0.0
 Flask-Mailman==1.1.1
-Flask-Migrate==4.0.7
 flask-praetorian==1.6.0
 Flask-SQLAlchemy==3.1.1
 frozenlist==1.4.1

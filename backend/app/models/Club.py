@@ -1,13 +1,14 @@
 from datetime import datetime, timezone
 from uuid import UUID, uuid4
 from sqlalchemy import String
-from app import db
+from app.models import Base
 from sqlalchemy.orm import Mapped, mapped_column
 from dataclasses import dataclass
 
 @dataclass
-class Club(db.Model):
+class Club(Base):
     __tablename__ = 'clubs'
+    __table_args__ = {"mysql_engine": "InnoDB"}
 
     club_id: Mapped[UUID] = mapped_column(primary_key=True)
     club_name: Mapped[str] = mapped_column(String(50))

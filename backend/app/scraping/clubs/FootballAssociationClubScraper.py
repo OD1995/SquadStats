@@ -17,7 +17,7 @@ class FootballAssociationClubScraper(ClubScraper):
     def get_teams(
         self,
         ss_club_id:UUID
-    ) -> tuple[list[Team], list[TeamName]]:
+    ):# -> tuple[list[Team], list[TeamName]]:
         team_divs = self.soup.find_all(
             'div',
             {
@@ -33,11 +33,11 @@ class FootballAssociationClubScraper(ClubScraper):
             team_section,league_section = after_qm.split("&")
             _,team_id = team_section.split("=")
             _,league_id = league_section.split("=")
-            if team_id not in new_teams:
-                team = Team(
-                    club_id=ss_club_id,
-                    sport_id=
-                )
+            # if team_id not in new_teams:
+                # team = Team(
+                #     club_id=ss_club_id,
+                #     sport_id=
+                # )
 
     def get_club_name(self):
         normal_club_name = self.get_name(club_type='normal')

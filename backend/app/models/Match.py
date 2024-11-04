@@ -1,11 +1,12 @@
 from uuid import UUID
 from datetime import date, time
 from sqlalchemy import ForeignKey, String
-from app import db
+from app.models import Base
 from sqlalchemy.orm import Mapped, mapped_column
 
-class Match(db.Model):
+class Match(Base):
     __tablename__ = 'matches'
+    __table_args__ = {"mysql_engine": "InnoDB"}
     
     match_id: Mapped[UUID] = mapped_column(primary_key=True)
     competition_id: Mapped[UUID] = mapped_column(
