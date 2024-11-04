@@ -7,3 +7,6 @@ class ClubType(Enum):
 class DataSource(Enum):
     FOOTBALL_ASSOCIATION = 'football-association'
     MANUAL = 'manual'
+
+class Sport(Enum):
+    FOOTBALL = 'football'

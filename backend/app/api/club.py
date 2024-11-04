@@ -40,10 +40,16 @@ def create_club():
         db.session.add(new_club_admin)
         db.session.commit()
         return jsonify(success=True)
-    elif data_source == DataSource.FOOTBALL_ASSOCIATION.value:
-        club_scraper = FootballAssociationClubScraper(
-            club_id=club_id
-        )
+    elif data_source in [
+        DataSource.FOOTBALL_ASSOCIATION.value
+    ]:
+        save_teams = False
+        match data_source:
+            case DataSource.FOOTBALL_ASSOCIATION.value:
+                club_scraper = FootballAssociationClubScraper(
+                    fa_club_id=club_id
+                )
+                save_teams = True
         club_name = club_scraper.get_club_name()
     elif data_source == DataSource.MANUAL.value:
         club_name = req.get("clubName")
@@ -57,7 +63,8 @@ def create_club():
         user_id=UUID(user_id)
     )
     db.session.add(new_club)
-    db.session.commit()
     db.session.add(new_club_admin)
+    if save_teams:
+        new_teams, new_team_names = club_scraper.get_teams(new_club.club_id)
     db.session.commit()
     return jsonify(success=True)

@@ -1,3 +1,6 @@
+from uuid import UUID
+from app.models.Team import Team
+from app.models.TeamName import TeamName
 from app.scraping.clubs.ClubScraper import ClubScraper
 
 
@@ -5,10 +8,36 @@ class FootballAssociationClubScraper(ClubScraper):
 
     def __init__(
         self,
-        club_id: str
+        fa_club_id: str
     ):
         super(ClubScraper).__init__()
-        self.club_id = club_id
+        self.fa_club_id = fa_club_id
+        self.soup = None
+
+    def get_teams(
+        self,
+        ss_club_id:UUID
+    ) -> tuple[list[Team], list[TeamName]]:
+        team_divs = self.soup.find_all(
+            'div',
+            {
+                'class' : 'results-container grid-3'
+            }
+        )
+
+        new_teams = {}
+        new_team_names = {}
+        for team_div in team_divs:
+            link = team_div.a['href']
+            _,after_qm = link.split("?")
+            team_section,league_section = after_qm.split("&")
+            _,team_id = team_section.split("=")
+            _,league_id = league_section.split("=")
+            if team_id not in new_teams:
+                team = Team(
+                    club_id=ss_club_id,
+                    sport_id=
+                )
 
     def get_club_name(self):
         normal_club_name = self.get_name(club_type='normal')
@@ -21,11 +50,11 @@ class FootballAssociationClubScraper(ClubScraper):
         club_type:str ## maybe this should be an enum
     ):
         if club_type == 'normal':
-            url = f"https://fulltime.thefa.com/home/club/{self.club_id}.html"
+            url = f"https://fulltime.thefa.com/home/club/{self.fa_club_id}.html"
         elif club_type == 'standalone':
-            url = f"https://fulltime.thefa.com/home/club/standalone/{self.club_id}.html"
-        soup = self.get_soup(url=url)
-        club_name_1 = soup.find(
+            url = f"https://fulltime.thefa.com/home/club/standalone/{self.fa_club_id}.html"
+        self.soup = self.get_soup(url=url)
+        club_name_1 = self.soup.find(
             'div',
             {
                 'class' : 'search-term center'
