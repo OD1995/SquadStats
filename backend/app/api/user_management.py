@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, session
 import flask_praetorian
 from app import guard, db
 from app.models.User import User
@@ -14,8 +14,7 @@ def register():
     req = request.get_json(force=True)
     email = req.get('email')
     password = req.get('password')
-    email_used_already = User.query.filter_by(email=email).count() >= 1
-    if email_used_already:
+    if db.session.query(User).filter_by(email=email).count() >= 1:
         return {
             "message" : "Email already registered"
         }, 400
@@ -56,7 +55,7 @@ def reset_password():
     req = request.get_json(force=True)
     email = req.get('email', None)
     new_password = req.get('password', None)    
-    user = User.query.get(email=email)
+    user = db.session.query(User).get(email=email)
     user.password = guard.hash_password(new_password)
     db.session.commit()
     return {

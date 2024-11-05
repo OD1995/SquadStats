@@ -1,7 +1,8 @@
 from datetime import datetime, timezone
+from typing import List
 from sqlalchemy import String
 from app import db, guard
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from uuid import UUID, uuid4
 from app.models import Base
 from app.models.Club import Club
@@ -16,6 +17,7 @@ class User(Base):
     email: Mapped[str] = mapped_column(String(50))
     password: Mapped[str] = mapped_column(String(130))
     time_created: Mapped[datetime]
+    # clubs: Mapped[List["Club"]] = relationship(lazy='joined')
 
     def __init__(
         self,
@@ -29,11 +31,11 @@ class User(Base):
     
     @classmethod
     def lookup(cls, email):
-        return cls.query.filter_by(email=email).one_or_none()
+        return db.session.query(cls).filter_by(email=email).one_or_none()
     
     @classmethod
     def identify(cls, user_id):
-        return cls.query.get(user_id)
+        return db.session.query(cls).get(UUID(user_id))
     
     @property
     def identity(self):

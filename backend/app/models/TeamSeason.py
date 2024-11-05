@@ -1,7 +1,8 @@
 from uuid import UUID
-from sqlalchemy import ForeignKey
-from app.models import Base
+from sqlalchemy import Enum, ForeignKey
+from app.models import Base, DataSource
 from sqlalchemy.orm import Mapped, mapped_column
+from app.types.enums import DataSource as DataSourceEnum
 
 class TeamSeason(Base):
     __tablename__ = 'team_seasons'
@@ -16,7 +17,8 @@ class TeamSeason(Base):
         ForeignKey("seasons.season_id", name="fk_seasons_season_id"),
         index=True
     )
-    data_source_id: Mapped[UUID] = mapped_column(
+    data_source_id: Mapped[DataSourceEnum] = mapped_column(
+        Enum(DataSourceEnum),
         ForeignKey("data_sources.data_source_id", name='fk_data_sources_data_source_id'),
         index=True
     )

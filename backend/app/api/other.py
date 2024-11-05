@@ -10,5 +10,5 @@ other_bp = Blueprint(
 
 @other_bp.route("/abrordob-markers")
 def get_abrordob_markers():
-    abrordob_markers = AbrordobMarker.query.all()
+    abrordob_markers = db.session.query(AbrordobMarker).all()
     return jsonify(abrordob_markers)

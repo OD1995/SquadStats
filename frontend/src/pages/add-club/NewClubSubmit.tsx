@@ -26,7 +26,7 @@ export const NewClubSubmit = (props:NewClubSubmitProps) => {
             (props.dataSource == DATA_SOURCE.MANUAL) ? textValue : null
         ).then(
             (res:BackendResponse) => {
-
+                const a=1;
             }
         )
     }

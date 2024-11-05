@@ -28,7 +28,7 @@ def create_club():
             return {
                 "message" : "Invalid club ID"
             }, 400
-        club_count = Club.query.filter_by(club_id=actual_club_id).count()
+        club_count = db.session.query(Club).filter_by(club_id=actual_club_id).count()
         if club_count == 0:
             return {
                 "message" : "Club does not exist"
@@ -64,7 +64,15 @@ def create_club():
     )
     db.session.add(new_club)
     db.session.add(new_club_admin)
+    db.session.commit()
     if save_teams:
         new_teams, new_team_names = club_scraper.get_teams(new_club.club_id)
-    db.session.commit()
-    return jsonify(success=True)
+        db.session.add_all(new_teams)
+        db.session.commit()
+        db.session.add_all(new_team_names)
+        db.session.commit()
+    current_user = flask_praetorian.current_user()
+    return {
+        "message" : "New club added",
+        "ss_user" : current_user.get_ss_user_data()
+    }, 200

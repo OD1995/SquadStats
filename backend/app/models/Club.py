@@ -1,8 +1,10 @@
 from datetime import datetime, timezone
+from typing import List
 from uuid import UUID, uuid4
 from sqlalchemy import String
 from app.models import Base
-from sqlalchemy.orm import Mapped, mapped_column
+from app.models.Team import Team
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from dataclasses import dataclass
 
 @dataclass
@@ -14,6 +16,7 @@ class Club(Base):
     club_name: Mapped[str] = mapped_column(String(50))
     data_source_club_id: Mapped[str] = mapped_column(String(50), nullable=True)
     time_created: Mapped[datetime]
+    teams: Mapped[List["Team"]] = relationship(lazy='joined')
 
     def __init__(
         self,

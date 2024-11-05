@@ -1,8 +1,8 @@
 """initial commit
 
-Revision ID: 2571a69e3101
+Revision ID: 0d59afb8ab9b
 Revises: 
-Create Date: 2024-11-04 20:00:52.863317
+Create Date: 2024-11-05 22:16:51.568224
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '2571a69e3101'
+revision: str = '0d59afb8ab9b'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -41,7 +41,7 @@ def upgrade() -> None:
     op.create_table('data_sources',
     sa.Column('data_source_id', sa.Enum('FOOTBALL_ASSOCIATION', 'MANUAL', name='datasource'), nullable=False),
     sa.Column('data_source_name', sa.String(length=50), nullable=False),
-    sa.Column('url', sa.String(length=100), nullable=False),
+    sa.Column('url', sa.String(length=100), nullable=True),
     sa.PrimaryKeyConstraint('data_source_id'),
     mysql_engine='InnoDB'
     )
@@ -53,16 +53,9 @@ def upgrade() -> None:
     mysql_engine='InnoDB'
     )
     op.create_table('sports',
-    sa.Column('sport_id', sa.Enum('FOOTBALL_ASSOCIATION', 'MANUAL', name='datasource'), nullable=False),
+    sa.Column('sport_id', sa.Enum('FOOTBALL', name='sport'), nullable=False),
     sa.Column('sport_name', sa.String(length=50), nullable=False),
     sa.PrimaryKeyConstraint('sport_id'),
-    mysql_engine='InnoDB'
-    )
-    op.create_table('team_names',
-    sa.Column('team_id', sa.Uuid(), nullable=False),
-    sa.Column('team_name', sa.String(length=50), nullable=False),
-    sa.Column('is_default_name', sa.Boolean(), nullable=False),
-    sa.PrimaryKeyConstraint('team_id'),
     mysql_engine='InnoDB'
     )
     op.create_table('users',
@@ -106,7 +99,7 @@ def upgrade() -> None:
     op.create_table('teams',
     sa.Column('team_id', sa.Uuid(), nullable=False),
     sa.Column('club_id', sa.Uuid(), nullable=False),
-    sa.Column('sport_id', sa.Enum('FOOTBALL_ASSOCIATION', 'MANUAL', name='datasource'), nullable=False),
+    sa.Column('sport_id', sa.Enum('FOOTBALL', name='sport'), nullable=False),
     sa.Column('data_source_team_id', sa.String(length=100), nullable=False),
     sa.ForeignKeyConstraint(['club_id'], ['clubs.club_id'], name='fk_clubs_club_id'),
     sa.ForeignKeyConstraint(['sport_id'], ['sports.sport_id'], name='fk_sports_sport_id'),
@@ -115,6 +108,15 @@ def upgrade() -> None:
     )
     op.create_index(op.f('ix_teams_club_id'), 'teams', ['club_id'], unique=False)
     op.create_index(op.f('ix_teams_sport_id'), 'teams', ['sport_id'], unique=False)
+    op.create_table('team_names',
+    sa.Column('team_id', sa.Uuid(), nullable=False),
+    sa.Column('team_name', sa.String(length=50), nullable=False),
+    sa.Column('is_default_name', sa.Boolean(), nullable=False),
+    sa.ForeignKeyConstraint(['team_id'], ['teams.team_id'], name='fk_teams_team_id'),
+    sa.PrimaryKeyConstraint('team_id'),
+    mysql_engine='InnoDB'
+    )
+    op.create_index(op.f('ix_team_names_team_id'), 'team_names', ['team_id'], unique=False)
     op.create_table('team_seasons',
     sa.Column('team_season_id', sa.Uuid(), nullable=False),
     sa.Column('team_id', sa.Uuid(), nullable=False),
@@ -187,6 +189,8 @@ def downgrade() -> None:
     op.drop_index(op.f('ix_team_seasons_season_id'), table_name='team_seasons')
     op.drop_index(op.f('ix_team_seasons_data_source_id'), table_name='team_seasons')
     op.drop_table('team_seasons')
+    op.drop_index(op.f('ix_team_names_team_id'), table_name='team_names')
+    op.drop_table('team_names')
     op.drop_index(op.f('ix_teams_sport_id'), table_name='teams')
     op.drop_index(op.f('ix_teams_club_id'), table_name='teams')
     op.drop_table('teams')
@@ -198,7 +202,6 @@ def downgrade() -> None:
     op.drop_index(op.f('ix_club_admins_club_id'), table_name='club_admins')
     op.drop_table('club_admins')
     op.drop_table('users')
-    op.drop_table('team_names')
     op.drop_table('sports')
     op.drop_table('seasons')
     op.drop_table('data_sources')
