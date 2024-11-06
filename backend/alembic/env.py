@@ -21,7 +21,9 @@ from app.models import (
     Player,
     PlayerMatchPerformance,
     User,
-    ClubAdmin
+    ClubAdmin,
+    League,
+    TeamLeague
 )
 
 # this is the Alembic Config object, which provides

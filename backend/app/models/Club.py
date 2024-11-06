@@ -30,3 +30,13 @@ class Club(Base):
 
     def get_club_id(self):
         return str(self.club_id)
+    
+    def get_club_info(self):
+        return {
+            'club_name' : self.club_name,
+            'club_id' : self.club_id,
+            'teams' : [
+                team.get_team_info()
+                for team in self.teams
+            ]
+        }

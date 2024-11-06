@@ -26,7 +26,7 @@ export const Login = () => {
             (res:BackendResponse) => {
                 if (res.success) {
                     dispatch(setUser(res.data.ss_user));
-                    navigate("/home")
+                    navigate("/my-clubs")
                 } else {
                     setLoginErrorColour("red");
                     setLoginError(res.data.message);

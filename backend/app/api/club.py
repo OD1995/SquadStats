@@ -66,10 +66,17 @@ def create_club():
     db.session.add(new_club_admin)
     db.session.commit()
     if save_teams:
-        new_teams, new_team_names = club_scraper.get_teams(new_club.club_id)
+        (
+            new_teams,
+            new_team_names,
+            new_team_leagues,
+            new_leagues
+        ) = club_scraper.get_teams(new_club.club_id)
         db.session.add_all(new_teams)
-        db.session.commit()
+        # db.session.commit()
         db.session.add_all(new_team_names)
+        db.session.add_all(new_leagues)
+        db.session.add_all(new_team_leagues)
         db.session.commit()
     current_user = flask_praetorian.current_user()
     return {

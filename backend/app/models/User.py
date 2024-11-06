@@ -46,11 +46,15 @@ class User(Base):
         return []
     
     def get_clubs(self):
-        return db.session \
+        clubs = db.session \
             .query(Club) \
             .join(ClubAdmin) \
             .filter(ClubAdmin.user_id == self.user_id) \
             .all()
+        return [
+            club.get_club_info()
+            for club in clubs
+        ]
 
     def get_ss_user_data(self):
         return {

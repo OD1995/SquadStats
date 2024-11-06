@@ -1,0 +1,15 @@
+#my-clubs-parent-div {
+    width: 100%;
+}
+
+#my-clubs-content {
+    display: flex;
+    flex-direction: column;
+    width: 75vw;
+}
+
+.my-clubs-cell {
+    padding-bottom: 0.75% !important;
+    padding-top: 0.75% !important;
+    border-bottom: 0 !important;
+}

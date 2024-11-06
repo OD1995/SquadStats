@@ -56,9 +56,10 @@ export const LoginOrRegister = (props:LoginOrRegisterProps) => {
         const nextVal = searchParams.get("next");
         if (nextVal !== null) {
             return <Navigate to={nextVal}/>
-        } else {
-            return <Navigate to="/about"/>
         }
+        // else {
+        //     return <Navigate to="/about"/>
+        // }
     }
 
     const handleButtonPress = () => {

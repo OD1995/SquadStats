@@ -84,3 +84,6 @@ external season ids
     <option value="803175700">2022-23</option>
     <option value="438891715">2023-24</option>
     <option value="66783998">2024-25</option>
+INSERT INTO seasons (season_id, season_name, data_source_season_id, data_source_id)
+VALUES
+(UUID(),'2014-15','522003046','FOOTBALL_ASSOCIATION')

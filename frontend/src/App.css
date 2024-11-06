@@ -65,3 +65,7 @@
 .question-mark-icon {
 	margin-left: 1vw;
 }
+
+.ss-table-head th {
+	font-weight: bold !important;
+}
