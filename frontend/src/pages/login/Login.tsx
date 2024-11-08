@@ -5,6 +5,7 @@ import { setUser } from "../../store/slices/userSlice";
 import { UnknownAction } from "@reduxjs/toolkit";
 import { LoginOrRegister } from "../../generic/LoginOrRegister";
 import { PAGE_TYPE } from "../../types/enums";
+import axios, { AxiosError } from "axios";
 
 
 
@@ -23,16 +24,22 @@ export const Login = () => {
             email,
             password
         ).then(
-            (res:BackendResponse) => {
-                if (res.success) {
-                    dispatch(setUser(res.data.ss_user));
-                    navigate("/my-clubs")
-                } else {
-                    setLoginErrorColour("red");
-                    setLoginError(res.data.message);
-                    return false;
-                }
+            (res) => {
+                dispatch(setUser(res.data.ss_user));
+                navigate("/my-clubs")
             }
+        ).catch(
+            (err:Error|AxiosError) => {
+                if (axios.isAxiosError(err))  {
+                    // Access to config, request, and response
+                    const a = 1;
+                } else {
+                    // Just a stock error
+                    const b = 1;
+                }
+                setLoginErrorColour("red");
+                // setLoginError(res.data.message);
+          }
         )
     }
 

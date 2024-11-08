@@ -1,5 +1,5 @@
-import { makePostRequest } from "./api"
-
+import { makePostRequest, transform } from "./api"
+import { BackendResponse } from "../types/BackendResponse"
 class UserManagementService {
 
     base_url = "/user_management"
@@ -14,14 +14,25 @@ class UserManagementService {
         )        
     }
 
-    login(email:string, password:string) {
-        return makePostRequest(
+    // login(email:string, password:string) {
+    //     return makePostRequest(
+    //         this.base_url + "/login",
+    //         {
+    //             email,
+    //             password
+    //         }
+    //     )
+    // }
+
+    async login(email:string, password:string) {
+        const response = await makePostRequest(
             this.base_url + "/login",
             {
                 email,
                 password
             }
-        )
+        ).then(transform);
+        return response as BackendResponse;
     }
 
     refreshAccessToken(access_token:string|undefined) {

@@ -1,0 +1,3 @@
+If no clubs, put message and link to 'Add Clubs'/'Get Started'
+
+Set page titles

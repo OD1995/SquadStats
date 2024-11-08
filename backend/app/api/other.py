@@ -12,3 +12,9 @@ other_bp = Blueprint(
 def get_abrordob_markers():
     abrordob_markers = db.session.query(AbrordobMarker).all()
     return jsonify(abrordob_markers)
+
+@other_bp.route("/test")
+def test():
+    return {
+        'data' : 111
+    }, 400

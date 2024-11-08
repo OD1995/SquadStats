@@ -58,6 +58,8 @@ class User(Base):
 
     def get_ss_user_data(self):
         return {
-            'access_token' : guard.encode_jwt_token(self),
-            'clubs' : self.get_clubs()
+            'ss_user' : {
+                'access_token' : guard.encode_jwt_token(self),
+                'clubs' : self.get_clubs()
+            }
         }

@@ -4,6 +4,7 @@ import { EntryLabelWithQuestionMark } from "../../generic/EntryLabelWithQuestion
 import ClubService from "../../services/ClubService";
 import { CLUB_TYPE, DATA_SOURCE } from "../../types/enums";
 import { BackendResponse } from "../../types/BackendResponse";
+import axios, { AxiosError } from "axios";
 
 interface NewClubSubmitProps {
     clubType:CLUB_TYPE
@@ -25,9 +26,19 @@ export const NewClubSubmit = (props:NewClubSubmitProps) => {
             (props.dataSource != DATA_SOURCE.MANUAL) ? textValue : null,
             (props.dataSource == DATA_SOURCE.MANUAL) ? textValue : null
         ).then(
-            (res:BackendResponse) => {
+            (res:any) => {
                 const a=1;
             }
+        ).catch(
+            (err:Error|AxiosError) => {
+                if (axios.isAxiosError(err))  {
+                    // Access to config, request, and response
+                    const a = 1;
+                } else {
+                    // Just a stock error
+                    const b = 1;
+                }
+          }
         )
     }
 

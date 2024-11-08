@@ -24,9 +24,11 @@ def register():
     )
     db.session.add(new_user)
     db.session.commit()
-    return {
-        "message" : "User registered",
-        "ss_user" : new_user.get_ss_user_data()
+    return {        
+        "data" : {
+            **new_user.get_ss_user_data(),
+            **{"message" : "User registered"}
+        }
     }, 200
 
 @user_management_bp.route("/login", methods=['POST'])
@@ -36,7 +38,7 @@ def login():
     password = req.get('password')
     user:User = guard.authenticate(email, password)
     return {
-        'ss_user' : user.get_ss_user_data()
+        'data' : user.get_ss_user_data()
     }, 200
 
 @user_management_bp.route("/refresh", methods=['POST'])
@@ -46,7 +48,7 @@ def refresh():
     new_token = guard.refresh_jwt_token(old_token)
     user = guard.get_user_from_registration_token(new_token)
     return {
-        'ss_user' : user.get_ss_user_data()
+        'data' : user.get_ss_user_data()
     }, 200
 
 @user_management_bp.route("/reset-password")
