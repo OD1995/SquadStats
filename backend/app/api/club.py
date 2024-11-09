@@ -17,7 +17,7 @@ club_bp = Blueprint(
 )
 
 @club_bp.route("/get/<club_id>", methods=['GET'])
-def get_seasons(club_id):
+def get_club(club_id):
     try:
         club = db.session.query(Club).filter_by(club_id=UUID(club_id)).first()
         return club.get_club_info(), 200
@@ -88,13 +88,15 @@ def create_club():
                 new_teams,
                 new_team_names,
                 new_team_leagues,
-                new_leagues
+                new_leagues,
+                new_league_seasons
             ) = club_scraper.get_teams(new_club.club_id)
             db.session.add_all(new_teams)
             # db.session.commit()
             db.session.add_all(new_team_names)
             db.session.add_all(new_leagues)
             db.session.add_all(new_team_leagues)
+            db.session.add_all(new_league_seasons)
             db.session.commit()
         current_user = flask_praetorian.current_user()
         return {

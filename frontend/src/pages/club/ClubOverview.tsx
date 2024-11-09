@@ -2,12 +2,12 @@ import { useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import { userSelector } from "../../store/slices/userSlice";
 import { useEffect, useState } from "react";
-import { User } from "../../types/User";
 import { Club } from "../../types/Club";
 import ClubService from "../../services/ClubService";
 import { BackendResponse } from "../../types/BackendResponse";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { Team } from "../../types/Team";
+import { getClub } from "../../helpers/other";
 
 interface ClubOverviewProps {
     // club_id:string
@@ -42,18 +42,6 @@ export const ClubOverview = (props:ClubOverviewProps) => {
         },
         []
     )
-
-    const getClub = (user:User|null, clubId:string|undefined) : Club|null => {
-        if (user == null) {
-            return null;
-        }
-        for (const club of user.clubs) {
-            if (club.club_id == clubId) {
-                return club
-            }
-        }
-        return null;
-    }
 
     return (
         <div id='club-overview-parent-div'>

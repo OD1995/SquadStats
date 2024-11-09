@@ -4,4 +4,12 @@ Set page titles
 
 Make sure same club not added twice, once testing finished
 
+Update list of seasons button on team scraper button
+
+Async getting of league season ids
+
 683216495
+
+https://fulltime.thefa.com/results.html?league=8577245
+
+https://fulltime.thefa.com/results.html?league=8577245&selectedSeason=801454154&selectedDivision=162603992&selectedCompetition=0&selectedFixtureGroupKey=1_104870944

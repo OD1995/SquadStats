@@ -1,0 +1,35 @@
+#team-scrape-parent {
+    width: 100%;
+}
+
+#team-scrape-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#team-scrape-input-parent {
+    display: flex;
+    flex-direction: column;
+    width: 50vw;
+    border: 1px solid #806c6c;
+    border-radius: 1vw;
+    padding: 1vh;
+}
+
+.team-scrape-input-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 1.5vh;
+    margin-bottom: 1.5vh;
+}
+
+#team-scrape-buttons-div {
+    /* justify-content: space-around; */
+    justify-content: space-evenly;
+}
+
+#team-scrape-season-div {
+    justify-content: space-evenly;
+}

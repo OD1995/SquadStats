@@ -1,8 +1,8 @@
-"""initial commit
+"""first commit
 
-Revision ID: 0d59afb8ab9b
+Revision ID: a2bfb8bc9128
 Revises: 
-Create Date: 2024-11-05 22:16:51.568224
+Create Date: 2024-11-09 18:52:41.492540
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '0d59afb8ab9b'
+revision: str = 'a2bfb8bc9128'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -45,13 +45,6 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('data_source_id'),
     mysql_engine='InnoDB'
     )
-    op.create_table('seasons',
-    sa.Column('season_id', sa.Uuid(), nullable=False),
-    sa.Column('season_name', sa.String(length=50), nullable=False),
-    sa.Column('data_source_season_id', sa.String(length=50), nullable=False),
-    sa.PrimaryKeyConstraint('season_id'),
-    mysql_engine='InnoDB'
-    )
     op.create_table('sports',
     sa.Column('sport_id', sa.Enum('FOOTBALL', name='sport'), nullable=False),
     sa.Column('sport_name', sa.String(length=50), nullable=False),
@@ -77,6 +70,16 @@ def upgrade() -> None:
     )
     op.create_index(op.f('ix_club_admins_club_id'), 'club_admins', ['club_id'], unique=False)
     op.create_index(op.f('ix_club_admins_user_id'), 'club_admins', ['user_id'], unique=False)
+    op.create_table('leagues',
+    sa.Column('league_id', sa.Uuid(), nullable=False),
+    sa.Column('league_name', sa.String(length=100), nullable=False),
+    sa.Column('data_source_league_id', sa.String(length=50), nullable=False),
+    sa.Column('data_source_id', sa.Enum('FOOTBALL_ASSOCIATION', 'MANUAL', name='datasource'), nullable=False),
+    sa.ForeignKeyConstraint(['data_source_id'], ['data_sources.data_source_id'], name='fk_data_sources_data_source_id'),
+    sa.PrimaryKeyConstraint('league_id'),
+    mysql_engine='InnoDB'
+    )
+    op.create_index(op.f('ix_leagues_data_source_id'), 'leagues', ['data_source_id'], unique=False)
     op.create_table('metrics',
     sa.Column('metric_id', sa.Uuid(), nullable=False),
     sa.Column('data_source_id', sa.Enum('FOOTBALL_ASSOCIATION', 'MANUAL', name='datasource'), nullable=False),
@@ -96,6 +99,16 @@ def upgrade() -> None:
     mysql_engine='InnoDB'
     )
     op.create_index(op.f('ix_players_club_id'), 'players', ['club_id'], unique=False)
+    op.create_table('seasons',
+    sa.Column('season_id', sa.Uuid(), nullable=False),
+    sa.Column('season_name', sa.String(length=50), nullable=False),
+    sa.Column('data_source_season_id', sa.String(length=50), nullable=False),
+    sa.Column('data_source_id', sa.Enum('FOOTBALL_ASSOCIATION', 'MANUAL', name='datasource'), nullable=False),
+    sa.ForeignKeyConstraint(['data_source_id'], ['data_sources.data_source_id'], name='fk_data_sources_data_source_id'),
+    sa.PrimaryKeyConstraint('season_id'),
+    mysql_engine='InnoDB'
+    )
+    op.create_index(op.f('ix_seasons_data_source_id'), 'seasons', ['data_source_id'], unique=False)
     op.create_table('teams',
     sa.Column('team_id', sa.Uuid(), nullable=False),
     sa.Column('club_id', sa.Uuid(), nullable=False),
@@ -108,6 +121,25 @@ def upgrade() -> None:
     )
     op.create_index(op.f('ix_teams_club_id'), 'teams', ['club_id'], unique=False)
     op.create_index(op.f('ix_teams_sport_id'), 'teams', ['sport_id'], unique=False)
+    op.create_table('league_seasons',
+    sa.Column('league_id', sa.Uuid(), nullable=False),
+    sa.Column('data_source_league_season_id', sa.String(length=50), nullable=False),
+    sa.Column('data_source_season_name', sa.String(length=100), nullable=False),
+    sa.ForeignKeyConstraint(['league_id'], ['leagues.league_id'], name='fk_leagues_league_id'),
+    sa.PrimaryKeyConstraint('league_id', 'data_source_league_season_id'),
+    mysql_engine='InnoDB'
+    )
+    op.create_index(op.f('ix_league_seasons_league_id'), 'league_seasons', ['league_id'], unique=False)
+    op.create_table('team_leagues',
+    sa.Column('team_id', sa.Uuid(), nullable=False),
+    sa.Column('league_id', sa.Uuid(), nullable=False),
+    sa.ForeignKeyConstraint(['league_id'], ['leagues.league_id'], name='fk_leagues_league_id'),
+    sa.ForeignKeyConstraint(['team_id'], ['teams.team_id'], name='fk_teams_team_id'),
+    sa.PrimaryKeyConstraint('team_id', 'league_id'),
+    mysql_engine='InnoDB'
+    )
+    op.create_index(op.f('ix_team_leagues_league_id'), 'team_leagues', ['league_id'], unique=False)
+    op.create_index(op.f('ix_team_leagues_team_id'), 'team_leagues', ['team_id'], unique=False)
     op.create_table('team_names',
     sa.Column('team_id', sa.Uuid(), nullable=False),
     sa.Column('team_name', sa.String(length=50), nullable=False),
@@ -191,19 +223,27 @@ def downgrade() -> None:
     op.drop_table('team_seasons')
     op.drop_index(op.f('ix_team_names_team_id'), table_name='team_names')
     op.drop_table('team_names')
+    op.drop_index(op.f('ix_team_leagues_team_id'), table_name='team_leagues')
+    op.drop_index(op.f('ix_team_leagues_league_id'), table_name='team_leagues')
+    op.drop_table('team_leagues')
+    op.drop_index(op.f('ix_league_seasons_league_id'), table_name='league_seasons')
+    op.drop_table('league_seasons')
     op.drop_index(op.f('ix_teams_sport_id'), table_name='teams')
     op.drop_index(op.f('ix_teams_club_id'), table_name='teams')
     op.drop_table('teams')
+    op.drop_index(op.f('ix_seasons_data_source_id'), table_name='seasons')
+    op.drop_table('seasons')
     op.drop_index(op.f('ix_players_club_id'), table_name='players')
     op.drop_table('players')
     op.drop_index(op.f('ix_metrics_data_source_id'), table_name='metrics')
     op.drop_table('metrics')
+    op.drop_index(op.f('ix_leagues_data_source_id'), table_name='leagues')
+    op.drop_table('leagues')
     op.drop_index(op.f('ix_club_admins_user_id'), table_name='club_admins')
     op.drop_index(op.f('ix_club_admins_club_id'), table_name='club_admins')
     op.drop_table('club_admins')
     op.drop_table('users')
     op.drop_table('sports')
-    op.drop_table('seasons')
     op.drop_table('data_sources')
     op.drop_table('clubs')
     op.drop_table('abrordob_markers')

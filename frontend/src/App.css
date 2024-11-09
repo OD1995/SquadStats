@@ -41,6 +41,13 @@
 	cursor: pointer;
 }
 
+.ss-grey-button {
+	background-color: #f6f6f6;
+	color: black;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
 .ss-green-button {
 	background-color: green;
 	color: white;
