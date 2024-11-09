@@ -1,9 +1,12 @@
 from dataclasses import dataclass
+from re import X
 from typing import List
 from uuid import UUID, uuid4
 from sqlalchemy import Enum, ForeignKey, String
+from app import db
 from app.models import Base#, Sport
 from app.models.Sport import Sport
+from app.models.TeamLeague import TeamLeague
 from app.models.TeamName import TeamName
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.types.enums import Sport as SportEnum
@@ -26,6 +29,7 @@ class Team(Base):
     data_source_team_id: Mapped[str] = mapped_column(String(100))
     team_names: Mapped[List["TeamName"]] = relationship(lazy='joined')
     sport: Mapped[Sport] = relationship(lazy='joined')
+    team_leagues: Mapped[List["TeamLeague"]] = relationship(lazy='joined')
 
     def __init__(
         self,
@@ -45,8 +49,19 @@ class Team(Base):
         return "[Default team name does not exist]"
 
     def get_team_info(self):
+        team_league_info = []
+        leagues = {}
+        for tl in self.team_leagues:
+            if tl.league_id in leagues:
+                pass
+            else:
+                league = db.session
         return {
             'team_name' : self.get_default_team_name(),
             'sport' : self.sport.sport_name,
-            'team_id' : self.team_id
+            'team_id' : self.team_id,
+            # 'leagues' : [
+            #     x
+            #     for x in self.team_leagues
+            # ]
         }

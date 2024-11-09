@@ -13,5 +13,5 @@ INSERT INTO `sports` (`sport_id`, `sport_name`) VALUES ('FOOTBALL','Football');
 
 INSERT INTO `data_sources` (`data_source_id`,`data_source_name`,`url`)
 VALUES
-('FOOTBALL_ASSOCIATION', 'Football Association', 'https://fulltime.thefa.com/'),
+('FOOTBALL_ASSOCIATION', 'Football Association', 'https://fulltime.thefa.com'),
 ('MANUAL', 'Manual', NULL);

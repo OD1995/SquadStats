@@ -4,6 +4,9 @@ import { EntryLabelWithQuestionMark } from "../../generic/EntryLabelWithQuestion
 import ClubService from "../../services/ClubService";
 import { CLUB_TYPE, DATA_SOURCE } from "../../types/enums";
 import { BackendResponse } from "../../types/BackendResponse";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../store/slices/userSlice";
+import { useNavigate } from "react-router-dom";
 
 interface NewClubSubmitProps {
     clubType:CLUB_TYPE
@@ -18,7 +21,11 @@ export const NewClubSubmit = (props:NewClubSubmitProps) => {
     const [buttonDisabled, setButtonDisabled] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
     const handleSubmit = () => {
+        setButtonDisabled(true);
         ClubService.createNewClub(
             props.clubType,
             props.dataSource,
@@ -26,7 +33,13 @@ export const NewClubSubmit = (props:NewClubSubmitProps) => {
             (props.dataSource == DATA_SOURCE.MANUAL) ? textValue : null
         ).then(
             (res:BackendResponse) => {
-                const a=1;
+                if (res.success) {
+                    dispatch(setUser(res.data.ss_user));
+                    navigate(`/club/${res.data.new_club_id}/overview`);
+                } else {
+                    setErrorMessage(res.data.message)
+                }
+                setButtonDisabled(false);
             }
         )
     }

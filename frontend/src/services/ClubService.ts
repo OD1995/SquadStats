@@ -21,6 +21,14 @@ class ClubService {
             }
         )
     }
+
+    getClubInformation(
+        clubId:string
+    ) {
+        return makeGetRequest(
+            this.base_url + `/get/${clubId}`
+        )
+    }
 }
 
 export default new ClubService();

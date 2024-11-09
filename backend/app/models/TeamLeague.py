@@ -1,8 +1,12 @@
-from uuid import UUID, uuid4
+from dataclasses import dataclass
+from uuid import UUID
 from sqlalchemy import String, Enum, ForeignKey
 from app.models import Base
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from app.models.League import League
+
+@dataclass
 class TeamLeague(Base):
     __tablename__ = 'team_leagues'
     __table_args__ = {"mysql_engine": "InnoDB"}
@@ -17,6 +21,7 @@ class TeamLeague(Base):
         index=True,
         primary_key=True
     )
+    league: Mapped[League] = relationship(lazy='joined')
 
     def __init__(
         self,
@@ -25,3 +30,9 @@ class TeamLeague(Base):
     ):
         self.team_id = team_id
         self.league_id = league_id
+
+    def get_team_league_info(self):
+        return {
+            'league_name' : self.league.league_name,
+            'league_id' : self.league_id
+        }

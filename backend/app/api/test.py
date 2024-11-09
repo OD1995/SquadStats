@@ -1,7 +1,7 @@
 from datetime import datetime
-from app.scraping.fixtures.FootballAssociationFixtureScraper import FootballAssociationFixtureScraper
-from app.scraping.seasons.FootballAssociationSeasonScraper import FootballAssociationSeasonScraper
-from app.scraping.teams.FootballAssociationTeamScraper import FootballAssociationTeamScraper
+from app.scrapers.fixtures.FootballAssociationFixtureScraper import FootballAssociationFixtureScraper
+from app.scrapers.seasons.FootballAssociationSeasonScraper import FootballAssociationSeasonScraper
+from app.scrapers.teams.FootballAssociationTeamScraper import FootballAssociationTeamScraper
 import asyncio
 from time import sleep
 

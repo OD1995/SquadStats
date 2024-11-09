@@ -40,9 +40,9 @@ def login():
     }, 200
 
 @user_management_bp.route("/refresh", methods=['POST'])
-@flask_praetorian.auth_required
+# @flask_praetorian.auth_required
 def refresh():
-    old_token = request.get_data()
+    old_token = request.get_json(force=True)['access_token']
     new_token = guard.refresh_jwt_token(old_token)
     user = guard.get_user_from_registration_token(new_token)
     return {

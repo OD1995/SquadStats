@@ -14,3 +14,10 @@ class Scraper:
         if req.ok:
             return BeautifulSoup(req.text, 'html.parser')
         return Exception(f"Status Code: {req.status_code} - Text: {req.text}")
+    
+    def get_text(
+        self,
+        url:str
+    ) -> str:
+        req = requests.get(url)
+        return req.text

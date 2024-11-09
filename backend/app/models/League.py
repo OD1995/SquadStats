@@ -1,9 +1,12 @@
+from dataclasses import dataclass
 from uuid import UUID, uuid4
 from app.types.enums import DataSource as DataSourceEnum
 from sqlalchemy import String, Enum, ForeignKey
 from app.models import Base
+from app.models.DataSource import DataSource
 from sqlalchemy.orm import Mapped, mapped_column
 
+@dataclass
 class League(Base):
     __tablename__ = 'leagues'
     __table_args__ = {"mysql_engine": "InnoDB"}

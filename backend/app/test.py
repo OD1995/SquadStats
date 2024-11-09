@@ -1,5 +1,5 @@
-from scraping.fixtures import FootballAssociationFixtureScraper
-from scraping.seasons import FootballAssociationSeasonScraper
+from scrapers.fixtures import FootballAssociationFixtureScraper
+from scrapers.seasons import FootballAssociationSeasonScraper
 
 season_scraper = FootballAssociationSeasonScraper(
     external_season_id="438891715",

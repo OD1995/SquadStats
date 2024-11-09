@@ -1,0 +1,7 @@
+If no clubs, put message and link to 'Add Clubs'/'Get Started'
+
+Set page titles
+
+Make sure same club not added twice, once testing finished
+
+683216495

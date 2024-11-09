@@ -36,9 +36,9 @@ const App = () => {
 						<Route path='/get-started' element={<GetStarted/>}/>
 						<Route path='/add-club' element={<AddClub includeHeirachy={false}/>}/>
 						<Route path='/my-clubs' element={<MyClubs/>}/>
-						<Route path='/club/:club_id/overview' element={<ClubOverview/>}/>
-						<Route path='/team/:team_id/overview' element={<TeamOverview/>}/>
-						<Route path='/team/:team_id/scrape' element={<TeamScrape/>}/>
+						<Route path='/club/:clubId/overview' element={<ClubOverview/>}/>
+						<Route path='/team/:teamId/overview' element={<TeamOverview/>}/>
+						<Route path='/team/:teamId/scrape' element={<TeamScrape/>}/>
 					</Routes>
 				</div>
 			</Router>

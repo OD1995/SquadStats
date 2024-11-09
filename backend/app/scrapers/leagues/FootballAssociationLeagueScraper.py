@@ -1,4 +1,4 @@
-from app.scraping.leagues.LeagueScraper import LeagueScraper
+from app.scrapers.leagues.LeagueScraper import LeagueScraper
 
 
 class FootballAssociationLeagueScraper(LeagueScraper):

@@ -30,6 +30,7 @@ instance.interceptors.response.use(
                 }
             }
         }
+        return Promise.reject(err);
         // if ((originalConfig.url !== "/v1/auth/login") && err.response) {
         //     // Access token has expired
         //     if ((err.response.status === 401) && (!originalConfig._retry)) {
@@ -93,9 +94,10 @@ export async function makeGetRequest(
             data: response.data
         }
     } catch (err:any) {
+        const errorMessage = err?.response?.data?.message ?? err.message;
         backendResponse = {
             success: false,
-            data: err.stack
+            data: { message: errorMessage }
         }
     }
     return backendResponse;
