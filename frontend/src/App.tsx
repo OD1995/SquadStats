@@ -13,6 +13,7 @@ import { MyClubs } from './pages/my-clubs/MyClubs';
 import { ClubOverview } from './pages/club/ClubOverview';
 import { TeamOverview } from './pages/team/TeamOverview';
 import { TeamScrape } from './pages/team/TeamScrape';
+import { TeamNames } from './pages/team/TeamNames';
 
 
 const App = () => {
@@ -39,6 +40,7 @@ const App = () => {
 						<Route path='/club/:clubId/overview' element={<ClubOverview/>}/>
 						<Route path='/team/:teamId/overview' element={<TeamOverview/>}/>
 						<Route path='/team/:teamId/scrape' element={<TeamScrape/>}/>
+						<Route path='/team/:teamId/team-names' element={<TeamNames/>}/>
 					</Routes>
 				</div>
 			</Router>

@@ -1,11 +1,15 @@
+from json import dumps
 import traceback
 from uuid import UUID
-from flask import Blueprint, jsonify
+from flask import Blueprint, current_app, jsonify
 from app import db
 from app.models.DataSource import DataSource
 from app.models.League import League
 from app.models.LeagueSeason import LeagueSeason
+from app.models.Match import Match
+from app.models.MatchError import MatchError
 from app.models.Team import Team
+from app.models.TeamName import TeamName
 from app.models.TeamSeason import TeamSeason
 from app.scrapers.teams.FootballAssociationTeamScraper import FootballAssociationTeamScraper
 from app.types.enums import DataSource as DataSourceEnum
@@ -69,9 +73,10 @@ def get_team_matches(team_id, league_season_id):
                 .filter_by(team_id=UUID(team_id)) \
                 .first()
             team_season = TeamSeason(
-                team_id=team_id,
-                league_season_id=league_season_id
+                team_id=UUID(team_id),
+                league_season_id=UUID(league_season_id)
             )
+            db.session.add(team_season)
         else:
             team = team_season.team
         if team.data_source_id == DataSourceEnum.FOOTBALL_ASSOCIATION:
@@ -87,18 +92,37 @@ def get_team_matches(team_id, league_season_id):
                 fa_league_id=league.data_source_league_id,
                 fa_base_url=data_source.url
             )
-            new_matches, old_matches = team_scraper.get_team_matches(
+            new_matches, new_match_errors = team_scraper.get_team_matches(
                 fa_season_id=league_season.data_source_league_season_id,
                 team_names=team.get_team_name_str_list(),
                 team_season_id=team_season.team_season_id
             )
+            ## Delete old matches/scraping errors from relevant matches
+            db.session.query(MatchError) \
+                .filter(
+                    MatchError.match_id == Match.match_id,
+                    Match.team_season_id == team_season.team_season_id
+                ).delete()
+            db.session.query(Match) \
+                .filter_by(team_season_id=team_season.team_season_id) \
+                .delete()
             db.session.add_all(new_matches)
-            db.session.delete(old_matches)
+            db.session.add_all(new_match_errors)
             db.session.commit()
-            return jsonify(new_matches), 200
+            return jsonify([
+                match.to_dict()
+                for match in sorted(new_matches, key=lambda x: x.date)
+            ])
         else:
             raise Exception('Unexpected data source type')
     except Exception as e:
         return {
             'message' : traceback.format_exc()
         }, 400
+    
+@team_bp.route("/get-team-names/<team_id>", methods=['GET'])
+def get_team_names(team_id):
+    team_names = db.session.query(TeamName) \
+        .filter_by(team_id=UUID(team_id)) \
+        .all()
+    return jsonify(team_names)

@@ -1,4 +1,5 @@
 from datetime import datetime
+from app.models.MatchError import MatchError
 from app.types.enums import Result
 
 
@@ -16,30 +17,55 @@ class FootballAssociationMatchRow:
         self.HOME = 'home'
         self.AWAY = 'road'
         self.home_and_away = [self.HOME, self.AWAY]
+        self.match_errors = []
+        self.goals_and_names_already_retrieved = False
     
     def get_fa_match_id(self):
-        return self.match_div['id'].replace("fixture-","")
+        try:
+            return self.match_div['id'].replace("fixture-","")
+        except Exception as e:
+            self.match_errors.append(repr(e)[:10000])
+            return None
     
     def get_competition_acronym(self):
-        return self.match_div.find(
-            'div',
-            attrs={
-                'class' : 'type-col center'
-            }
-        ).p.a.text.strip()
-    
+        try:
+            return self.match_div.find(
+                'div',
+                attrs={
+                    'class' : 'type-col center'
+                }
+            ).p.a.text.strip()
+        except Exception as e:
+            self.match_errors.append(repr(e)[:10000])
+            return None
+        
     def get_goals_for(self):
-        if not self.goals_already_retrieved():
-            self.retrieve_goals_and_names()
-        return self.goals_for
+        try:
+            if not self.goals_and_names_already_retrieved:
+                self.retrieve_goals_and_names()
+            return self.goals_for
+        except Exception as e:
+            self.match_errors.append(repr(e)[:10000])
+            return None
 
     def get_goals_against(self):
-        if not self.goals_already_retrieved():
-            self.retrieve_goals_and_names()
-        return self.goals_against
+        try:
+            if not self.goals_and_names_already_retrieved:
+                self.retrieve_goals_and_names()
+            return self.goals_against
+        except Exception as e:
+            self.match_errors.append(repr(e)[:10000])
+            return None
     
     def get_goal_difference(self):
-        return self.goals_for - self.goals_against
+        try:
+            if None in [self.goals_for, self.goals_against]:
+                return None
+            return self.goals_for - self.goals_against
+        except Exception as e:
+            self.match_errors.append(repr(e)[:10000])
+            return None
+
 
     def goals_already_retrieved(self):
         return (self.goals_for is not None) and (self.goals_against is not None)
@@ -60,9 +86,7 @@ class FootballAssociationMatchRow:
                 }
             )
             team_name = team_name_section.a.text.strip()
-            home_away_team_names[tm] = {
-                'name' : team_name
-            }
+            home_away_team_names[tm] = team_name
         score_text = self.match_div.find(
             'div',
             attrs={
@@ -90,12 +114,25 @@ class FootballAssociationMatchRow:
             self.oppo_team_name = home_away_team_names[self.AWAY]
             self.pens_for = home_pens
             self.pens_against = away_pens
-        else:
+        elif self.home_away == self.AWAY:
             self.goals_for = away_score
             self.goals_against = home_score
             self.oppo_team_name = home_away_team_names[self.HOME]
             self.pens_for = away_pens
             self.pens_against = home_pens
+        else:
+            self.goals_for = None
+            self.goals_against = None
+            self.oppo_team_name = self.combine_team_names(home_away_team_names)
+            self.pens_for = away_pens
+            self.pens_against = home_pens
+        self.goals_and_names_already_retrieved = True
+
+    def combine_team_names(
+        self,
+        home_away_team_names:dict
+    ):
+        return f"{home_away_team_names[self.HOME]}/{home_away_team_names[self.AWAY]}"
 
     def split_out_score_and_pens(
         self,
@@ -109,50 +146,80 @@ class FootballAssociationMatchRow:
         return score_text, pens_text
 
     def get_oppo_team_name(self):
-        return self.oppo_team_name
+        try:
+            return self.oppo_team_name
+        except Exception as e:
+            self.match_errors.append(repr(e)[:10000])
+            return None
     
     def get_result(self):
-        if self.goals_for > self.goals_against:
-            return Result.WIN
-        elif self.goals_for < self.goals_against:
-            return Result.LOSS
-        return Result.DRAW
+        try:
+            if None in [self.goals_for, self.goals_against]:
+                return None
+            if self.goals_for > self.goals_against:
+                return Result.WIN
+            elif self.goals_for < self.goals_against:
+                return Result.LOSS
+            return Result.DRAW
+        except Exception as e:
+            self.match_errors.append(repr(e)[:10000])
+            return None
     
     def get_pens_for(self):
-        return None#self.pens_for
+        try:
+            return self.pens_for
+        except Exception as e:
+            self.match_errors.append(repr(e)[:10000])
+            return None
     
     def get_pens_against(self):
-        return None#self.pens_against
+        try:
+            return self.pens_against
+        except Exception as e:
+            self.match_errors.append(repr(e)[:10000])
+            return None
     
     def get_date(self):
-        date_time_div = self.match_div.find(
-            'div',
-            attrs={
-                'class' : 'datetime-col'
-            }
-        )
-        date_txt = date_time_div.a.span.text.strip()
-        self.date = datetime.strptime(
-            date_txt,
-            "%d/%m/%y"
-        ).date()
-        time_txt = date_time_div.find(
-            'span',
-            attrs={
-                'class' : 'color-dark-grey'
-            }
-        ).text.strip()
-        self.time = datetime.strptime(
-            time_txt,
-            "%H:%M"
-        ).time()
-        return self.date
+        try:
+            date_time_div = self.match_div.find(
+                'div',
+                attrs={
+                    'class' : 'datetime-col'
+                }
+            )
+            date_txt = date_time_div.a.span.text.strip()
+            self.date = datetime.strptime(
+                date_txt,
+                "%d/%m/%y"
+            ).date()
+            time_txt = date_time_div.find(
+                'span',
+                attrs={
+                    'class' : 'color-dark-grey'
+                }
+            ).text.strip()
+            self.time = datetime.strptime(
+                time_txt,
+                "%H:%M"
+            ).time()
+            return self.date
+        except Exception as e:
+            self.match_errors.append(repr(e)[:10000])
+            return None
     
     def get_time(self):
-        return self.time
+        try:
+            return self.time
+        except Exception as e:
+            self.match_errors.append(repr(e)[:10000])
+            return None
     
     def get_home_away_neutral(self):
-        return self.home_away
+        try:
+            return self.home_away
+        except Exception as e:
+            self.match_errors.append(repr(e)[:10000])
+            return None
 
     def get_home_or_away(
         self,
@@ -162,8 +229,9 @@ class FootballAssociationMatchRow:
             name = home_away_team_names[ha]
             if name in self.team_names:
                 return ha
-        error_msg = f"Neither team names for matchID {self.get_fa_match_id()} are expected. "
+        error_msg = f"Neither team names are expected. "
         error_msg += f"Home - {home_away_team_names[self.HOME]}, Away - {home_away_team_names[self.AWAY]}, "
         expected_team_names = " or ".join(self.team_names)
         error_msg += f"Expected - {expected_team_names}"
-        return NameError(error_msg)
+        self.match_errors.append(error_msg)
+        return None

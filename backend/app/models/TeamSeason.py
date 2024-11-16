@@ -1,10 +1,14 @@
+# from typing import List
+from dataclasses import dataclass
 from uuid import UUID, uuid4
 from sqlalchemy import ForeignKey
 from app.models import Base
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.models.LeagueSeason import LeagueSeason
+# from app.models.Match import Match
 from app.models.Team import Team
 
+@dataclass
 class TeamSeason(Base):
     __tablename__ = 'team_seasons'
     __table_args__ = {"mysql_engine": "InnoDB"}
@@ -20,6 +24,7 @@ class TeamSeason(Base):
     )
     team: Mapped[Team] = relationship(lazy='joined')
     league_season: Mapped[LeagueSeason] = relationship(lazy='joined')
+    # matches: Mapped[List["Match"]] = relationship(lazy='joined')
 
     def __init__(
         self,

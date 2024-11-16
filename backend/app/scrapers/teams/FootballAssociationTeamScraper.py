@@ -3,6 +3,7 @@ from aiohttp import ClientSession
 from app import db
 from app.helpers.misc import build_url_using_params
 from app.models.Match import Match
+from app.models.MatchError import MatchError
 from app.scrapers.matches.FootballAssociationMatchRow import FootballAssociationMatchRow
 from app.scrapers.teams.TeamScraper import TeamScraper
 
@@ -71,6 +72,7 @@ class FootballAssociationTeamScraper(TeamScraper):
             id=lambda x: x and x.startswith('fixture-')
         )
         new_matches = []
+        new_match_errors = []
         for fixture_div in fixture_divs:
             match_row = FootballAssociationMatchRow(
                 match_div=fixture_div,
@@ -93,7 +95,13 @@ class FootballAssociationTeamScraper(TeamScraper):
                 location=None,
                 home_away_neutral=match_row.get_home_away_neutral()
             )
+            match_errors = [
+                MatchError(
+                    match_id=new_match.match_id,
+                    error_message=me
+                )
+                for me in match_row.match_errors
+            ]
+            new_match_errors.extend(match_errors)
             new_matches.append(new_match)
-        old_matches = db.session.query(Match) \
-            .filter_by(team_season_id=team_season_id)
-        return new_matches, old_matches
+        return new_matches, new_match_errors
