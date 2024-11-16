@@ -10,3 +10,13 @@ class DataSource(str, Enum):
 
 class Sport(str, Enum):
     FOOTBALL: str = 'football'
+
+class Result(str, Enum):
+    WIN: str = 'W'
+    DRAW: str = 'D'
+    LOSS: str = 'L'
+
+class HomeAwayNeutral(str, Enum):
+    HOME: str = 'H'
+    AWAY: str = 'A'
+    NEUTRAL: str = 'N'

@@ -46,9 +46,10 @@ export const TeamScrape = () => {
             ).then(
                 (res:BackendResponse) => {
                     if (res.success) {
-                        setSeasons(res.data)
+                        setSeasons(res.data);
+                        setSelectedSeason(res.data[0].season_id);
                     } else {
-                        setErrorMessage(res.data.message)
+                        setErrorMessage(res.data.message);
                     }
                 }
             )
@@ -57,7 +58,14 @@ export const TeamScrape = () => {
     )
 
     const handleGetMatchesButtonPress = () => {
+        TeamService.getTeamMatches(
+            teamId!,
+            selectedSeason
+        ).then(
+            (res:BackendResponse) => {
 
+            }
+        )
     }
 
     const handleScrapeMatchesButtonPress = () => {
@@ -89,6 +97,7 @@ export const TeamScrape = () => {
                                         (season:Season) => {
                                             return (
                                                 <MenuItem
+                                                    key={season.season_id}
                                                     value={season.season_id}
                                                 >
                                                     {season.season_name}

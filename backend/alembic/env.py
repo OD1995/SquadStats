@@ -12,7 +12,6 @@ from app.models import (
     Sport,
     Team,
     TeamName,
-    Season,
     TeamSeason,
     Competition,
     DataSource,

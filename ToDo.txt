@@ -8,8 +8,24 @@ Update list of seasons button on team scraper button
 
 Async getting of league season ids
 
+get_team_matches for manual entry team
+
+
+
+722938481
+
 683216495
 
-https://fulltime.thefa.com/results.html?league=8577245
+https://fulltime.thefa.com/results.html?league=8577245&selectedSeason=500540830
 
 https://fulltime.thefa.com/results.html?league=8577245&selectedSeason=801454154&selectedDivision=162603992&selectedCompetition=0&selectedFixtureGroupKey=1_104870944
+
+
+https://fulltime.thefa.com/results.html?selectedSeason=289171907&selectedFixtureGroupAgeGroup=0&selectedFixtureGroupKey=&selectedRelatedFixtureOption=2&selectedClub=87422925&selectedTeam=564659066&selectedDateCode=all&previousSelectedFixtureGroupAgeGroup=&previousSelectedFixtureGroupKey=&previousSelectedClub=87422925
+
+
+WORKS
+https://fulltime.thefa.com/results/1/100.html?selectedSeason=452044587&selectedFixtureGroupAgeGroup=0&previousSelectedFixtureGroupAgeGroup=&selectedFixtureGroupKey=&previousSelectedFixtureGroupKey=&selectedDateCode=all&selectedRelatedFixtureOption=2&selectedClub=87422925&previousSelectedClub=87422925&selectedTeam=564659066
+
+DOESNT WORK
+https://fulltime.thefa.com/results/1/100.html?selectedSeason=452044587&selectedFixtureGroupAgeGroup=0&previousSelectedFixtureGroupAgeGroup=&selectedFixtureGroupKey=&selectedDateCode=all&selectedClub=722938481&previousSelectedClub=722938481&selectedTeam=307057648&selectedRelatedFixtureOption=2

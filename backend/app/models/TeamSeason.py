@@ -1,8 +1,9 @@
-from uuid import UUID
-from sqlalchemy import Enum, ForeignKey
-from app.models import Base, DataSource
-from sqlalchemy.orm import Mapped, mapped_column
-from app.types.enums import DataSource as DataSourceEnum
+from uuid import UUID, uuid4
+from sqlalchemy import ForeignKey
+from app.models import Base
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from app.models.LeagueSeason import LeagueSeason
+from app.models.Team import Team
 
 class TeamSeason(Base):
     __tablename__ = 'team_seasons'
@@ -13,12 +14,18 @@ class TeamSeason(Base):
         ForeignKey("teams.team_id", name="fk_teams_team_id"),
         index=True
     )
-    season_id: Mapped[UUID] = mapped_column(
-        ForeignKey("seasons.season_id", name="fk_seasons_season_id"),
+    league_season_id: Mapped[UUID] = mapped_column(
+        ForeignKey("league_seasons.league_season_id", name="fk_league_seasons_league_season_id"),
         index=True
     )
-    data_source_id: Mapped[DataSourceEnum] = mapped_column(
-        Enum(DataSourceEnum),
-        ForeignKey("data_sources.data_source_id", name='fk_data_sources_data_source_id'),
-        index=True
-    )
+    team: Mapped[Team] = relationship(lazy='joined')
+    league_season: Mapped[LeagueSeason] = relationship(lazy='joined')
+
+    def __init__(
+        self,
+        team_id:UUID,
+        league_season_id:UUID
+    ):
+        self.team_season_id = uuid4()
+        self.team_id = team_id
+        self.league_season_id = league_season_id

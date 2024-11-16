@@ -91,6 +91,7 @@ class FootballAssociationClubScraper(ClubScraper):
             new_team_obj = Team(
                 club_id=ss_club_id,
                 sport_id=Sport.FOOTBALL,
+                data_source_id=DataSource.FOOTBALL_ASSOCIATION,
                 data_source_team_id=fa_team_id
             )
             new_team_name_obj = TeamName(

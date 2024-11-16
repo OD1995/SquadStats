@@ -1,11 +1,15 @@
 from datetime import datetime, timezone
-from typing import List
+from typing import TYPE_CHECKING, List
 from uuid import UUID, uuid4
 from sqlalchemy import String
 from app.models import Base
-from app.models.Team import Team
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from dataclasses import dataclass
+
+if TYPE_CHECKING:
+    from app.models.Team import Team
+else:
+    Team = 'Team'
 
 @dataclass
 class Club(Base):
@@ -16,7 +20,7 @@ class Club(Base):
     club_name: Mapped[str] = mapped_column(String(50))
     data_source_club_id: Mapped[str] = mapped_column(String(50), nullable=True)
     time_created: Mapped[datetime]
-    teams: Mapped[List["Team"]] = relationship(lazy='joined')
+    teams: Mapped[List["Team"]] = relationship(back_populates='club')
 
     def __init__(
         self,

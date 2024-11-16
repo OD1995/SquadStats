@@ -36,6 +36,15 @@ class TeamService {
             this.base_url + `/get-seasons/${teamId}`
         )
     }
+
+    getTeamMatches(
+        teamId:string,
+        leagueSeasonId:string
+    ) {
+        return makeGetRequest(
+            this.base_url + `/get-matches/${teamId}/${leagueSeasonId}`
+        )
+    }
 }
 
 export default new TeamService();
