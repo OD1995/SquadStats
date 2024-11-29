@@ -95,6 +95,7 @@ class FootballAssociationClubScraper(ClubScraper):
                 data_source_team_id=fa_team_id
             )
             new_team_name_obj = TeamName(
+                team_name_id=None,
                 team_id=new_team_obj.team_id,
                 team_name=team_name_str,
                 is_default_name=True

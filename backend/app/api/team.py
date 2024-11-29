@@ -1,7 +1,7 @@
 from json import dumps
 import traceback
 from uuid import UUID
-from flask import Blueprint, current_app, jsonify
+from flask import Blueprint, current_app, jsonify, request
 from app import db
 from app.models.DataSource import DataSource
 from app.models.League import League
@@ -122,7 +122,33 @@ def get_team_matches(team_id, league_season_id):
     
 @team_bp.route("/get-team-names/<team_id>", methods=['GET'])
 def get_team_names(team_id):
-    team_names = db.session.query(TeamName) \
-        .filter_by(team_id=UUID(team_id)) \
-        .all()
-    return jsonify(team_names)
+    try:
+        team_names = db.session.query(TeamName) \
+            .filter_by(team_id=UUID(team_id)) \
+            .order_by(TeamName.is_default_name.desc()) \
+            .all()
+        return jsonify(team_names)
+    except Exception as e:
+        return {
+            'message' : traceback.format_exc()
+        }, 400
+
+@team_bp.route("/save-team-names", methods=['POST'])
+def save_team_names():
+    try:
+        req = request.get_json(force=True)
+        for team_name_dict in req:
+            team_name = TeamName(
+                team_name_id=UUID(team_name_dict['team_name_id']) \
+                    if 'team_name_id' in team_name_dict else None,
+                team_id=UUID(team_name_dict['team_id']),
+                team_name=team_name_dict['team_name'],
+                is_default_name=team_name_dict['is_default_name']
+            )
+            db.session.merge(team_name)
+        db.session.commit()
+        return jsonify(success=True)
+    except Exception as e:
+        return {
+            'message' : traceback.format_exc()
+        }, 400

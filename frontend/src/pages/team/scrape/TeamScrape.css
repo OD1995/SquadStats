@@ -31,5 +31,10 @@
 }
 
 #team-scrape-season-div {
-    justify-content: space-evenly;
+    /* justify-content: space-evenly; */
+    justify-content: center;
+}
+
+#team-scrape-season-label {
+    margin-right: 3vw;
 }

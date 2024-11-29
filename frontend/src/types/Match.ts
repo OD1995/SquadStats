@@ -16,4 +16,5 @@ export interface Match {
     location: string,
     home_away_neutral: string,
     match_errors:MatchError[]
+    player_info_scraped:boolean
 }

@@ -57,12 +57,21 @@
 
 .disabled-button {
     cursor: not-allowed;
+	background-color: grey;
 }
 
 .big-h1-title {
     margin-left: 5vw;
     font-size: 200%;
     margin-bottom: 5vh;
+}
+
+.ss-table-cell {
+	text-align: center !important;
+}
+
+.ss-red-text {
+	color: red;
 }
 
 .ss-icon {

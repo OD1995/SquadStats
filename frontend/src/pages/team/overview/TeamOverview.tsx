@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { Team } from "../../types/Team";
+import { Team } from "../../../types/Team";
 import { Link, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { userSelector } from "../../store/slices/userSlice";
-import TeamService from "../../services/TeamService";
-import { BackendResponse } from "../../types/BackendResponse";
-import { getTeam } from "../../helpers/other";
+import { userSelector } from "../../../store/slices/userSlice";
+import TeamService from "../../../services/TeamService";
+import { BackendResponse } from "../../../types/BackendResponse";
+import { getTeam } from "../../../helpers/other";
 
 export const TeamOverview = () => {
 

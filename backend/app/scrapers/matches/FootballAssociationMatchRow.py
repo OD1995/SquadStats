@@ -1,6 +1,7 @@
 from datetime import datetime
+from email.policy import default
 from app.models.MatchError import MatchError
-from app.types.enums import Result
+from app.types.enums import HomeAwayNeutral, Result
 
 
 class FootballAssociationMatchRow:
@@ -216,11 +217,18 @@ class FootballAssociationMatchRow:
     
     def get_home_away_neutral(self):
         try:
-            return self.home_away
+            match self.home_away:
+                case self.HOME:
+                    return HomeAwayNeutral.HOME
+                case self.AWAY:
+                    return HomeAwayNeutral.AWAY
+                case _:
+                    raise Exception(f"Unexpected home/away/neutral: {self.home_and_away}")
+        
         except Exception as e:
             self.match_errors.append(repr(e)[:10000])
             return None
-
+        
     def get_home_or_away(
         self,
         home_away_team_names

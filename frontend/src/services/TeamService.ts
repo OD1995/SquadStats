@@ -1,3 +1,4 @@
+import { TeamName } from "../types/TeamName.ts";
 import { makeGetRequest, makePostRequest } from "./api.ts";
 
 class TeamService {
@@ -51,6 +52,15 @@ class TeamService {
     ) {
         return makeGetRequest(
             this.base_url + `/get-team-names/${teamId}`
+        )
+    }
+
+    saveTeamNames(
+        teamNames:TeamName[]
+    ) {
+        return makePostRequest(
+            this.base_url + "/save-team-names",
+            teamNames
         )
     }
 }

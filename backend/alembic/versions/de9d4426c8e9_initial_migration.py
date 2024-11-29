@@ -1,8 +1,8 @@
-"""first commit
+"""initial migration
 
-Revision ID: 469e8b32a2a3
+Revision ID: de9d4426c8e9
 Revises: 
-Create Date: 2024-11-15 22:54:39.533090
+Create Date: 2024-11-28 14:50:46.749312
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '469e8b32a2a3'
+revision: str = 'de9d4426c8e9'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -135,11 +135,12 @@ def upgrade() -> None:
     op.create_index(op.f('ix_team_leagues_league_id'), 'team_leagues', ['league_id'], unique=False)
     op.create_index(op.f('ix_team_leagues_team_id'), 'team_leagues', ['team_id'], unique=False)
     op.create_table('team_names',
+    sa.Column('team_name_id', sa.Uuid(), nullable=False),
     sa.Column('team_id', sa.Uuid(), nullable=False),
     sa.Column('team_name', sa.String(length=50), nullable=False),
     sa.Column('is_default_name', sa.Boolean(), nullable=False),
     sa.ForeignKeyConstraint(['team_id'], ['teams.team_id'], name='fk_teams_team_id'),
-    sa.PrimaryKeyConstraint('team_id'),
+    sa.PrimaryKeyConstraint('team_name_id'),
     mysql_engine='InnoDB'
     )
     op.create_index(op.f('ix_team_names_team_id'), 'team_names', ['team_id'], unique=False)
@@ -169,16 +170,18 @@ def upgrade() -> None:
     sa.Column('data_source_match_id', sa.String(length=50), nullable=False),
     sa.Column('competition_id', sa.Uuid(), nullable=True),
     sa.Column('team_season_id', sa.Uuid(), nullable=False),
-    sa.Column('competition_acronym', sa.String(length=10), nullable=False),
-    sa.Column('goals_for', sa.Integer(), nullable=False),
-    sa.Column('goals_against', sa.Integer(), nullable=False),
-    sa.Column('goal_difference', sa.Integer(), nullable=False),
-    sa.Column('opposition_team_name', sa.String(length=100), nullable=False),
-    sa.Column('result', sa.Enum('WIN', 'DRAW', 'LOSS', name='result'), nullable=False),
-    sa.Column('date', sa.Date(), nullable=False),
-    sa.Column('time', sa.Time(), nullable=False),
-    sa.Column('location', sa.String(length=100), nullable=False),
-    sa.Column('home_away_neutral', sa.Enum('HOME', 'AWAY', 'NEUTRAL', name='homeawayneutral'), nullable=False),
+    sa.Column('competition_acronym', sa.String(length=10), nullable=True),
+    sa.Column('goals_for', sa.Integer(), nullable=True),
+    sa.Column('goals_against', sa.Integer(), nullable=True),
+    sa.Column('goal_difference', sa.Integer(), nullable=True),
+    sa.Column('pens_for', sa.Integer(), nullable=True),
+    sa.Column('pens_against', sa.Integer(), nullable=True),
+    sa.Column('opposition_team_name', sa.String(length=100), nullable=True),
+    sa.Column('result', sa.Enum('WIN', 'DRAW', 'LOSS', name='result'), nullable=True),
+    sa.Column('date', sa.Date(), nullable=True),
+    sa.Column('time', sa.Time(), nullable=True),
+    sa.Column('location', sa.String(length=100), nullable=True),
+    sa.Column('home_away_neutral', sa.Enum('HOME', 'AWAY', 'NEUTRAL', name='homeawayneutral'), nullable=True),
     sa.ForeignKeyConstraint(['competition_id'], ['competitions.competition_id'], name='fk_competitions_competition_id'),
     sa.ForeignKeyConstraint(['team_season_id'], ['team_seasons.team_season_id'], name='team_seasons_team_season_id'),
     sa.PrimaryKeyConstraint('match_id'),
@@ -186,6 +189,15 @@ def upgrade() -> None:
     )
     op.create_index(op.f('ix_matches_competition_id'), 'matches', ['competition_id'], unique=False)
     op.create_index(op.f('ix_matches_team_season_id'), 'matches', ['team_season_id'], unique=False)
+    op.create_table('match_errors',
+    sa.Column('match_error_id', sa.Uuid(), nullable=False),
+    sa.Column('match_id', sa.Uuid(), nullable=False),
+    sa.Column('error_message', sa.String(length=10000), nullable=False),
+    sa.ForeignKeyConstraint(['match_id'], ['matches.match_id'], name='fk_matches_match_id'),
+    sa.PrimaryKeyConstraint('match_error_id'),
+    mysql_engine='InnoDB'
+    )
+    op.create_index(op.f('ix_match_errors_match_id'), 'match_errors', ['match_id'], unique=False)
     op.create_table('player_match_performances',
     sa.Column('player_id', sa.Uuid(), nullable=False),
     sa.Column('match_id', sa.Uuid(), nullable=False),
@@ -209,6 +221,8 @@ def downgrade() -> None:
     op.drop_index(op.f('ix_player_match_performances_metric_id'), table_name='player_match_performances')
     op.drop_index(op.f('ix_player_match_performances_match_id'), table_name='player_match_performances')
     op.drop_table('player_match_performances')
+    op.drop_index(op.f('ix_match_errors_match_id'), table_name='match_errors')
+    op.drop_table('match_errors')
     op.drop_index(op.f('ix_matches_team_season_id'), table_name='matches')
     op.drop_index(op.f('ix_matches_competition_id'), table_name='matches')
     op.drop_table('matches')

@@ -11,9 +11,9 @@ import { GetStarted } from './pages/get-started/GetStarted';
 import { Home } from './pages/home/Home';
 import { MyClubs } from './pages/my-clubs/MyClubs';
 import { ClubOverview } from './pages/club/ClubOverview';
-import { TeamOverview } from './pages/team/TeamOverview';
-import { TeamScrape } from './pages/team/TeamScrape';
-import { TeamNames } from './pages/team/TeamNames';
+import { TeamOverview } from './pages/team/overview/TeamOverview';
+import { TeamScrape } from './pages/team/scrape/TeamScrape';
+import { TeamNames } from './pages/team/name/TeamNames';
 
 
 const App = () => {

@@ -30,7 +30,7 @@ export const LoginOrRegister = (props:LoginOrRegisterProps) => {
     
     useEffect(
         () => {
-            document.title = props.pageType;
+            // document.title = props.pageType;
             const keyEnter = (ev:KeyboardEvent) => {
                 if (ev.key === 'Enter') {
                     props.handleSubmitButton();
@@ -57,9 +57,6 @@ export const LoginOrRegister = (props:LoginOrRegisterProps) => {
         if (nextVal !== null) {
             return <Navigate to={nextVal}/>
         }
-        // else {
-        //     return <Navigate to="/about"/>
-        // }
     }
 
     const handleButtonPress = () => {

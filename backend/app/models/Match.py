@@ -94,5 +94,6 @@ class Match(Base):
             'time' : self.time.strftime("%H:%M"),
             'location' : self.location,
             'home_away_neutral' : self.home_away_neutral,
-            'match_errors' : self.match_errors
+            'match_errors' : self.match_errors,
+            'player_info_scraped' : False
         }
