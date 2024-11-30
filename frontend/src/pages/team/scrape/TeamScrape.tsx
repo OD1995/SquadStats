@@ -1,6 +1,6 @@
 import { FormControl, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Team } from "../../../types/Team";
 import { useSelector } from "react-redux";
 import { userSelector } from "../../../store/slices/userSlice";
@@ -12,6 +12,7 @@ import "./TeamScrape.css";
 import { Match } from "../../../types/Match";
 import { MatchInfoView } from "./MatchInfoView";
 import { PlayerInfoView } from "./PlayerInfoView";
+import MatchService from "../../../services/MatchService";
 
 export const TeamScrape = () => {
 
@@ -25,40 +26,46 @@ export const TeamScrape = () => {
     const [isPlayerInfoView, setIsPlayerInfoView] = useState<boolean>(false);
     const [successMatches, setSuccessMatches] = useState<Match[]>([]);
     const [errorMatches, setErrorMatches] = useState<Match[]>([]);
+    const [tickedBoxes, setTickedBoxes] = useState<boolean[]>([]);
 
     let { teamId } = useParams();
     const user = useSelector(userSelector);
+    const navigate = useNavigate();
 
     useEffect(
         () => {
-            var _team_ = getTeam(user, teamId);
-            if (_team_) {
-                setTeam(_team_);
+            if (!user) {
+                navigate("/about");
             } else {
-                TeamService.getTeamInformation(
+                var _team_ = getTeam(user, teamId);
+                if (_team_) {
+                    setTeam(_team_);
+                } else {
+                    TeamService.getTeamInformation(
+                        teamId!
+                    ).then(
+                        (res:BackendResponse) => {
+                            if (res.success) {
+                                setTeam(res.data);
+                            } else {
+                                setErrorMessage(res.data.message);
+                            }
+                        }
+                    )
+                }
+                TeamService.getTeamSeasons(
                     teamId!
                 ).then(
                     (res:BackendResponse) => {
                         if (res.success) {
-                            setTeam(res.data);
+                            setSeasons(res.data);
+                            setSelectedSeason(res.data[0].season_id);
                         } else {
                             setErrorMessage(res.data.message);
                         }
                     }
                 )
             }
-            TeamService.getTeamSeasons(
-                teamId!
-            ).then(
-                (res:BackendResponse) => {
-                    if (res.success) {
-                        setSeasons(res.data);
-                        setSelectedSeason(res.data[0].season_id);
-                    } else {
-                        setErrorMessage(res.data.message);
-                    }
-                }
-            )
         },
         []
     )
@@ -73,17 +80,7 @@ export const TeamScrape = () => {
             (res:BackendResponse) => {
                 if (res.success) {
                     const matches:Match[] = res.data;
-                    var goods = []
-                    var bads = [];
-                    for (const match of matches) {
-                        if (match.match_errors.length == 0) {
-                            goods.push(match);
-                        } else {
-                            bads.push(match);
-                        }
-                    }
-                    setSuccessMatches(goods);
-                    setErrorMatches(bads);
+                    handlePostScrape(matches);
                     setScrapeMatchesButtonDisabled(false);
                 } else {
                     setErrorMessage(res.data.message);
@@ -91,6 +88,20 @@ export const TeamScrape = () => {
                 setGetMatchesButtonDisabled(false);
             }
         )
+    }
+
+    const handlePostScrape = (matches:Match[]) => {
+        var goods = []
+        var bads = [];
+        for (const match of matches) {
+            if (match.match_errors.length == 0) {
+                goods.push(match);
+            } else {
+                bads.push(match);
+            }
+        }
+        setSuccessMatches(goods);
+        setErrorMatches(bads);
     }
 
     const handleScrapeMatchesButtonPress = () => {
@@ -102,7 +113,25 @@ export const TeamScrape = () => {
     }
 
     const handleStartScrapeButtonPress = () => {
-        
+        setStartScrapeButtonDisabled(true);
+        var matchIds = [];
+        for (const [idx, match] of successMatches.entries()) {
+            if (tickedBoxes[idx]) {
+                matchIds.push(match.match_id)
+            }
+        }
+        MatchService.saveTeamNames(
+            matchIds
+        ).then(
+            (response:BackendResponse) => {
+                if (response.success) {
+                    const matches:Match[] = response.data;
+                    handlePostScrape(matches);
+                } else {
+                    setErrorMessage(response.data.message);
+                }
+            }
+        )
     }
 
     const successCols = [
@@ -184,6 +213,8 @@ export const TeamScrape = () => {
                         <PlayerInfoView
                             successMatches={successMatches}
                             cols={successCols}
+                            tickedBoxes={tickedBoxes}
+                            setTickedBoxes={setTickedBoxes}
                         />
                     ) : (
                         <MatchInfoView

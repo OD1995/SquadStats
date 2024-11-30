@@ -1,4 +1,4 @@
-from uuid import UUID
+from uuid import UUID, uuid4
 from sqlalchemy import ForeignKey, String
 from app.models import Base
 from sqlalchemy.orm import Mapped, mapped_column
@@ -13,3 +13,12 @@ class Metric(Base):
         index=True
     )
     metric_name: Mapped[str] = mapped_column(String(50))
+
+    def __init__(
+        self,
+        data_source_id:UUID,
+        metric_name:str
+    ):
+        self.metric_id = uuid4()
+        self.data_source_id = data_source_id
+        self.metric_name = metric_name

@@ -4,7 +4,6 @@ from uuid import UUID, uuid4
 from datetime import date as dateDT, time as timeDT
 from sqlalchemy import Enum, ForeignKey, String
 from app.models import Base
-from app.models.Competition import Competition
 from app.models.MatchError import MatchError
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -38,9 +37,12 @@ class Match(Base):
     date: Mapped[dateDT] = mapped_column(nullable=True)
     time: Mapped[timeDT] = mapped_column(nullable=True)
     location: Mapped[str] = mapped_column(String(100), nullable=True)
-    home_away_neutral: Mapped[HomeAwayNeutral] = mapped_column(Enum(HomeAwayNeutral), nullable=True)
+    home_away_neutral: Mapped[HomeAwayNeutral] = mapped_column(
+        Enum(HomeAwayNeutral),
+        nullable=True
+    )
     match_errors: Mapped[List["MatchError"]] = relationship(lazy='joined')
-    # team_season: Mapped[TeamSeason] = relationship(lazy='joined')
+    team_season: Mapped[TeamSeason] = relationship(back_populates='matches')
 
     def __init__(
         self,

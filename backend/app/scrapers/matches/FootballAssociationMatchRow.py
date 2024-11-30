@@ -27,6 +27,20 @@ class FootballAssociationMatchRow:
         except Exception as e:
             self.match_errors.append(repr(e)[:10000])
             return None
+        
+    def get_competition_name(self):
+        try:
+            competition_name_div = self.match_div.find(
+                'div',
+                attrs={
+                    'class' : 'fg-col'
+                }
+            )
+            return competition_name_div.p.text.strip()
+        except Exception as e:
+            self.match_errors.append(repr(e)[:10000])
+            return None
+
     
     def get_competition_acronym(self):
         try:

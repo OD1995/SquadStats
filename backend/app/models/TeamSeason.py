@@ -1,12 +1,16 @@
-# from typing import List
 from dataclasses import dataclass
+from typing import TYPE_CHECKING, List
 from uuid import UUID, uuid4
 from sqlalchemy import ForeignKey
 from app.models import Base
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.models.LeagueSeason import LeagueSeason
-# from app.models.Match import Match
 from app.models.Team import Team
+
+if TYPE_CHECKING:
+    from app.models.Match import Match
+else:
+    Match = 'Match'
 
 @dataclass
 class TeamSeason(Base):
@@ -24,7 +28,7 @@ class TeamSeason(Base):
     )
     team: Mapped[Team] = relationship(lazy='joined')
     league_season: Mapped[LeagueSeason] = relationship(lazy='joined')
-    # matches: Mapped[List["Match"]] = relationship(lazy='joined')
+    matches: Mapped[List["Match"]] = relationship(back_populates='team_season')
 
     def __init__(
         self,

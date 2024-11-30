@@ -23,3 +23,15 @@ class PlayerMatchPerformance(Base):
         index=True
     )
     value: Mapped[float]
+
+    def __init__(
+        self,
+        player_id:UUID,
+        match_id:UUID,
+        metric_id:UUID,
+        value:float
+    ):
+        self.player_id = player_id
+        self.match_id = match_id
+        self.metric_id = metric_id
+        self.value = value

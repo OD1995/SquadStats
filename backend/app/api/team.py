@@ -1,7 +1,6 @@
-from json import dumps
 import traceback
 from uuid import UUID
-from flask import Blueprint, current_app, jsonify, request
+from flask import Blueprint, jsonify, request
 from app import db
 from app.models.DataSource import DataSource
 from app.models.League import League
@@ -92,7 +91,7 @@ def get_team_matches(team_id, league_season_id):
                 fa_league_id=league.data_source_league_id,
                 fa_base_url=data_source.url
             )
-            new_matches, new_match_errors = team_scraper.get_team_matches(
+            new_matches, new_match_errors, new_competitions = team_scraper.get_team_matches(
                 fa_season_id=league_season.data_source_league_season_id,
                 team_names=team.get_team_name_str_list(),
                 team_season_id=team_season.team_season_id
@@ -108,6 +107,7 @@ def get_team_matches(team_id, league_season_id):
                 .delete()
             db.session.add_all(new_matches)
             db.session.add_all(new_match_errors)
+            db.session.add_all(new_competitions)
             db.session.commit()
             return jsonify([
                 match.to_dict()

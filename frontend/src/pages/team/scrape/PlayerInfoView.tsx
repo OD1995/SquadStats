@@ -4,17 +4,17 @@ import { Match } from "../../../types/Match";
 import CloseIcon from '@mui/icons-material/Close';
 import DoneIcon from '@mui/icons-material/Done';
 import { TableCellValue } from "../../../types/TableCellValue";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Checkbox } from "@mui/material";
 
 interface PlayerInfoViewProps {
     successMatches:Match[]
     cols:string[]
+    tickedBoxes:boolean[]
+    setTickedBoxes:Function
 }
 
 export const PlayerInfoView = (props:PlayerInfoViewProps) => {
-
-    const [tickedBoxes, setTickedBoxes] = useState<boolean[]>([]);
 
     useEffect(
         () => {
@@ -22,14 +22,14 @@ export const PlayerInfoView = (props:PlayerInfoViewProps) => {
             for (const match of props.successMatches) {
                 tb.push(!match.player_info_scraped);
             }
-            setTickedBoxes(tb);
+            props.setTickedBoxes(tb);
         },
         []
     )
 
     const handleChecking = (ix:number) => {
-        setTickedBoxes(
-            (oldTickedBoxes) => {
+        props.setTickedBoxes(
+            (oldTickedBoxes:boolean[]) => {
                 var newTickedBoxes = [...oldTickedBoxes];
                 newTickedBoxes[ix] = !newTickedBoxes[ix];
                 return newTickedBoxes;
@@ -45,7 +45,7 @@ export const PlayerInfoView = (props:PlayerInfoViewProps) => {
         )
         const checkbox = (
             <Checkbox
-                checked={tickedBoxes[ix]}
+                checked={props.tickedBoxes[ix]}
                 onChange={() => handleChecking(ix)}
             />
         )
@@ -61,7 +61,7 @@ export const PlayerInfoView = (props:PlayerInfoViewProps) => {
         ] as TableCellValue[];
     }
 
-    if (tickedBoxes.length > 0) {
+    if (props.tickedBoxes.length > 0) {
         return (
             <>
                 <i style={{textAlign:'center', marginBottom:'2vh'}}>

@@ -1,12 +1,11 @@
 from dataclasses import dataclass
-from re import X
-from turtle import TNavigator, back
-from typing import TYPE_CHECKING, List
+from typing import List
 from uuid import UUID, uuid4
 from sqlalchemy import Enum, ForeignKey, String
 from app import db
-from app.models import Base#, Sport
+from app.models import Base
 from app.models.Club import Club
+from app.models.DataSource import DataSource
 from app.models.Sport import Sport
 from app.models.TeamLeague import TeamLeague
 from app.models.TeamName import TeamName
@@ -39,6 +38,7 @@ class Team(Base):
     sport: Mapped[Sport] = relationship(lazy='joined')
     club: Mapped[Club] = relationship(back_populates='teams')
     team_leagues: Mapped[List["TeamLeague"]] = relationship(lazy='joined')
+    data_source: Mapped[DataSource] = relationship(lazy='joined')
 
     def __init__(
         self,
