@@ -7,6 +7,7 @@ from app.models import Base
 from app.models.MatchError import MatchError
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from app.models.PlayerMatchPerformance import PlayerMatchPerformance
 from app.models.TeamSeason import TeamSeason
 from app.types.enums import HomeAwayNeutral, Result
 
@@ -43,6 +44,7 @@ class Match(Base):
     )
     match_errors: Mapped[List["MatchError"]] = relationship(lazy='joined')
     team_season: Mapped[TeamSeason] = relationship(back_populates='matches')
+    player_match_performances: Mapped[List[PlayerMatchPerformance]] = relationship(lazy='joined')
 
     def __init__(
         self,
@@ -97,5 +99,5 @@ class Match(Base):
             'location' : self.location,
             'home_away_neutral' : self.home_away_neutral,
             'match_errors' : self.match_errors,
-            'player_info_scraped' : False
+            'player_info_scraped' : len(self.player_match_performances) > 0
         }

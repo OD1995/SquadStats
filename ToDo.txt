@@ -10,6 +10,11 @@ get_team_matches for manual entry team
 
 Deal with walkovers, e.g. https://fulltime.thefa.com/displayFixture.html?id=27206908
 
+set buttons on team scrape in grid
+-    match info - players -
+-     view   - select matches  -
+- update all - update  -
+
 
 182317005
 

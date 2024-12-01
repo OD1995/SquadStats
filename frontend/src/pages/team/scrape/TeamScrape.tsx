@@ -1,5 +1,5 @@
-import { FormControl, MenuItem, Select, SelectChangeEvent } from "@mui/material";
-import { useEffect, useState } from "react";
+import { FormControl, MenuItem, Select, SelectChangeEvent, Tooltip } from "@mui/material";
+import { MouseEventHandler, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Team } from "../../../types/Team";
 import { useSelector } from "react-redux";
@@ -16,13 +16,19 @@ import MatchService from "../../../services/MatchService";
 
 export const TeamScrape = () => {
 
+    const [viewCurrentMatchesDisabled, setViewCurrentMatchesDisabled] = useState(false);
+    const [updateMatchInfoFromDataSourceDisabled, setUpdateMatchInfoFromDataSourceDisabled] = useState(true);
+    const [selectMatchesToUpdateDisabled, setSelectMatchesToUpdateDisabled] = useState(true);
+    const [startUpdateDisabled, setStartUpdateDisabled] = useState(true);
+    
     const [team, setTeam] = useState<Team>();
     const [errorMessage, setErrorMessage] = useState("");
-    const [getMatchesButtonDisabled, setGetMatchesButtonDisabled] = useState(false);
-    const [scrapeMatchesButtonDisabled, setScrapeMatchesButtonDisabled] = useState(true);
-    const [startScrapeButtonDisabled, setStartScrapeButtonDisabled] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    
+    
     const [selectedSeason, setSelectedSeason] = useState("");
     const [seasons, setSeasons] = useState([]);
+
     const [isPlayerInfoView, setIsPlayerInfoView] = useState<boolean>(false);
     const [successMatches, setSuccessMatches] = useState<Match[]>([]);
     const [errorMatches, setErrorMatches] = useState<Match[]>([]);
@@ -70,27 +76,29 @@ export const TeamScrape = () => {
         []
     )
 
-    const handleGetMatchesButtonPress = () => {
-        setGetMatchesButtonDisabled(true);
+    const handleUpdateMatchInfoFromDataSourceButtonPress = () => {
+        setUpdateMatchInfoFromDataSourceDisabled(true);
         setErrorMessage("");
-        TeamService.getTeamMatches(
+        setIsLoading(true);
+        MatchService.updateTeamMatches(
             teamId!,
             selectedSeason
         ).then(
             (res:BackendResponse) => {
                 if (res.success) {
                     const matches:Match[] = res.data;
-                    handlePostScrape(matches);
-                    setScrapeMatchesButtonDisabled(false);
+                    handleMatchesResponse(matches);
+                    // setUpdatePlayerPerformanceDataDisabled(false);
                 } else {
                     setErrorMessage(res.data.message);
                 }
-                setGetMatchesButtonDisabled(false);
+                setUpdateMatchInfoFromDataSourceDisabled(false);
+                setIsLoading(false);
             }
         )
     }
 
-    const handlePostScrape = (matches:Match[]) => {
+    const handleMatchesResponse = (matches:Match[]) => {
         var goods = []
         var bads = [];
         for (const match of matches) {
@@ -104,7 +112,7 @@ export const TeamScrape = () => {
         setErrorMatches(bads);
     }
 
-    const handleScrapeMatchesButtonPress = () => {
+    const handleSelectMatchesToUpdateButtonPress = () => {
         setIsPlayerInfoView(true);
     }
 
@@ -112,24 +120,49 @@ export const TeamScrape = () => {
         setSelectedSeason(event.target.value as string);
     }
 
-    const handleStartScrapeButtonPress = () => {
-        setStartScrapeButtonDisabled(true);
+    const handleStartUpdateButtonPress = () => {
+        setStartUpdateDisabled(true);
+        setErrorMessage("");
+        setIsLoading(true);
         var matchIds = [];
         for (const [idx, match] of successMatches.entries()) {
             if (tickedBoxes[idx]) {
                 matchIds.push(match.match_id)
             }
         }
-        MatchService.saveTeamNames(
+        MatchService.scrapeMatches(
             matchIds
         ).then(
             (response:BackendResponse) => {
                 if (response.success) {
                     const matches:Match[] = response.data;
-                    handlePostScrape(matches);
+                    handleMatchesResponse(matches);
+                    setIsPlayerInfoView(false);
                 } else {
                     setErrorMessage(response.data.message);
                 }
+                setStartUpdateDisabled(false);
+                setIsLoading(false);
+            }
+        )
+    }
+
+    const handleViewCurrentMatchesClick = () => {
+        setViewCurrentMatchesDisabled(true);
+        setIsLoading(true);
+        setErrorMessage("");
+        MatchService.getCurrentMatches(
+            teamId!,
+            selectedSeason
+        ).then(
+            (response:BackendResponse) => {
+                if (response.success) {
+                    const matches:Match[] = response.data;
+                    handleMatchesResponse(matches);
+                } else {
+                    setErrorMessage(response.data.message)
+                }
+                setIsLoading(false);
             }
         )
     }
@@ -143,6 +176,62 @@ export const TeamScrape = () => {
         'Goals Against',
         'Player Info Already Scraped'
     ]
+
+    interface ButtonInfo {
+        disabled:boolean
+        handleClick:MouseEventHandler
+        text:string
+        title?:string
+    }
+
+    const generateButtons = () => {
+        const buttonInfoArray = [
+            {
+                disabled: viewCurrentMatchesDisabled,
+                handleClick: handleViewCurrentMatchesClick,
+                text: 'View Current Matches',
+                title: 'View all the matches which are already in the Squad Stats database'
+            },
+            {
+                disabled: updateMatchInfoFromDataSourceDisabled,
+                handleClick: handleUpdateMatchInfoFromDataSourceButtonPress,
+                text: 'Update Match Info From Data Source',
+                title: 'Update the match info for all the displayed matches from the data source'
+            },
+            {
+                disabled: selectMatchesToUpdateDisabled,
+                handleClick: handleSelectMatchesToUpdateButtonPress,
+                text: 'Select Matches To Update Player Performance Data From Data Source',
+                // title: ''
+            },
+            {
+                disabled: startUpdateDisabled,
+                handleClick: handleStartUpdateButtonPress,
+                text: 'Start Update'
+            }
+        ] as ButtonInfo[];
+        return (
+            <>
+                {
+                    buttonInfoArray.map(
+                        (buttonInfo:ButtonInfo) => {
+                            return (
+                                <Tooltip title={buttonInfo.title} placement="right">
+                                    <button
+                                        className={"ss-green-button ts-button" + (buttonInfo.disabled ? " disabled-button" : "")}
+                                        onClick={buttonInfo.handleClick}
+                                        disabled={buttonInfo.disabled}
+                                    >
+                                        {buttonInfo.text}
+                                    </button>
+                                </Tooltip>
+                            )
+                        }
+                    )
+                }
+            </>
+        )
+    }
 
     return (
         <div id='team-scrape-parent'>
@@ -177,32 +266,8 @@ export const TeamScrape = () => {
                             </Select>
                         </FormControl>
                     </div>
-                    <div id='team-scrape-buttons-div' className="team-scrape-input-row">
-                            <button
-                                className={"ss-green-button" + (getMatchesButtonDisabled ? " disabled-button" : "")}
-                                onClick={handleGetMatchesButtonPress}
-                                disabled={getMatchesButtonDisabled}
-                            >
-                                Get Match Info
-                            </button>
-                            <button
-                                className={"ss-green-button" + (scrapeMatchesButtonDisabled ? " disabled-button" : "")}
-                                onClick={handleScrapeMatchesButtonPress}
-                                disabled={scrapeMatchesButtonDisabled}
-                            >
-                                Scrape Player Info
-                            </button>
-                            {
-                                isPlayerInfoView && (                                    
-                                    <button
-                                        className={"ss-green-button" + (startScrapeButtonDisabled ? " disabled-button" : "")}
-                                        onClick={handleStartScrapeButtonPress}
-                                        disabled={startScrapeButtonDisabled}
-                                    >
-                                        Start Scrape
-                                    </button>
-                                )
-                            }
+                    <div id='team-scrape-buttons-div'>
+                        {generateButtons()}
                     </div>
                 </div>
                 <p>

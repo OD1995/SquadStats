@@ -1,3 +1,4 @@
+from uuid import UUID
 from aiohttp import ClientSession
 from app.scrapers.fixtures.FixtureScraper import FixtureScraper
 from bs4 import BeautifulSoup
@@ -28,7 +29,8 @@ class FootballAssociationFixtureScraper(FixtureScraper):
     
     async def scrape_fixture(
         self,
-        session:ClientSession
+        session:ClientSession,
+        match_id:UUID
     ):
         match_errors = []
         player_data = {}
@@ -61,7 +63,8 @@ class FootballAssociationFixtureScraper(FixtureScraper):
         return {
             "player_data" : player_data,
             "match_info" : match_info,
-            "match_errors" : match_errors
+            "match_errors" : match_errors,
+            'match_id' : match_id
         }
     
     def get_match_info(

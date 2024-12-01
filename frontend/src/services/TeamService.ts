@@ -38,15 +38,6 @@ class TeamService {
         )
     }
 
-    getTeamMatches(
-        teamId:string,
-        leagueSeasonId:string
-    ) {
-        return makeGetRequest(
-            this.base_url + `/get-matches/${teamId}/${leagueSeasonId}`
-        )
-    }
-
     getTeamNames(
         teamId:string
     ) {

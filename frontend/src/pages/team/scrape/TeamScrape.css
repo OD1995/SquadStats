@@ -10,11 +10,12 @@
 
 #team-scrape-input-parent {
     display: flex;
-    flex-direction: column;
-    width: 50vw;
+    flex-direction: row;
+    width: 40vw;
     border: 1px solid #806c6c;
     border-radius: 1vw;
     padding: 1vh;
+    justify-content: space-around;
 }
 
 .team-scrape-input-row {
@@ -26,8 +27,12 @@
 }
 
 #team-scrape-buttons-div {
-    /* justify-content: space-around; */
     justify-content: space-evenly;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 1.5vh;
+    margin-bottom: 1.5vh;
 }
 
 #team-scrape-season-div {
@@ -37,4 +42,10 @@
 
 #team-scrape-season-label {
     margin-right: 3vw;
+}
+
+.ts-button {
+    margin-top: 0.5vh;
+    margin-bottom: 0.5vh;
+    max-width: 20vw;
 }

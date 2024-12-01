@@ -36,13 +36,13 @@ class FootballAssociationTeamScraper(TeamScraper):
         async with aiohttp.ClientSession() as session:
             tasks = [
                 FootballAssociationFixtureScraper(
-                    fixture_id=match_id,
+                    fixture_id=fa_match_id,
                     team_names=team_names
-                ).scrape_fixture(session=session)
-                for match_id in fa_match_id_list
+                ).scrape_fixture(session=session, match_id=match_id)
+                for fa_match_id, match_id in zip(fa_match_id_list, match_id_list)
             ]
-            result = await asyncio.gather(*tasks)
-        return dict(zip(match_id_list, result))
+            return await asyncio.gather(*tasks)
+        # return dict(zip(match_id_list, result))
 
     async def is_team_valid(
         self,
@@ -65,7 +65,8 @@ class FootballAssociationTeamScraper(TeamScraper):
         self,
         fa_season_id:str,
         team_names:list[str],
-        team_season_id:UUID
+        team_season_id:UUID,
+        current_matches:list[Match]
     ):
         params = {
             'selectedSeason' : fa_season_id,
@@ -105,9 +106,16 @@ class FootballAssociationTeamScraper(TeamScraper):
             c.competition_name : c
             for c in competitions
         }
+        still_exists = {}
+        matches_by_fa_match_id = {}
+        for m in current_matches:
+            still_exists[m.data_source_match_id] = False
+            matches_by_fa_match_id[m.data_source_match_id] = m
         new_matches = []
         new_match_errors = []
         new_competitions = []
+        delete_match_errors = []
+        matches_to_return = []
         for fixture_div in fixture_divs:
             match_row = FootballAssociationMatchRow(
                 match_div=fixture_div,
@@ -123,33 +131,67 @@ class FootballAssociationTeamScraper(TeamScraper):
                     team_season_id=team_season_id
                 )
                 new_competitions.append(competition)
-            new_match = Match(
-                data_source_match_id=match_row.get_fa_match_id(),
-                competition_id=competition.competition_id,
-                team_season_id=team_season_id,
-                competition_acronym=match_row.get_competition_acronym(),
-                goals_for=match_row.get_goals_for(),
-                goals_against=match_row.get_goals_against(),
-                goal_difference=match_row.get_goal_difference(),
-                pens_for=match_row.get_pens_for(),
-                pens_against=match_row.get_pens_against(),
-                opposition_team_name=match_row.get_oppo_team_name(),
-                result=match_row.get_result(),
-                date=match_row.get_date(),
-                time=match_row.get_time(),
-                location=None,
-                home_away_neutral=match_row.get_home_away_neutral()
-            )
+            fa_match_id = match_row.get_fa_match_id()
+            if fa_match_id in matches_by_fa_match_id:
+                match = matches_by_fa_match_id[fa_match_id]
+                match.competition_id = competition.competition_id
+                match.team_season_id = team_season_id
+                match.competition_acronym = match_row.get_competition_acronym()
+                match.goals_for=match_row.get_goals_for()
+                match.goals_against=match_row.get_goals_against()
+                match.goal_difference=match_row.get_goal_difference()
+                match.pens_for=match_row.get_pens_for()
+                match.pens_against=match_row.get_pens_against()
+                match.opposition_team_name=match_row.get_oppo_team_name()
+                match.result=match_row.get_result()
+                match.date=match_row.get_date()
+                match.time=match_row.get_time()
+                match.location=None
+                match.home_away_neutral=match_row.get_home_away_neutral()
+                still_exists[fa_match_id] = True
+                delete_match_errors.append(match.match_id)
+            else:
+                match = Match(
+                    data_source_match_id=match_row.get_fa_match_id(),
+                    competition_id=competition.competition_id,
+                    team_season_id=team_season_id,
+                    competition_acronym=match_row.get_competition_acronym(),
+                    goals_for=match_row.get_goals_for(),
+                    goals_against=match_row.get_goals_against(),
+                    goal_difference=match_row.get_goal_difference(),
+                    pens_for=match_row.get_pens_for(),
+                    pens_against=match_row.get_pens_against(),
+                    opposition_team_name=match_row.get_oppo_team_name(),
+                    result=match_row.get_result(),
+                    date=match_row.get_date(),
+                    time=match_row.get_time(),
+                    location=None,
+                    home_away_neutral=match_row.get_home_away_neutral()
+                )
+                new_matches.append(match)
             match_errors = [
                 MatchError(
-                    match_id=new_match.match_id,
+                    match_id=match.match_id,
                     error_message=me
                 )
                 for me in match_row.match_errors
             ]
             new_match_errors.extend(match_errors)
-            new_matches.append(new_match)
-        return new_matches, new_match_errors, new_competitions
+            matches_to_return.append(match)
+        match_ids_to_delete = [
+            matches_by_fa_match_id[fa_match_id].match_id
+            for fa_match_id, exists in still_exists.items()
+            if exists == False
+        ]
+
+        return (
+            new_matches,
+            new_match_errors,
+            new_competitions,
+            delete_match_errors,
+            match_ids_to_delete,
+            matches_to_return
+        )
     
     def get_competition_options(
         self,
