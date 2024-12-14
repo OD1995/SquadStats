@@ -1,19 +1,13 @@
 If no clubs, put message and link to 'Add Clubs'/'Get Started'
 
+Write 'About' page
+
 Make sure same club not added twice, once testing finished
-
-Update list of seasons button on team scraper button
-
-Async getting of league season ids
 
 get_team_matches for manual entry team
 
 Deal with walkovers, e.g. https://fulltime.thefa.com/displayFixture.html?id=27206908
 
-set buttons on team scrape in grid
--    match info - players -
--     view   - select matches  -
-- update all - update  -
 
 
 182317005

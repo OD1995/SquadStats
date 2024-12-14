@@ -69,7 +69,7 @@ export const PlayerInfoView = (props:PlayerInfoViewProps) => {
                     <br/>
                     Tick any other boxes if you want to re-scrape and update the match's data. 
                     <br/>
-                    Then hit the Start Scrape button above.
+                    Then hit the Update button above.
                 </i>
                 <Table
                     headers={generateHeaderRow(props.cols.concat('Queued To Scrape'))}

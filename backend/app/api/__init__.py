@@ -5,6 +5,7 @@ from app.api.user_management import user_management_bp
 from app.api.club import club_bp
 from app.api.team import team_bp
 from app.api.match import match_bp
+from app.api.season import season_bp
 
 parent_bp = Blueprint(
     name="parent",
@@ -16,3 +17,4 @@ parent_bp.register_blueprint(user_management_bp)
 parent_bp.register_blueprint(club_bp)
 parent_bp.register_blueprint(team_bp)
 parent_bp.register_blueprint(match_bp)
+parent_bp.register_blueprint(season_bp)

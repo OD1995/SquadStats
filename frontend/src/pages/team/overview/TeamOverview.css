@@ -1,0 +1,23 @@
+#team-overview-content {
+    display: flex;
+    flex-direction: column;
+}
+
+#team-overview-link-bar {
+    height: 10vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+#team-overview-tables-div {
+    display: flex;
+    flex-direction: row;
+}
+
+.overview-table-div {
+    width: 25vw;
+    padding-left: 2vw;
+    padding-right: 2vw;
+    border-right: 1px solid #646cff;
+}

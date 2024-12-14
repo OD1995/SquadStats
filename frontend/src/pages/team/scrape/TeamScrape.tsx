@@ -1,5 +1,5 @@
-import { FormControl, MenuItem, Select, SelectChangeEvent, Tooltip } from "@mui/material";
-import { MouseEventHandler, useEffect, useState } from "react";
+import { FormControl, MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Team } from "../../../types/Team";
 import { useSelector } from "react-redux";
@@ -13,6 +13,10 @@ import { Match } from "../../../types/Match";
 import { MatchInfoView } from "./MatchInfoView";
 import { PlayerInfoView } from "./PlayerInfoView";
 import MatchService from "../../../services/MatchService";
+import { TeamScrapeButtonColumn } from "./TeamScrapeButtonColumn";
+import { TooltipButtonProps } from "../../../generic/TooltipButton";
+import { Loading } from "../../../generic/Loading";
+import SeasonService from "../../../services/SeasonService";
 
 export const TeamScrape = () => {
 
@@ -20,11 +24,11 @@ export const TeamScrape = () => {
     const [updateMatchInfoFromDataSourceDisabled, setUpdateMatchInfoFromDataSourceDisabled] = useState(true);
     const [selectMatchesToUpdateDisabled, setSelectMatchesToUpdateDisabled] = useState(true);
     const [startUpdateDisabled, setStartUpdateDisabled] = useState(true);
+    const [updateListDisabled, setUpdateListDisabled] = useState(false);
     
     const [team, setTeam] = useState<Team>();
     const [errorMessage, setErrorMessage] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
-    
+    const [isLoading, setIsLoading] = useState(false);    
     
     const [selectedSeason, setSelectedSeason] = useState("");
     const [seasons, setSeasons] = useState([]);
@@ -59,7 +63,7 @@ export const TeamScrape = () => {
                         }
                     )
                 }
-                TeamService.getTeamSeasons(
+                SeasonService.getTeamSeasons(
                     teamId!
                 ).then(
                     (res:BackendResponse) => {
@@ -80,6 +84,8 @@ export const TeamScrape = () => {
         setUpdateMatchInfoFromDataSourceDisabled(true);
         setErrorMessage("");
         setIsLoading(true);
+        setSuccessMatches([]);
+        setErrorMatches([]);
         MatchService.updateTeamMatches(
             teamId!,
             selectedSeason
@@ -113,7 +119,9 @@ export const TeamScrape = () => {
     }
 
     const handleSelectMatchesToUpdateButtonPress = () => {
+        // setIsLoading(true);
         setIsPlayerInfoView(true);
+        setStartUpdateDisabled(false);
     }
 
     const handleSeasonSelect = (event:SelectChangeEvent) => {
@@ -163,6 +171,29 @@ export const TeamScrape = () => {
                     setErrorMessage(response.data.message)
                 }
                 setIsLoading(false);
+                setViewCurrentMatchesDisabled(false);
+                setUpdateMatchInfoFromDataSourceDisabled(false);
+                setSelectMatchesToUpdateDisabled(false);
+            }
+        )
+    }
+
+    const handleUpdateListButtonPress = () => {
+        setUpdateListDisabled(true);
+        setIsLoading(true);
+        setErrorMessage("");
+        SeasonService.updateSeasons(
+            teamId!
+        ).then(
+            (response:BackendResponse) => {
+                if (response.success) {
+                    setSeasons(response.data);
+                    setSelectedSeason(response.data[0].season_id);
+                } else {
+                    setErrorMessage(response.data.message)
+                }
+                setIsLoading(false);
+                setUpdateListDisabled(false);
             }
         )
     }
@@ -177,61 +208,45 @@ export const TeamScrape = () => {
         'Player Info Already Scraped'
     ]
 
-    interface ButtonInfo {
-        disabled:boolean
-        handleClick:MouseEventHandler
-        text:string
-        title?:string
-    }
+    const matchInfoView = {
+        buttonText: "View",
+        disabled: viewCurrentMatchesDisabled,
+        handleClick: handleViewCurrentMatchesClick,
+        tooltipText: "View all the matches which are already in the Squad Stats database",
+        placement: "top"
+    } as TooltipButtonProps;
 
-    const generateButtons = () => {
-        const buttonInfoArray = [
-            {
-                disabled: viewCurrentMatchesDisabled,
-                handleClick: handleViewCurrentMatchesClick,
-                text: 'View Current Matches',
-                title: 'View all the matches which are already in the Squad Stats database'
-            },
-            {
-                disabled: updateMatchInfoFromDataSourceDisabled,
-                handleClick: handleUpdateMatchInfoFromDataSourceButtonPress,
-                text: 'Update Match Info From Data Source',
-                title: 'Update the match info for all the displayed matches from the data source'
-            },
-            {
-                disabled: selectMatchesToUpdateDisabled,
-                handleClick: handleSelectMatchesToUpdateButtonPress,
-                text: 'Select Matches To Update Player Performance Data From Data Source',
-                // title: ''
-            },
-            {
-                disabled: startUpdateDisabled,
-                handleClick: handleStartUpdateButtonPress,
-                text: 'Start Update'
-            }
-        ] as ButtonInfo[];
-        return (
-            <>
-                {
-                    buttonInfoArray.map(
-                        (buttonInfo:ButtonInfo) => {
-                            return (
-                                <Tooltip title={buttonInfo.title} placement="right">
-                                    <button
-                                        className={"ss-green-button ts-button" + (buttonInfo.disabled ? " disabled-button" : "")}
-                                        onClick={buttonInfo.handleClick}
-                                        disabled={buttonInfo.disabled}
-                                    >
-                                        {buttonInfo.text}
-                                    </button>
-                                </Tooltip>
-                            )
-                        }
-                    )
-                }
-            </>
-        )
-    }
+    const matchInfoUpdateAll = {
+        buttonText: "Update All",
+        disabled: updateMatchInfoFromDataSourceDisabled,
+        handleClick: handleUpdateMatchInfoFromDataSourceButtonPress,
+        tooltipText: "Update the match info and the list of matches from the data source",
+        placement: "bottom"
+    } as TooltipButtonProps;
+
+    const playersSelectMatches = {
+        buttonText: "Select Matches",
+        disabled: selectMatchesToUpdateDisabled,
+        handleClick: handleSelectMatchesToUpdateButtonPress,
+        tooltipText: "Select matches to have their player performance data updated",
+        placement: "top"
+    } as TooltipButtonProps;
+
+    const playersUpdate = {
+        buttonText: "Update",
+        disabled: startUpdateDisabled,
+        handleClick: handleStartUpdateButtonPress,
+        tooltipText: "Update player performance data for selected matches from the data source",
+        placement: "bottom"
+    } as TooltipButtonProps;
+
+    const seasonsUpdateList = {
+        buttonText: "Update List",
+        disabled: updateListDisabled,
+        handleClick: handleUpdateListButtonPress,
+        tooltipText: "Update list of seasons from the data source",
+        placement: "bottom"
+    } as TooltipButtonProps;
 
     return (
         <div id='team-scrape-parent'>
@@ -267,26 +282,51 @@ export const TeamScrape = () => {
                         </FormControl>
                     </div>
                     <div id='team-scrape-buttons-div'>
-                        {generateButtons()}
+                        <TeamScrapeButtonColumn
+                            title="MATCH INFO"
+                            buttonProps={[
+                                matchInfoView,
+                                matchInfoUpdateAll
+                            ]}
+                        />
+                        <TeamScrapeButtonColumn
+                            title="PLAYERS"
+                            buttonProps={[
+                                playersSelectMatches,
+                                playersUpdate
+                            ]}
+                        />
+                        <TeamScrapeButtonColumn
+                            title="SEASONS"
+                            buttonProps={[
+                                seasonsUpdateList
+                            ]}
+                        />
                     </div>
                 </div>
-                <p>
-                    {errorMessage}
-                </p>
                 {
-                    isPlayerInfoView ? (
-                        <PlayerInfoView
-                            successMatches={successMatches}
-                            cols={successCols}
-                            tickedBoxes={tickedBoxes}
-                            setTickedBoxes={setTickedBoxes}
-                        />
-                    ) : (
-                        <MatchInfoView
-                            successMatches={successMatches}
-                            errorMatches={errorMatches}
-                            successCols={successCols}
-                        />
+                    isLoading ? <Loading/> : (
+                        <>
+                            <p>
+                                {errorMessage}
+                            </p>
+                            {
+                                isPlayerInfoView ? (
+                                    <PlayerInfoView
+                                        successMatches={successMatches}
+                                        cols={successCols}
+                                        tickedBoxes={tickedBoxes}
+                                        setTickedBoxes={setTickedBoxes}
+                                    />
+                                ) : (
+                                    <MatchInfoView
+                                        successMatches={successMatches}
+                                        errorMatches={errorMatches}
+                                        successCols={successCols}
+                                    />
+                                )
+                            }                        
+                        </>
                     )
                 }
             </div>

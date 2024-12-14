@@ -6,11 +6,15 @@ import { userSelector } from "../../../store/slices/userSlice";
 import TeamService from "../../../services/TeamService";
 import { BackendResponse } from "../../../types/BackendResponse";
 import { getTeam } from "../../../helpers/other";
+import { OverviewTableData } from "../../../types/OverviewTableData";
+import { OverviewTable } from "./OverviewTable";
+import "./TeamOverview.css";
 
 export const TeamOverview = () => {
 
     const [team, setTeam] = useState<Team>();
     const [errorMessage, setErrorMessage] = useState("");
+    const [tableDataArray, setTableDataArray] = useState<OverviewTableData[]>([]);
 
     let { teamId } = useParams();
     const user = useSelector(userSelector);
@@ -33,6 +37,17 @@ export const TeamOverview = () => {
                     }
                 )
             }
+            TeamService.getTeamOverviewStats(
+                teamId!
+            ).then(
+                (res:BackendResponse) => {
+                    if (res.success) {
+                        setTableDataArray(res.data);
+                    } else {
+                        setErrorMessage(res.data.message);
+                    }
+                }
+            )
         },
         []
     )
@@ -43,14 +58,35 @@ export const TeamOverview = () => {
                 {team?.team_name}
             </h1>
             <div id='team-overview-content'>
+                <div id='team-overview-link-bar'>
+                    <Link
+                        to={`/team/${teamId}/scrape`}
+                    >
+                        Scrape
+                    </Link>
+                    <Link
+                        to={`/team/${teamId}/scrape`}
+                    >
+                        Team Stats
+                    </Link>
+                    <Link
+                        to={`/team/${teamId}/scrape`}
+                    >
+                        Player Stats
+                    </Link>
+                </div>
                 <div>
                     {errorMessage}
                 </div>
-                <Link
-                    to={`/team/${teamId}/scrape`}
-                >
-                    Scrape
-                </Link>
+                <div id='team-overview-tables-div'>
+                    {
+                        tableDataArray.map(
+                            (overviewTableData:OverviewTableData) => {
+                                return <OverviewTable {...overviewTableData}/>
+                            }
+                        )
+                    }
+                </div>
             </div>
         </div>
     );

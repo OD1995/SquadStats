@@ -11,7 +11,8 @@
 #team-scrape-input-parent {
     display: flex;
     flex-direction: row;
-    width: 40vw;
+    width: 50vw;
+    min-width: 560px;
     border: 1px solid #806c6c;
     border-radius: 1vw;
     padding: 1vh;
@@ -29,7 +30,7 @@
 #team-scrape-buttons-div {
     justify-content: space-evenly;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     margin-top: 1.5vh;
     margin-bottom: 1.5vh;
@@ -48,4 +49,32 @@
     margin-top: 0.5vh;
     margin-bottom: 0.5vh;
     max-width: 20vw;
+}
+
+#team-scrape-button-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 16vh;
+}
+
+#team-scrape-button-column-text {
+    height: 20%;
+    font-weight: bold;
+    font-size: 8pt;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+#team-scrape-button-column-buttons {
+    display: flex;
+    flex-direction: column;
+    height: 80%;
+    justify-content: center;
+}
+
+.team-scrape-button-column-button {
+    font-size: smaller;
+    margin-left: 0.5vw;
+    margin-right: 0.5vw;
 }

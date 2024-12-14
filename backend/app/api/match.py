@@ -4,6 +4,7 @@ from uuid import UUID
 from flask import Blueprint, jsonify, request
 from sqlalchemy import and_, or_
 from app import db
+from app.models.DataSource import DataSource
 from app.models.League import League
 from app.models.LeagueSeason import LeagueSeason
 from app.models.Match import Match
@@ -177,10 +178,13 @@ def get_current_matches(team_id, league_season_id):
         current_matches = db.session.query(Match) \
             .join(TeamSeason) \
             .filter(
-                TeamSeason.team_id == team_id,
-                TeamSeason.league_season_id == league_season_id
+                TeamSeason.team_id == UUID(team_id),
+                TeamSeason.league_season_id == UUID(league_season_id)
             ).all()
-        return jsonify(current_matches), 200
+        return jsonify([
+                match.to_dict()
+                for match in sorted(current_matches, key=lambda x: x.date)
+            ]), 200
     except Exception as e:
         return {
             'message' : traceback.format_exc()
@@ -219,7 +223,7 @@ def update_matches():
             league = db.session.query(League) \
                 .filter_by(league_id=league_id) \
                 .first()
-            data_source = db.session.query(DataSourceEnum) \
+            data_source = db.session.query(DataSource) \
                 .filter_by(data_source_id=team.data_source_id) \
                 .first()
             team_scraper = FootballAssociationTeamScraper(
