@@ -158,7 +158,7 @@ class FootballAssociationFixtureScraper(FixtureScraper):
                 stat,
                 value
             ) = [
-                x.text
+                x.text.strip()
                 for x in row.find_all('td')
             ]
             if team not in self.team_names:

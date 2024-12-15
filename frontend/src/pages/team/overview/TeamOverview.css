@@ -1,23 +1,41 @@
+#team-overview-parent {
+    width: 100%;
+}
+
 #team-overview-content {
     display: flex;
     flex-direction: column;
 }
 
-#team-overview-link-bar {
-    height: 10vh;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
+#team-overview-parent-table {
+    border-collapse: collapse;
+    border-style: hidden;
+}
+
+#team-overview-parent-table .team-overview-cell {
+    border: 1px solid #646cff;
+    /* display: flex; */
+    /* text-align: center; */
 }
 
 #team-overview-tables-div {
     display: flex;
-    flex-direction: row;
+    justify-content: center;
 }
 
 .overview-table-div {
-    width: 25vw;
-    padding-left: 2vw;
-    padding-right: 2vw;
-    border-right: 1px solid #646cff;
+    margin: 2vw;
+    display: flex;
+    flex-direction: column;
+    width: 35vw;
+}
+
+.overview-table-title {
+    font-weight: normal;
+    margin-top: 0.5vh;
+    margin-bottom: 0.5vh;
+}
+
+.overview-table-table {
+    text-align: center;
 }

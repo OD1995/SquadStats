@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Team } from "../../../types/Team";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { userSelector } from "../../../store/slices/userSlice";
 import TeamService from "../../../services/TeamService";
@@ -9,12 +9,14 @@ import { getTeam } from "../../../helpers/other";
 import { OverviewTableData } from "../../../types/OverviewTableData";
 import { OverviewTable } from "./OverviewTable";
 import "./TeamOverview.css";
+import { TeamLinkBar } from "../generic/TeamLinkBar";
 
 export const TeamOverview = () => {
 
     const [team, setTeam] = useState<Team>();
     const [errorMessage, setErrorMessage] = useState("");
-    const [tableDataArray, setTableDataArray] = useState<OverviewTableData[]>([]);
+    const [teamTableDataArray, setTeamTableDataArray] = useState<OverviewTableData[]>([]);
+    const [playerTableDataArray, setPlayerTableDataArray] = useState<OverviewTableData[]>([]);
 
     let { teamId } = useParams();
     const user = useSelector(userSelector);
@@ -42,7 +44,8 @@ export const TeamOverview = () => {
             ).then(
                 (res:BackendResponse) => {
                     if (res.success) {
-                        setTableDataArray(res.data);
+                        setTeamTableDataArray(res.data.teams);
+                        setPlayerTableDataArray(res.data.players);
                     } else {
                         setErrorMessage(res.data.message);
                     }
@@ -52,40 +55,73 @@ export const TeamOverview = () => {
         []
     )
 
+    const generateTableRow = (tableDataArray:OverviewTableData[]) => {
+        return [
+            <OverviewTable {...tableDataArray[0]}/>,
+            <hr className="vertical-line"/>,
+            <OverviewTable {...tableDataArray[1]}/>,
+        ]
+    }
+
+    // const generateTables = (
+    //     teamData:OverviewTableData[],
+    //     playerData:OverviewTableData[]
+    // ) => {
+    //     var arrayToReturn = [];
+    //     for (const td of teamData) {
+    //         arrayToReturn.push(
+    //             <OverviewTable {...td}/>
+    //         )
+    //     }
+    //     for (const pd of playerData) {
+    //         arrayToReturn.push(
+    //             <OverviewTable {...pd}/>
+    //         )
+    //     }
+    //     return arrayToReturn;
+    // }
+
+    const generateParentTable = () => {
+        return (
+            <table id='team-overview-parent-table'>
+                <tr>
+                    {generateTeamTableRow()}
+                </tr>
+                <tr>
+                    {generatePlayerTableRow()}
+                </tr>
+            </table>
+        )
+    }
+
+    const generateTeamTableRow = () => {
+        return teamTableDataArray.map(
+            (teamTableData:OverviewTableData) => {
+                return <td className="team-overview-cell"><OverviewTable {...teamTableData}/></td>
+            }
+        )
+    }
+
+    const generatePlayerTableRow = () => {
+        return playerTableDataArray.map(
+            (playerTableData:OverviewTableData) => {
+                return <td className="team-overview-cell"><OverviewTable {...playerTableData}/></td>
+            }
+        )
+    }
+
     return (
         <div id='team-overview-parent'>
             <h1 className="big-h1-title">
                 {team?.team_name}
             </h1>
             <div id='team-overview-content'>
-                <div id='team-overview-link-bar'>
-                    <Link
-                        to={`/team/${teamId}/scrape`}
-                    >
-                        Scrape
-                    </Link>
-                    <Link
-                        to={`/team/${teamId}/scrape`}
-                    >
-                        Team Stats
-                    </Link>
-                    <Link
-                        to={`/team/${teamId}/scrape`}
-                    >
-                        Player Stats
-                    </Link>
-                </div>
+                <TeamLinkBar/>
                 <div>
                     {errorMessage}
                 </div>
                 <div id='team-overview-tables-div'>
-                    {
-                        tableDataArray.map(
-                            (overviewTableData:OverviewTableData) => {
-                                return <OverviewTable {...overviewTableData}/>
-                            }
-                        )
-                    }
+                    {generateParentTable()}
                 </div>
             </div>
         </div>

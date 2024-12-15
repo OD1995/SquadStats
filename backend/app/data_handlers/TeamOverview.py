@@ -1,7 +1,13 @@
 from uuid import UUID
+
+from sqlalchemy import Row, func
 from app import db
 from app.models.Match import Match
+from app.models.Metric import Metric
+from app.models.Player import Player
+from app.models.PlayerMatchPerformance import PlayerMatchPerformance
 from app.models.TeamSeason import TeamSeason
+from app.types.enums import Metric as MetricEnum
 
 class TeamOverview:
 
@@ -21,6 +27,73 @@ class TeamOverview:
                 self.get_top_appearances(),
                 self.get_top_goals(),
             ]
+        }
+
+    def get_top_appearances(self):
+        top_appearances = db.session.query(
+                Player,
+                func.sum(PlayerMatchPerformance.value)
+            ) \
+            .join(Player) \
+            .join(Match) \
+            .join(TeamSeason) \
+            .join(Metric) \
+            .group_by(Player) \
+            .order_by(func.sum(PlayerMatchPerformance.value).desc()) \
+            .filter(
+                TeamSeason.team_id == self.team_id,
+                Metric.metric_name == MetricEnum.APPEARANCES
+            ) \
+            .limit(5) \
+            .all()
+        return self.create_table_data_dict_for_player_stats(
+            title='Top Appearance Makers',
+            stat_name='Appearances',
+            player_stats=top_appearances
+        )
+
+    def get_top_goals(self):
+        top_goals = db.session.query(
+                Player,
+                func.sum(PlayerMatchPerformance.value)
+            ) \
+            .join(Player) \
+            .join(Match) \
+            .join(TeamSeason) \
+            .join(Metric) \
+            .group_by(Player) \
+            .order_by(func.sum(PlayerMatchPerformance.value).desc()) \
+            .filter(
+                TeamSeason.team_id == self.team_id,
+                Metric.metric_name == MetricEnum.OVERALL_GOALS
+            ) \
+            .limit(5) \
+            .all()
+        return self.create_table_data_dict_for_player_stats(
+            title='Top Goalscorers',
+            stat_name='Goals',
+            player_stats=top_goals
+        )
+            
+    def create_table_data_dict_for_player_stats(
+        self,
+        title:str,
+        stat_name:str,
+        player_stats:Row
+    ):
+        rows = []
+        for player, stat in player_stats:
+            rows.append([
+                player.get_best_name(),
+                stat
+            ])
+        return {
+            'title' : title,
+            'column_headers' : [
+                'Player',
+                stat_name
+            ],
+            'rows' : rows
         }
     
     def get_biggest_wins(self):        
@@ -55,7 +128,6 @@ class TeamOverview:
         rows = []
         for rnk,match in enumerate(matches,1):
             rows.append([
-                rnk,
                 f"{match.opposition_team_name} ({match.home_away_neutral.value[0]})",
                 f"{match.goals_for}-{match.goals_against}",
                 match.date.strftime("%d %b %Y")
@@ -63,7 +135,6 @@ class TeamOverview:
         return {
             'title' : title,
             'column_headers' : [
-                '',
                 'Opposition',
                 'Result',
                 'Date'

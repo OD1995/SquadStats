@@ -1,12 +1,9 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { PAGE_TYPE } from "../types/enums";
-import './LoginOrRegster.css';
-// import { BackendResponse } from "../../types/BackendResponse";
-// import UserManagementService from "../../services/UserManagementService";
-import { setUser, userSelector } from "../store/slices/userSlice";
+import { userSelector } from "../store/slices/userSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { isWiderThanHigher } from "../helpers/windowDimensions";
+import './LoginOrRegster.css';
 
 interface LoginOrRegisterProps {
     pageType:PAGE_TYPE

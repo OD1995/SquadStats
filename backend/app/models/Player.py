@@ -24,3 +24,6 @@ class Player(Base):
         self.club_id = club_id
         self.data_source_player_name = data_source_player_name
         self.better_player_name = None
+
+    def get_best_name(self):
+        return self.better_player_name or self.data_source_player_name

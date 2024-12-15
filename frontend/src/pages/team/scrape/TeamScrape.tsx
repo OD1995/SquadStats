@@ -17,6 +17,7 @@ import { TeamScrapeButtonColumn } from "./TeamScrapeButtonColumn";
 import { TooltipButtonProps } from "../../../generic/TooltipButton";
 import { Loading } from "../../../generic/Loading";
 import SeasonService from "../../../services/SeasonService";
+import { TeamLinkBar } from "../generic/TeamLinkBar";
 
 export const TeamScrape = () => {
 
@@ -254,6 +255,7 @@ export const TeamScrape = () => {
                 {team?.team_name}
             </h1>
             <div id='team-scrape-content'>
+                <TeamLinkBar/>
                 <div id='team-scrape-input-parent'>
                     <div id='team-scrape-season-div' className="team-scrape-input-row">
                         <strong id='team-scrape-season-label'>

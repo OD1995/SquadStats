@@ -1,0 +1,19 @@
+#team-link-bar {
+    height: 5vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    /* width: 99.9%; */
+    border: 1px solid #646cff;
+    align-items: center;
+    background-color: #646cff;
+    margin-bottom: 3vh;
+}
+
+.team-link {
+    color: white;
+}
+
+.team-link:hover {
+    color: black !important;
+}

@@ -1,14 +1,29 @@
 import { OverviewTableData } from "../../../types/OverviewTableData"
 
 export const OverviewTable = (props:OverviewTableData) => {
+
+    const generateRow = (row:string[],ix:number) => {
+        var arrayToReturn = [
+            <td><strong>{ix+1}</strong></td>
+        ];
+        for (const val of row) {
+            arrayToReturn.push(
+                <td>{val}</td>
+            )
+        }
+        return arrayToReturn;
+    }
+
     return (
         <div className='overview-table-div'>
-            {props.title}
-            <table>
+            <h6 className="overview-table-title">
+                {props.title.toUpperCase()}
+            </h6>
+            <table className="overview-table-table">
                 <thead>
                     <tr>
                         {
-                            props.column_headers.map(
+                            [""].concat(props.column_headers).map(
                                 (header:string) => {
                                     return <th>{header}</th>
                                 }
@@ -19,16 +34,10 @@ export const OverviewTable = (props:OverviewTableData) => {
                 <tbody>
                     {
                         props.rows.map(
-                            (row:string[]) => {
+                            (row:string[],ix:number) => {
                                 return (
                                     <tr>
-                                        {
-                                            row.map(
-                                                (val:string) => {
-                                                    return <td>{val}</td>
-                                                }
-                                            )
-                                        }
+                                        {generateRow(row, ix)}
                                     </tr>
                                 )
                             }

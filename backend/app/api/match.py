@@ -113,8 +113,9 @@ def scrape_matches():
                             data_source_player_name=player_name
                         )
                         new_players.append(player)
+                        players_by_name[player_name] = player
                     for metric_name, value in metric_dict.items():
-                        cleaner_metric_name = metric_name.strip().lower()
+                        cleaner_metric_name = metric_name.lower()
                         if cleaner_metric_name in metrics_by_name:
                             metric = metrics_by_name[cleaner_metric_name]
                         else:
@@ -123,6 +124,7 @@ def scrape_matches():
                                 metric_name=metric_name
                             )
                             new_metrics.append(metric)
+                            metrics_by_name[cleaner_metric_name] = metric
                         key = (
                             player.player_id,
                             match_id,

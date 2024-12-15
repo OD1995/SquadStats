@@ -8,7 +8,7 @@ get_team_matches for manual entry team
 
 Deal with walkovers, e.g. https://fulltime.thefa.com/displayFixture.html?id=27206908
 
-
+Add ability to add 'better player name'
 
 182317005
 

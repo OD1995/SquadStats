@@ -20,3 +20,7 @@ class HomeAwayNeutral(str, Enum):
     HOME: str = 'H'
     AWAY: str = 'A'
     NEUTRAL: str = 'N'
+
+class Metric(str, Enum):
+    APPEARANCES: str = 'Appearances'
+    OVERALL_GOALS: str = 'Overall Goals'
