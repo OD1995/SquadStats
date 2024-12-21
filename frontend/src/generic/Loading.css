@@ -4,6 +4,12 @@
     border: 1px solid black;
 }
 
+#loading-div-parent {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 @media (prefers-reduced-motion: no-preference) {
     #loading-logo {
         animation: App-logo-spin infinite 3s linear;

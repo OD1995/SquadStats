@@ -1,8 +1,10 @@
+from dataclasses import dataclass
 from uuid import UUID, uuid4
 from sqlalchemy import ForeignKey, String
 from app.models import Base
 from sqlalchemy.orm import Mapped, mapped_column
 
+@dataclass
 class Player(Base):
     __tablename__ = 'players'
     __table_args__ = {"mysql_engine": "InnoDB"}
@@ -27,3 +29,9 @@ class Player(Base):
 
     def get_best_name(self):
         return self.better_player_name or self.data_source_player_name
+    
+    def to_dict(self):
+        return {
+            'player_id' : self.player_id,
+            'player_name' : self.get_best_name()
+        }

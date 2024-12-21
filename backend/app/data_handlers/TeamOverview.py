@@ -81,12 +81,13 @@ class TeamOverview:
         stat_name:str,
         player_stats:Row
     ):
-        rows = []
-        for player, stat in player_stats:
-            rows.append([
-                player.get_best_name(),
-                stat
-            ])
+        rows = [
+            {
+                'player' : player.to_dict(),
+                'val' : stat
+            }
+            for player, stat in player_stats
+        ]
         return {
             'title' : title,
             'column_headers' : [
@@ -125,13 +126,10 @@ class TeamOverview:
         title:str,
         matches:list[Match]
     ):
-        rows = []
-        for rnk,match in enumerate(matches,1):
-            rows.append([
-                f"{match.opposition_team_name} ({match.home_away_neutral.value[0]})",
-                f"{match.goals_for}-{match.goals_against}",
-                match.date.strftime("%d %b %Y")
-            ])
+        rows = [
+            match.to_dict()
+            for match in matches
+        ]
         return {
             'title' : title,
             'column_headers' : [

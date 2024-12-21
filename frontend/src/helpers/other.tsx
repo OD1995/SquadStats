@@ -61,3 +61,11 @@ export const generateBodyRow = (values:TableCellValue[]) => {
         </TableRow>
     )
 }
+
+export const getTeamOverviewHeaders = (columnHeaders:string[]) => {    
+    return [""].concat(columnHeaders).map(
+        (header:string) => {
+            return <th>{header}</th>
+        }
+    )
+}

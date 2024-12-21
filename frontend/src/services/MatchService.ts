@@ -36,6 +36,14 @@ class MatchService {
             }
         )
     }
+
+    getMatchInfo(
+        matchId:string
+    ) {
+        return makeGetRequest(
+            this.base_url + `/get-match-info/${matchId}`
+        )
+    }
 }
 
 export default new MatchService();

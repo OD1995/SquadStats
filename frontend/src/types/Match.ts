@@ -7,8 +7,8 @@ export interface Match {
     goals_for: number,
     goals_against: number,
     goal_difference: number,
-    pens_for: string,
-    pens_against: string,
+    pens_for: number|null,
+    pens_against: number|null,
     opposition_team_name: string,
     result: string,
     date: string,
@@ -16,5 +16,6 @@ export interface Match {
     location: string,
     home_away_neutral: string,
     match_errors:MatchError[]
-    player_info_scraped:boolean
+    player_info_scraped:boolean,
+    // player_performance_data:
 }

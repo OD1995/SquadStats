@@ -256,81 +256,83 @@ export const TeamScrape = () => {
             </h1>
             <div id='team-scrape-content'>
                 <TeamLinkBar/>
-                <div id='team-scrape-input-parent'>
-                    <div id='team-scrape-season-div' className="team-scrape-input-row">
-                        <strong id='team-scrape-season-label'>
-                            Season
-                        </strong>
-                        <FormControl>
-                            <Select
-                                value={selectedSeason}
-                                onChange={handleSeasonSelect}
-                            >
+                <div id='team-scrape-2'>
+                    <div id='team-scrape-input-parent'>
+                        <div id='team-scrape-season-div' className="team-scrape-input-row">
+                            <strong id='team-scrape-season-label'>
+                                Season
+                            </strong>
+                            <FormControl>
+                                <Select
+                                    value={selectedSeason}
+                                    onChange={handleSeasonSelect}
+                                >
+                                    {
+                                        seasons.map(
+                                            (season:Season) => {
+                                                return (
+                                                    <MenuItem
+                                                        key={season.season_id}
+                                                        value={season.season_id}
+                                                    >
+                                                        {season.season_name}
+                                                    </MenuItem>
+                                                )
+                                            }
+                                        )
+                                    }
+                                </Select>
+                            </FormControl>
+                        </div>
+                        <div id='team-scrape-buttons-div'>
+                            <TeamScrapeButtonColumn
+                                title="MATCH INFO"
+                                buttonProps={[
+                                    matchInfoView,
+                                    matchInfoUpdateAll
+                                ]}
+                            />
+                            <TeamScrapeButtonColumn
+                                title="PLAYERS"
+                                buttonProps={[
+                                    playersSelectMatches,
+                                    playersUpdate
+                                ]}
+                            />
+                            <TeamScrapeButtonColumn
+                                title="SEASONS"
+                                buttonProps={[
+                                    seasonsUpdateList
+                                ]}
+                            />
+                        </div>
+                    </div>
+                    {
+                        isLoading ? <Loading/> : (
+                            <>
+                                <p>
+                                    {errorMessage}
+                                </p>
                                 {
-                                    seasons.map(
-                                        (season:Season) => {
-                                            return (
-                                                <MenuItem
-                                                    key={season.season_id}
-                                                    value={season.season_id}
-                                                >
-                                                    {season.season_name}
-                                                </MenuItem>
-                                            )
-                                        }
+                                    isPlayerInfoView ? (
+                                        <PlayerInfoView
+                                            successMatches={successMatches}
+                                            cols={successCols}
+                                            tickedBoxes={tickedBoxes}
+                                            setTickedBoxes={setTickedBoxes}
+                                        />
+                                    ) : (
+                                        <MatchInfoView
+                                            successMatches={successMatches}
+                                            errorMatches={errorMatches}
+                                            successCols={successCols}
+                                        />
                                     )
-                                }
-                            </Select>
-                        </FormControl>
-                    </div>
-                    <div id='team-scrape-buttons-div'>
-                        <TeamScrapeButtonColumn
-                            title="MATCH INFO"
-                            buttonProps={[
-                                matchInfoView,
-                                matchInfoUpdateAll
-                            ]}
-                        />
-                        <TeamScrapeButtonColumn
-                            title="PLAYERS"
-                            buttonProps={[
-                                playersSelectMatches,
-                                playersUpdate
-                            ]}
-                        />
-                        <TeamScrapeButtonColumn
-                            title="SEASONS"
-                            buttonProps={[
-                                seasonsUpdateList
-                            ]}
-                        />
-                    </div>
+                                }                        
+                            </>
+                        )
+                    }
                 </div>
-                {
-                    isLoading ? <Loading/> : (
-                        <>
-                            <p>
-                                {errorMessage}
-                            </p>
-                            {
-                                isPlayerInfoView ? (
-                                    <PlayerInfoView
-                                        successMatches={successMatches}
-                                        cols={successCols}
-                                        tickedBoxes={tickedBoxes}
-                                        setTickedBoxes={setTickedBoxes}
-                                    />
-                                ) : (
-                                    <MatchInfoView
-                                        successMatches={successMatches}
-                                        errorMatches={errorMatches}
-                                        successCols={successCols}
-                                    />
-                                )
-                            }                        
-                        </>
-                    )
-                }
             </div>
         </div>
     );

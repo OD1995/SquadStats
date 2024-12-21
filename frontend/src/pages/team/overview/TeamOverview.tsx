@@ -6,17 +6,19 @@ import { userSelector } from "../../../store/slices/userSlice";
 import TeamService from "../../../services/TeamService";
 import { BackendResponse } from "../../../types/BackendResponse";
 import { getTeam } from "../../../helpers/other";
-import { OverviewTableData } from "../../../types/OverviewTableData";
-import { OverviewTable } from "./OverviewTable";
+import { PlayerOverviewTableData, TeamOverviewTableData } from "../../../types/OverviewTableData";
 import "./TeamOverview.css";
 import { TeamLinkBar } from "../generic/TeamLinkBar";
+import { Loading } from "../../../generic/Loading";
+import { TeamOverviewTable } from "./TeamOverviewTable";
+import { PlayerOverviewTable } from "./PlayerOverviewTable";
 
 export const TeamOverview = () => {
 
-    const [team, setTeam] = useState<Team>();
+    const [team, setTeam] = useState<Team|null>(null);
     const [errorMessage, setErrorMessage] = useState("");
-    const [teamTableDataArray, setTeamTableDataArray] = useState<OverviewTableData[]>([]);
-    const [playerTableDataArray, setPlayerTableDataArray] = useState<OverviewTableData[]>([]);
+    const [teamTableDataArray, setTeamTableDataArray] = useState<TeamOverviewTableData[]>([]);
+    const [playerTableDataArray, setPlayerTableDataArray] = useState<PlayerOverviewTableData[]>([]);
 
     let { teamId } = useParams();
     const user = useSelector(userSelector);
@@ -55,32 +57,6 @@ export const TeamOverview = () => {
         []
     )
 
-    const generateTableRow = (tableDataArray:OverviewTableData[]) => {
-        return [
-            <OverviewTable {...tableDataArray[0]}/>,
-            <hr className="vertical-line"/>,
-            <OverviewTable {...tableDataArray[1]}/>,
-        ]
-    }
-
-    // const generateTables = (
-    //     teamData:OverviewTableData[],
-    //     playerData:OverviewTableData[]
-    // ) => {
-    //     var arrayToReturn = [];
-    //     for (const td of teamData) {
-    //         arrayToReturn.push(
-    //             <OverviewTable {...td}/>
-    //         )
-    //     }
-    //     for (const pd of playerData) {
-    //         arrayToReturn.push(
-    //             <OverviewTable {...pd}/>
-    //         )
-    //     }
-    //     return arrayToReturn;
-    // }
-
     const generateParentTable = () => {
         return (
             <table id='team-overview-parent-table'>
@@ -96,34 +72,46 @@ export const TeamOverview = () => {
 
     const generateTeamTableRow = () => {
         return teamTableDataArray.map(
-            (teamTableData:OverviewTableData) => {
-                return <td className="team-overview-cell"><OverviewTable {...teamTableData}/></td>
+            (teamTableData:TeamOverviewTableData) => {
+                return <td className="team-overview-cell"><TeamOverviewTable {...teamTableData}/></td>
             }
         )
     }
 
     const generatePlayerTableRow = () => {
         return playerTableDataArray.map(
-            (playerTableData:OverviewTableData) => {
-                return <td className="team-overview-cell"><OverviewTable {...playerTableData}/></td>
+            (playerTableData:PlayerOverviewTableData) => {
+                return <td className="team-overview-cell"><PlayerOverviewTable {...playerTableData}/></td>
             }
         )
     }
 
-    return (
-        <div id='team-overview-parent'>
-            <h1 className="big-h1-title">
-                {team?.team_name}
-            </h1>
-            <div id='team-overview-content'>
-                <TeamLinkBar/>
-                <div>
-                    {errorMessage}
-                </div>
-                <div id='team-overview-tables-div'>
-                    {generateParentTable()}
+    if (
+        (errorMessage == "") && (
+            (team == null) || (teamTableDataArray.length == 0)
+        )
+    ) {
+        return (
+            <div id='team-overview-parent'>
+                <Loading/>
+            </div>
+        )
+    } else {
+        return (
+            <div id='team-overview-parent'>
+                <h1 className="big-h1-title">
+                    {team?.team_name}
+                </h1>
+                <div id='team-overview-content'>
+                    <TeamLinkBar/>
+                    <div>
+                        {errorMessage}
+                    </div>
+                    <div id='team-overview-tables-div'>
+                        {generateParentTable()}
+                    </div>
                 </div>
             </div>
-        </div>
-    );
+        );
+    }
 }

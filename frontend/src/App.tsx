@@ -14,6 +14,7 @@ import { ClubOverview } from './pages/club/ClubOverview';
 import { TeamOverview } from './pages/team/overview/TeamOverview';
 import { TeamScrape } from './pages/team/scrape/TeamScrape';
 import { TeamNames } from './pages/team/name/TeamNames';
+import { MatchView } from './pages/match/MatchView';
 
 
 const App = () => {
@@ -41,6 +42,7 @@ const App = () => {
 						<Route path='/team/:teamId/overview' element={<TeamOverview/>}/>
 						<Route path='/team/:teamId/scrape' element={<TeamScrape/>}/>
 						<Route path='/team/:teamId/team-names' element={<TeamNames/>}/>
+						<Route path='/match/:matchId' element={<MatchView/>}/>
 					</Routes>
 				</div>
 			</Router>

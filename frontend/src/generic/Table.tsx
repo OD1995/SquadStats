@@ -2,6 +2,7 @@ import { Table as MuiTable, TableBody, TableContainer, TableHead } from "@mui/ma
 interface TableProps {
     headers:any
     rows:any[]
+    className?:string
 }
 
 export const Table = (props:TableProps) => {
@@ -9,7 +10,7 @@ export const Table = (props:TableProps) => {
         return null;
     }
     return (
-        <TableContainer>
+        <TableContainer className={props.className}>
             <MuiTable>
                 <TableHead>
                     {props.headers}

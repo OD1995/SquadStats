@@ -13,6 +13,7 @@ class Metric(Base):
         index=True
     )
     metric_name: Mapped[str] = mapped_column(String(50))
+    better_metric_name: Mapped[str] = mapped_column(String(50), nullable=True)
 
     def __init__(
         self,
@@ -22,3 +23,7 @@ class Metric(Base):
         self.metric_id = uuid4()
         self.data_source_id = data_source_id
         self.metric_name = metric_name
+        self.better_metric_name = None
+
+    def get_best_metric_name(self):
+        return self.better_metric_name or self.metric_name

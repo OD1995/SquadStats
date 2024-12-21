@@ -1,9 +1,11 @@
 from dataclasses import dataclass
+from turtle import back
 from typing import List
 from uuid import UUID, uuid4
 from datetime import date as dateDT, time as timeDT
 from sqlalchemy import Enum, ForeignKey, String
 from app.models import Base
+from app.models.Competition import Competition
 from app.models.MatchError import MatchError
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -45,6 +47,7 @@ class Match(Base):
     match_errors: Mapped[List["MatchError"]] = relationship(lazy='joined')
     team_season: Mapped[TeamSeason] = relationship(back_populates='matches')
     player_match_performances: Mapped[List[PlayerMatchPerformance]] = relationship(lazy='joined')
+    competition: Mapped[Competition] = relationship(lazy='joined')
 
     def __init__(
         self,
@@ -81,7 +84,16 @@ class Match(Base):
         self.location = location
         self.home_away_neutral = home_away_neutral
 
-    def to_dict(self):
+    def get_pmp(self):
+        return [
+            pmp.get_dict()
+            for pmp in self.player_match_performances
+        ]
+
+    def to_dict(
+        self,
+        include_player_stats:bool=False
+    ):
         return {
             'match_id' : self.match_id,
             'data_source_match_id' : self.data_source_match_id,
@@ -99,5 +111,6 @@ class Match(Base):
             'location' : self.location,
             'home_away_neutral' : self.home_away_neutral,
             'match_errors' : self.match_errors,
-            'player_info_scraped' : len(self.player_match_performances) > 0
+            'player_info_scraped' : len(self.player_match_performances) > 0,
+            'player_performance_data' : self.get_pmp() if include_player_stats else []
         }
