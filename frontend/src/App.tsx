@@ -1,4 +1,4 @@
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
+import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom'
 import './App.css';
 import { About } from './pages/about/About';
 import { AbrORDOB } from './pages/abrORDOB/AbrORDOB';
@@ -43,6 +43,7 @@ const App = () => {
 						<Route path='/team/:teamId/scrape' element={<TeamScrape/>}/>
 						<Route path='/team/:teamId/team-names' element={<TeamNames/>}/>
 						<Route path='/match/:matchId' element={<MatchView/>}/>
+						<Route path="*" element={<Navigate to="/about" replace/>}/>
 					</Routes>
 				</div>
 			</Router>

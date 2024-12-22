@@ -2,7 +2,8 @@ import axios from "axios";
 import { BackendResponse } from "../types/BackendResponse";
 import store from "../store/store";
 import UserManagementService from "./UserManagementService";
-import { setUser } from "../store/slices/userSlice";
+import { setUser, triggerRefresh } from "../store/slices/userSlice";
+import { setUserLS } from "../authentication/auth";
 
 const instance = axios.create(
     {
@@ -24,7 +25,9 @@ instance.interceptors.response.use(
                         user?.access_token
                     ).then(
                         (res:BackendResponse) => {
-                            store.dispatch(setUser(res.data.ss_user))
+                            // store.dispatch(setUser(res.data.ss_user))
+                            setUserLS(res.data.ss_user);
+                            store.dispatch(triggerRefresh());
                         }
                     )
                 }

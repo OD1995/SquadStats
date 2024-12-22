@@ -9,6 +9,7 @@ import { HeirachyDescription } from "../../how-to/HeirachyDescription";
 import { useSelector } from "react-redux";
 import { userSelector } from "../../store/slices/userSlice";
 import { Link } from "react-router-dom";
+import { getUserLS } from "../../authentication/auth";
 
 interface AddClubProps {
     includeHeirachy:boolean
@@ -18,7 +19,8 @@ export const AddClub = (props:AddClubProps) => {
 
     const [newClubType, setNewClubType] = useState<string>("");
 
-    const user = useSelector(userSelector);
+    // const user = useSelector(userSelector);
+    const user = getUserLS();
 
     if (user) {
         return (

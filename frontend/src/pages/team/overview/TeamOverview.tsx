@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { userSelector } from "../../../store/slices/userSlice";
 import TeamService from "../../../services/TeamService";
 import { BackendResponse } from "../../../types/BackendResponse";
-import { getTeam } from "../../../helpers/other";
+import { getIsClubAdmin, getTeam } from "../../../helpers/other";
 import { PlayerOverviewTableData, TeamOverviewTableData } from "../../../types/OverviewTableData";
 import "./TeamOverview.css";
 import { TeamLinkBar } from "../generic/TeamLinkBar";
@@ -13,6 +13,8 @@ import { Loading } from "../../../generic/Loading";
 import { TeamOverviewTable } from "./TeamOverviewTable";
 import { PlayerOverviewTable } from "./PlayerOverviewTable";
 import { isWiderThanHigher } from "../../../helpers/windowDimensions";
+import { getUserLS } from "../../../authentication/auth";
+import { Club } from "../../../types/Club";
 
 export const TeamOverview = () => {
 
@@ -22,7 +24,8 @@ export const TeamOverview = () => {
     const [playerTableDataArray, setPlayerTableDataArray] = useState<PlayerOverviewTableData[]>([]);
 
     let { teamId } = useParams();
-    const user = useSelector(userSelector);
+    // const user = useSelector(userSelector);
+    const user = getUserLS();
     const isDesktop = isWiderThanHigher();
 
     useEffect(
@@ -120,7 +123,9 @@ export const TeamOverview = () => {
                     {team?.team_name}
                 </h1>
                 <div id='team-overview-content'>
-                    <TeamLinkBar/>
+                    <TeamLinkBar
+                        isClubAdmin={getIsClubAdmin(user,team)}
+                    />
                     <div>
                         {errorMessage}
                     </div>

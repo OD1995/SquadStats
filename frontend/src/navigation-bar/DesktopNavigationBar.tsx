@@ -1,9 +1,10 @@
+import { MouseEventHandler } from "react"
 import { User } from "../types/User"
 import { VerticalNavigationBarItems } from "./VerticalNavigationBarItems"
 
 interface DesktopNavigationBarProps {
     user:User|null
-    handleLogoutClick:Function
+    handleLogoutClick:MouseEventHandler
 }
 
 export const DesktopNavigationBar = (props:DesktopNavigationBarProps) => {
@@ -20,6 +21,7 @@ export const DesktopNavigationBar = (props:DesktopNavigationBarProps) => {
             <VerticalNavigationBarItems
                 user={props.user}
                 handleLogoutClick={props.handleLogoutClick}
+                handleItemSelection={() => {}}
             />
         </div>
     )

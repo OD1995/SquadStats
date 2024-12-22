@@ -18,6 +18,7 @@ import { TooltipButtonProps } from "../../../generic/TooltipButton";
 import { Loading } from "../../../generic/Loading";
 import SeasonService from "../../../services/SeasonService";
 import { TeamLinkBar } from "../generic/TeamLinkBar";
+import { getUserLS } from "../../../authentication/auth";
 
 export const TeamScrape = () => {
 
@@ -40,7 +41,8 @@ export const TeamScrape = () => {
     const [tickedBoxes, setTickedBoxes] = useState<boolean[]>([]);
 
     let { teamId } = useParams();
-    const user = useSelector(userSelector);
+    // const user = useSelector(userSelector);
+    const user = getUserLS();
     const navigate = useNavigate();
 
     useEffect(

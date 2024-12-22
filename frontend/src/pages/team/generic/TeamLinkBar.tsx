@@ -1,7 +1,11 @@
 import { Link, useParams } from "react-router-dom"
 import "./TeamLinkBar.css"
 
-export const TeamLinkBar = () => {
+interface OwnProps {
+    isClubAdmin:boolean
+}
+
+export const TeamLinkBar = (props:OwnProps) => {
 
     let { teamId } = useParams();
 

@@ -8,6 +8,7 @@ import { BackendResponse } from "../../types/BackendResponse";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { Team } from "../../types/Team";
 import { getClub } from "../../helpers/other";
+import { getUserLS } from "../../authentication/auth";
 
 interface ClubOverviewProps {
     // club_id:string
@@ -19,7 +20,8 @@ export const ClubOverview = (props:ClubOverviewProps) => {
     const [errorMessage, setErrorMessage] = useState("");
 
     let { clubId } = useParams();
-    const user = useSelector(userSelector);
+    // const user = useSelector(userSelector);
+    const user = getUserLS();
 
     useEffect(
         () => {

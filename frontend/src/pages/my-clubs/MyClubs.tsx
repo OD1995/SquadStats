@@ -5,11 +5,13 @@ import { Club } from "../../types/Club";
 import "./MyClubs.css"
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { getUserLS } from "../../authentication/auth";
 
 export const MyClubs = () => {
 
     const navigate = useNavigate();
-    const user = useSelector(userSelector);
+    // const user = useSelector(userSelector);
+    const user = getUserLS();
 
     useEffect(
         () => {

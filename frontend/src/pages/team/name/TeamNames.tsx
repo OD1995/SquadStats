@@ -11,6 +11,7 @@ import { TableCell, TableRow } from "@mui/material";
 import { TeamName } from "../../../types/TeamName";
 import { EditTeamNameTable } from "./EditTeamNameTable";
 import "./TeamNames.css";
+import { getUserLS } from "../../../authentication/auth";
 
 export const TeamNames = () => {
     
@@ -20,7 +21,8 @@ export const TeamNames = () => {
     const [editMode, setEditMode] = useState<boolean>(false);
 
     let { teamId } = useParams();
-    const user = useSelector(userSelector);
+    // const user = useSelector(userSelector);
+    const user = getUserLS();
 
     useEffect(
         () => {

@@ -77,6 +77,7 @@ class Team(Base):
             'team_name' : self.get_default_team_name(),
             'sport' : self.sport.sport_name,
             'team_id' : self.team_id,
+            'club_id' : self.club_id
             # 'leagues' : [
             #     x
             #     for x in self.team_leagues

@@ -5,8 +5,9 @@ import ClubService from "../../services/ClubService";
 import { CLUB_TYPE, DATA_SOURCE } from "../../types/enums";
 import { BackendResponse } from "../../types/BackendResponse";
 import { useDispatch } from "react-redux";
-import { setUser } from "../../store/slices/userSlice";
+import { setUser, triggerRefresh } from "../../store/slices/userSlice";
 import { useNavigate } from "react-router-dom";
+import { setUserLS } from "../../authentication/auth";
 
 interface NewClubSubmitProps {
     clubType:CLUB_TYPE
@@ -34,7 +35,9 @@ export const NewClubSubmit = (props:NewClubSubmitProps) => {
         ).then(
             (res:BackendResponse) => {
                 if (res.success) {
-                    dispatch(setUser(res.data.ss_user));
+                    // dispatch(setUser(res.data.ss_user));
+                    setUserLS(res.data.ss_user);
+                    dispatch(triggerRefresh());
                     navigate(`/club/${res.data.new_club_id}/overview`);
                 } else {
                     setErrorMessage(res.data.message)

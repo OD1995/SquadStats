@@ -69,3 +69,15 @@ export const getTeamOverviewHeaders = (columnHeaders:string[]) => {
         }
     )
 }
+
+export const getIsClubAdmin = (user:User|null, team:Team|null) => {
+    if (user && team) {
+        const clubId = team.club_id;
+        for (const club of user.clubs) {
+            if (club.club_id == clubId) {
+                return true;
+            }
+        }
+    }
+    return false;
+}

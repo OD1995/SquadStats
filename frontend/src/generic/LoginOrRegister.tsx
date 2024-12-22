@@ -4,6 +4,7 @@ import { PAGE_TYPE } from "../types/enums";
 import { userSelector } from "../store/slices/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import './LoginOrRegster.css';
+import { getUserLS } from "../authentication/auth";
 
 interface LoginOrRegisterProps {
     pageType:PAGE_TYPE
@@ -23,7 +24,8 @@ export const LoginOrRegister = (props:LoginOrRegisterProps) => {
     const [searchParams, setSearchParams] = useSearchParams();   
     const navigate = useNavigate(); 
     const dispatch = useDispatch();
-    const user = useSelector(userSelector);
+    // const user = useSelector(userSelector);
+    const user = getUserLS();
     
     useEffect(
         () => {
@@ -48,12 +50,14 @@ export const LoginOrRegister = (props:LoginOrRegisterProps) => {
         setPassword(e.target.value);
     }
 
-    // This is the part that does the navigation once the login is successful
     if (user) {
+        // Navigate once the login is successful
         const nextVal = searchParams.get("next");
         if (nextVal !== null) {
             return <Navigate to={nextVal}/>
         }
+        // Navigate if already logged in
+        return <Navigate to="my-clubs"/>
     }
 
     const handleButtonPress = () => {

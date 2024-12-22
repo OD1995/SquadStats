@@ -1,10 +1,11 @@
 import { Dispatch } from "react";
 import { BackendResponse } from "../../types/BackendResponse";
 import UserManagementService from "../../services/UserManagementService";
-import { setUser } from "../../store/slices/userSlice";
+import { setUser, triggerRefresh } from "../../store/slices/userSlice";
 import { UnknownAction } from "@reduxjs/toolkit";
 import { LoginOrRegister } from "../../generic/LoginOrRegister";
 import { PAGE_TYPE } from "../../types/enums";
+import { setUserLS } from "../../authentication/auth";
 
 
 
@@ -14,7 +15,7 @@ export const Login = () => {
         email:string,
         password:string,
         dispatch:Dispatch<UnknownAction>,
-        setUser:Function,
+        setUserLS:Function,
         setLoginError:Function,
         setLoginErrorColour:Function,
         navigate:Function
@@ -25,8 +26,10 @@ export const Login = () => {
         ).then(
             (res:BackendResponse) => {
                 if (res.success) {
-                    dispatch(setUser(res.data.ss_user));
-                    navigate("/my-clubs")
+                    // dispatch(setUser(res.data.ss_user));
+                    setUserLS(res.data.ss_user);
+                    dispatch(triggerRefresh());
+                    navigate("/my-clubs");
                 } else {
                     setLoginErrorColour("red");
                     setLoginError(res.data.message);
@@ -71,7 +74,7 @@ export const Login = () => {
                 email,
                 password,
                 dispatch,
-                setUser,
+                setUserLS,
                 setLoginError,
                 setLoginErrorColour,
                 navigate
