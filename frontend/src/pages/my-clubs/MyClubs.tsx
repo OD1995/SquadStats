@@ -25,7 +25,7 @@ export const MyClubs = () => {
                 My Clubs
             </h1>
             <div id='my-clubs-content'>
-                <TableContainer>
+                <TableContainer id='my-clubs-table-container'>
                     <Table>
                         <TableHead>
                             <TableRow className="ss-table-head">

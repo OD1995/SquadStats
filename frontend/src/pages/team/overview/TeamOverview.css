@@ -18,7 +18,11 @@
     /* text-align: center; */
 }
 
-#team-overview-tables-div {
+.team-overview-cell {
+    width: 35vw;
+}
+
+#team-overview-tables-desktop {
     display: flex;
     justify-content: center;
 }
@@ -27,7 +31,7 @@
     margin: 2vw;
     display: flex;
     flex-direction: column;
-    width: 35vw;
+    /* width: 35vw; */
 }
 
 .overview-table-title {
@@ -38,4 +42,10 @@
 
 .overview-table-table {
     text-align: center;
+}
+
+#team-overview-tables-mobile {
+    display: flex;
+    flex-direction: column;
+    /* width: 100vw; */
 }

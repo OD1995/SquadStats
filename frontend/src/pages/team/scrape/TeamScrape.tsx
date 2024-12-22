@@ -258,7 +258,7 @@ export const TeamScrape = () => {
                 <TeamLinkBar/>
                 <div id='team-scrape-2'>
                     <div id='team-scrape-input-parent'>
-                        <div id='team-scrape-season-div' className="team-scrape-input-row">
+                        <div id='team-scrape-season-div'>
                             <strong id='team-scrape-season-label'>
                                 Season
                             </strong>

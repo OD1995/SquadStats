@@ -12,6 +12,15 @@ export const MobileNavigationBar = (props:MobileNavigationBarProps) => {
 
     const [folded, setFolded] = useState(true);
 
+    const logoutClick = () => {
+        setFolded(true);
+        props.handleLogoutClick();
+    }
+
+    const itemClick = () => {
+        setFolded(true);
+    }
+
     return (
         <>
             <div
@@ -44,7 +53,8 @@ export const MobileNavigationBar = (props:MobileNavigationBarProps) => {
                     <div id='unfolded-mobile-navigation-bar'>
                         <VerticalNavigationBarItems
                             user={props.user}
-                            handleLogoutClick={props.handleLogoutClick}
+                            handleLogoutClick={logoutClick}
+                            handleItemSelection={itemClick}
                         />
                     </div>
                 )

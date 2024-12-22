@@ -61,9 +61,9 @@
     left: 0;
     position: fixed;
     width: 100vw;
-    /* border: 1px solid red; */
     display: flex;
     flex-direction: column;
     height: 90vh;
     background-color: #f6f6f6;
+    z-index: 1;
 }

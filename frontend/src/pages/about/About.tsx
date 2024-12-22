@@ -8,15 +8,8 @@ export const About = () => {
 
     return (
         <div id='about-parent'>
-            {/* {user?.access_token} */}
-            <div className="test-class">
-
-            </div>
-            <div id='od' className="test-class">
-
-            </div>
-            <div className="test-class">
-
+            <div>
+                Some text
             </div>
         </div>
     )

@@ -18,8 +18,8 @@
 #team-scrape-input-parent {
     display: flex;
     flex-direction: row;
-    width: 50vw;
-    min-width: 560px;
+    min-width: 50vw;
+    /* min-width: 560px; */
     border: 1px solid #806c6c;
     border-radius: 1vw;
     padding: 1vh;
@@ -27,11 +27,11 @@
 }
 
 .team-scrape-input-row {
-    display: flex;
+    /* display: flex;
     flex-direction: row;
     align-items: center;
     margin-top: 1.5vh;
-    margin-bottom: 1.5vh;
+    margin-bottom: 1.5vh; */
 }
 
 #team-scrape-buttons-div {
@@ -44,12 +44,16 @@
 }
 
 #team-scrape-season-div {
-    /* justify-content: space-evenly; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 1.5vh;
+    margin-bottom: 1.5vh;
     justify-content: center;
 }
 
 #team-scrape-season-label {
-    margin-right: 3vw;
+    /* margin-right: 3vw; */
 }
 
 .ts-button {

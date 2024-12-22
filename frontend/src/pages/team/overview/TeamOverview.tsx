@@ -12,6 +12,7 @@ import { TeamLinkBar } from "../generic/TeamLinkBar";
 import { Loading } from "../../../generic/Loading";
 import { TeamOverviewTable } from "./TeamOverviewTable";
 import { PlayerOverviewTable } from "./PlayerOverviewTable";
+import { isWiderThanHigher } from "../../../helpers/windowDimensions";
 
 export const TeamOverview = () => {
 
@@ -22,6 +23,7 @@ export const TeamOverview = () => {
 
     let { teamId } = useParams();
     const user = useSelector(userSelector);
+    const isDesktop = isWiderThanHigher();
 
     useEffect(
         () => {
@@ -86,6 +88,21 @@ export const TeamOverview = () => {
         )
     }
 
+    const generateTableColumn = () => {
+        var returnArray = [] as JSX.Element[];
+        teamTableDataArray.map(
+            (data:TeamOverviewTableData) => {
+                returnArray.push(<TeamOverviewTable {...data}/>)
+            }
+        )
+        playerTableDataArray.map(
+            (data:PlayerOverviewTableData) => {
+                returnArray.push(<PlayerOverviewTable {...data}/>)
+            }
+        )
+        return returnArray;
+    }
+
     if (
         (errorMessage == "") && (
             (team == null) || (teamTableDataArray.length == 0)
@@ -107,9 +124,17 @@ export const TeamOverview = () => {
                     <div>
                         {errorMessage}
                     </div>
-                    <div id='team-overview-tables-div'>
-                        {generateParentTable()}
-                    </div>
+                    {
+                        isDesktop ? (
+                            <div id='team-overview-tables-desktop'>
+                                {generateParentTable()}
+                            </div>
+                        ) : (
+                            <div id='team-overview-tables-mobile'>
+                                {generateTableColumn()}
+                            </div>
+                        )
+                    }
                 </div>
             </div>
         );
