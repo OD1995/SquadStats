@@ -29,6 +29,14 @@ class ClubService {
             this.base_url + `/get/${clubId}`
         )
     }
+
+    getClubOverviewStats(
+        clubId:string
+    ) {
+        return makeGetRequest(
+            this.base_url + `/get-club-overview-stats/${clubId}`
+        )
+    }
 }
 
 export default new ClubService();

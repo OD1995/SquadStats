@@ -27,23 +27,6 @@
     justify-content: center;
 }
 
-.overview-table-div {
-    margin: 2vw;
-    display: flex;
-    flex-direction: column;
-    /* width: 35vw; */
-}
-
-.overview-table-title {
-    font-weight: normal;
-    margin-top: 0.5vh;
-    margin-bottom: 0.5vh;
-}
-
-.overview-table-table {
-    text-align: center;
-}
-
 #team-overview-tables-mobile {
     display: flex;
     flex-direction: column;

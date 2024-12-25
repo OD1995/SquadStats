@@ -1,26 +1,21 @@
-import { useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
-import { userSelector } from "../../store/slices/userSlice";
+import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Club } from "../../types/Club";
 import ClubService from "../../services/ClubService";
 import { BackendResponse } from "../../types/BackendResponse";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
-import { Team } from "../../types/Team";
-import { getClub } from "../../helpers/other";
+import { getClub, getIsClubAdmin } from "../../helpers/other";
 import { getUserLS } from "../../authentication/auth";
+import { ClubOrTeamOverview } from "../../generic/ClubOrTeamOverview";
+import { PlayerOverviewTableData, TeamOverviewTableData } from "../../types/OverviewTableData";
 
-interface ClubOverviewProps {
-    // club_id:string
-}
-
-export const ClubOverview = (props:ClubOverviewProps) => {
+export const ClubOverview = () => {
 
     const [club, setClub] = useState<Club>();
     const [errorMessage, setErrorMessage] = useState("");
+    const [teamTableDataArray, setTeamTableDataArray] = useState<TeamOverviewTableData[]>([]);
+    const [playerTableDataArray, setPlayerTableDataArray] = useState<PlayerOverviewTableData[]>([]);
 
     let { clubId } = useParams();
-    // const user = useSelector(userSelector);
     const user = getUserLS();
 
     useEffect(
@@ -41,64 +36,29 @@ export const ClubOverview = (props:ClubOverviewProps) => {
                     }
                 )
             }
+            ClubService.getClubOverviewStats(
+                clubId!
+            ).then(
+                (res:BackendResponse) => {
+                    if (res.success) {
+                        setTeamTableDataArray(res.data.teams);
+                        setPlayerTableDataArray(res.data.players);
+                    } else {
+                        setErrorMessage(res.data.message);
+                    }
+                }
+            )
         },
         []
     )
 
     return (
-        <div id='club-overview-parent-div'>
-            <h1 className="big-h1-title">
-                {club?.club_name}
-            </h1>
-            <div id='club-overview-content'>
-                <div>
-                    {errorMessage}
-                </div>
-                <TableContainer>
-                    <Table>
-                        <TableHead>
-                            <TableRow className="ss-table-head">
-                                <TableCell
-                                    className="club-overview-cell"
-                                >
-                                    Team
-                                </TableCell>
-                                <TableCell
-                                    className="club-overview-cell"
-                                >
-                                    League
-                                </TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {
-                                club?.teams.map(
-                                    (team:Team) => {
-                                        const rows = [];
-                                        const teamVal = (
-                                            <Link to={`/team/${team.team_id}/overview`}>
-                                                {team.team_name}
-                                            </Link>
-                                        );
-                                        rows.push(
-                                            <TableRow
-                                                key={team.team_name + "-" + Math.random()}
-                                            >
-                                                <TableCell
-                                                    className="club-overview-cell"
-                                                >
-                                                    {teamVal}
-                                                </TableCell>
-                                            </TableRow>
-                                        )
-                                        return rows;
-                                    }
-                                )
-                            }
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-            </div>
-        </div>
+        <ClubOrTeamOverview
+            club={club}
+            errorMessage={errorMessage}
+            teamTableDataArray={teamTableDataArray}
+            playerTableDataArray={playerTableDataArray}
+            isClubAdmin={getIsClubAdmin(user,club?.club_id!)}
+        />
     );
 }

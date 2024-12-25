@@ -2,9 +2,7 @@ import { FormControl, MenuItem, Select, SelectChangeEvent } from "@mui/material"
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Team } from "../../../types/Team";
-import { useSelector } from "react-redux";
-import { userSelector } from "../../../store/slices/userSlice";
-import { getTeam } from "../../../helpers/other";
+import { getClubId, getIsClubAdmin, getTeam } from "../../../helpers/other";
 import TeamService from "../../../services/TeamService";
 import { BackendResponse } from "../../../types/BackendResponse";
 import { Season } from "../../../types/Season";
@@ -257,7 +255,10 @@ export const TeamScrape = () => {
                 {team?.team_name}
             </h1>
             <div id='team-scrape-content'>
-                <TeamLinkBar/>
+                <TeamLinkBar
+                    isClubAdmin={getIsClubAdmin(user, team?.club_id!)}
+                    clubId={team?.club_id!}
+                />
                 <div id='team-scrape-2'>
                     <div id='team-scrape-input-parent'>
                         <div id='team-scrape-season-div'>

@@ -4,7 +4,6 @@ import { Team } from "../types/Team";
 import { User } from "../types/User";
 import { TableCellValue } from "../types/TableCellValue";
 
-
 export const getTeam = (user:User|null, teamId:string|undefined) : Team|null => {
     if (user == null) {
         return null;
@@ -65,14 +64,16 @@ export const generateBodyRow = (values:TableCellValue[]) => {
 export const getTeamOverviewHeaders = (columnHeaders:string[]) => {    
     return [""].concat(columnHeaders).map(
         (header:string) => {
-            return <th>{header}</th>
+            return <th key={generateId()}>{header}</th>
         }
     )
 }
 
-export const getIsClubAdmin = (user:User|null, team:Team|null) => {
-    if (user && team) {
-        const clubId = team.club_id;
+export const getIsClubAdmin = (
+    user:User|null,
+    clubId:string|null
+) => {
+    if (user && clubId) {
         for (const club of user.clubs) {
             if (club.club_id == clubId) {
                 return true;
@@ -80,4 +81,19 @@ export const getIsClubAdmin = (user:User|null, team:Team|null) => {
         }
     }
     return false;
+}
+
+export const getClubId = (user:User, teamId:string) => {
+    for (const club of user.clubs) {
+        for (const team of club.teams) {
+            if (team.team_id == teamId) {
+                return club.club_id;
+            }
+        }
+    }
+    return null;
+}
+
+export const generateId = () => {
+    return Math.floor(Math.random() * 10000)
 }

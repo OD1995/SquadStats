@@ -14,7 +14,7 @@ export const PlayerDataSection = (props:OwnProps) => {
     useEffect(
         () => {
             const metricOrder = getMetricOrder(props.uniqueMetrics);
-            setHeaders(getHeaders(["",...metricOrder]));
+            setHeaders(getHeaders(["Featured Players",...metricOrder]));
             var _rows = [];
             for (const [playerId,playerDataDict] of Object.entries(props.playerData)) {
                 var vals = [

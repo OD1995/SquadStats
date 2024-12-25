@@ -1,0 +1,48 @@
+#cot-overview-parent {
+    width: 100%;
+}
+
+#cot-overview-content {
+    display: flex;
+    flex-direction: column;
+}
+
+#cot-overview-parent-table {
+    border-collapse: collapse;
+    border-style: hidden;
+}
+
+#cot-overview-parent-table .cot-overview-cell {
+    border: 1px solid #646cff;
+}
+
+.cot-overview-cell {
+    width: 35vw;
+}
+
+#cot-overview-tables-desktop {
+    display: flex;
+    justify-content: center;
+}
+
+.overview-table-div {
+    margin: 2vw;
+    display: flex;
+    flex-direction: column;
+    /* width: 35vw; */
+}
+
+.overview-table-title {
+    font-weight: normal;
+    margin-top: 0.5vh;
+    margin-bottom: 0.5vh;
+}
+
+.overview-table-table {
+    text-align: center;
+}
+
+#cot-overview-tables-mobile {
+    display: flex;
+    flex-direction: column;
+}

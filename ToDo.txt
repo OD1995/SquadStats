@@ -12,6 +12,8 @@ Deal with walkovers, e.g. https://fulltime.thefa.com/displayFixture.html?id=2720
 
 Add ability to add 'better player name'
 
+Maybe combine backend calls for team and club overview pages
+
 182317005
 
 https://fulltime.thefa.com/results.html?league=8577245&selectedSeason=500540830

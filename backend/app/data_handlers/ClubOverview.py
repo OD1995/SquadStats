@@ -6,16 +6,17 @@ from app.models.Match import Match
 from app.models.Metric import Metric
 from app.models.Player import Player
 from app.models.PlayerMatchPerformance import PlayerMatchPerformance
+from app.models.Team import Team
 from app.models.TeamSeason import TeamSeason
 from app.types.enums import Metric as MetricEnum
 
-class TeamOverview:
+class ClubOverview:
 
     def __init__(
         self,
-        team_id:str
+        club_id:str
     ):
-        self.team_id = UUID(team_id)
+        self.club_id = UUID(club_id)
 
     def get_data(self):
         return {
@@ -37,6 +38,7 @@ class TeamOverview:
             .join(Player) \
             .join(Match) \
             .join(TeamSeason) \
+            .join(Team) \
             .join(Metric) \
             .group_by(Player) \
             .order_by(
@@ -44,7 +46,7 @@ class TeamOverview:
                 Player.data_source_player_name
             ) \
             .filter(
-                TeamSeason.team_id == self.team_id,
+                Team.club_id == self.club_id,
                 Metric.metric_name == MetricEnum.APPEARANCES
             ) \
             .limit(5) \
@@ -64,13 +66,14 @@ class TeamOverview:
             .join(Match) \
             .join(TeamSeason) \
             .join(Metric) \
+            .join(Team) \
             .group_by(Player) \
             .order_by(
                 func.sum(PlayerMatchPerformance.value).desc(),
                 Player.data_source_player_name
             ) \
             .filter(
-                TeamSeason.team_id == self.team_id,
+                Team.club_id == self.club_id,
                 Metric.metric_name == MetricEnum.OVERALL_GOALS
             ) \
             .limit(5) \
@@ -106,7 +109,8 @@ class TeamOverview:
     def get_biggest_wins(self):        
         biggest_wins = db.session.query(Match) \
             .join(TeamSeason) \
-            .filter(TeamSeason.team_id==self.team_id) \
+            .join(Team) \
+            .filter(Team.club_id==self.club_id) \
             .order_by(
                 Match.goal_difference.desc(),
                 Match.opposition_team_name
@@ -121,7 +125,8 @@ class TeamOverview:
     def get_biggest_losses(self):        
         biggest_losses = db.session.query(Match) \
             .join(TeamSeason) \
-            .filter(TeamSeason.team_id==self.team_id) \
+            .join(Team) \
+            .filter(Team.club_id==self.club_id) \
             .order_by(
                 Match.goal_difference.asc(),
                 Match.opposition_team_name

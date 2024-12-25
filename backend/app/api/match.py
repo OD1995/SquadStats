@@ -131,6 +131,7 @@ def scrape_matches():
                             metric.metric_id
                         )
                         if key in player_match_performances_by_fk:
+                            player_match_perf = player_match_performances_by_fk[key]
                             player_match_perf.value = value
                             still_exists[key] = True
                         else:

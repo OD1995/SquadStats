@@ -10,7 +10,7 @@ export const Table = (props:TableProps) => {
         return null;
     }
     return (
-        <TableContainer className={props.className}>
+        <TableContainer className={props.className + " ss-table"}>
             <MuiTable>
                 <TableHead>
                     {props.headers}

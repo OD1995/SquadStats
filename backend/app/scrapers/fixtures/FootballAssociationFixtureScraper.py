@@ -72,10 +72,6 @@ class FootballAssociationFixtureScraper(FixtureScraper):
         soup:BeautifulSoup
     ) -> dict:
         fixture_details_section = soup.find("section", {"id" : "fixture-details"})
-        # competition_name = fixture_details_section.find(
-        #     "div",
-        #     {"class" : "fa-county-details"}
-        # ).text.strip()
         fixture_date_time_div = fixture_details_section.find(
             "div",
             {"class" : "fixture-date-time"}
@@ -84,51 +80,8 @@ class FootballAssociationFixtureScraper(FixtureScraper):
             x.text.strip()
             for x in fixture_date_time_div.find_all('div')
         ]
-        # result_info = {}
-        # fixture_team_score_div = fixture_details_section.find(
-        #     "div",
-        #     {"class" : "fixture-teams-and-score"}
-        # )
-        # scores = [
-        #     x.text
-        #     for x in fixture_team_score_div.find(
-        #         'div',
-        #         {'class' : 'score-container'}
-        #     ).find_all('p')
-        # ]
-        # for ix,loc in enumerate(['home','road']):
-        #     loc_team_div = fixture_team_score_div.find(
-        #         'div',
-        #         {'class' : f"{loc}-team"}
-        #     )
-        #     team_name = loc_team_div.find(
-        #         'div',
-        #         {'class' : 'team-name'}
-        #     ).text.strip()
-        #     result_info[f"{loc}_team_name"] = team_name
-        #     result_info[f"{loc}_score"] = int(scores[ix])
-        # is_home_team = result_info['home_team_name'] in self.team_names
-        # goals_for = result_info['home_score'] if is_home_team  else result_info['road_score']
-        # goals_against = result_info['home_score'] if not is_home_team  else result_info['road_score']
-        # goal_difference = goals_for - goals_against
-        # opposition = result_info['home_team_name'] if not is_home_team  else result_info['road_team_name']
-        # result = self.get_result(
-        #     is_home_team,
-        #     goals_for,
-        #     goals_against
-        # )
-        # home_away_neutral = "H" if is_home_team else "A"
         return {
-            # "competition_name" : competition_name,
-            # "date" : datetime.strptime(date,"%d/%m/%y").date(),
-            # "time" : datetime.strptime(time,"%H:%M").time(),
             "location" : location.strip(),
-            # "goals_for" : goals_for,
-            # "goals_against" : goals_against,
-            # "goal_difference" : goal_difference,
-            # "opposition" : opposition,
-            # "result" : result,
-            # "home_away_neutral" : home_away_neutral
         }
 
     def get_player_data(
@@ -164,6 +117,9 @@ class FootballAssociationFixtureScraper(FixtureScraper):
             if team not in self.team_names:
                 continue
             pmp = performances.get(player, {})
-            pmp[stat] = value
+            if stat in pmp:
+                pmp[stat] += float(value)
+            else:
+                pmp[stat] = float(value)
             performances[player] = pmp
         return performances

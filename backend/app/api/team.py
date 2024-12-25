@@ -3,7 +3,6 @@ from uuid import UUID
 from flask import Blueprint, jsonify, request
 from app import db
 from app.data_handlers.TeamOverview import TeamOverview
-from app.models.Match import Match
 from app.models.Team import Team
 from app.models.TeamName import TeamName
 

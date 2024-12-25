@@ -1,20 +1,13 @@
 import { useEffect, useState } from "react";
 import { Team } from "../../../types/Team";
 import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { userSelector } from "../../../store/slices/userSlice";
 import TeamService from "../../../services/TeamService";
 import { BackendResponse } from "../../../types/BackendResponse";
 import { getIsClubAdmin, getTeam } from "../../../helpers/other";
 import { PlayerOverviewTableData, TeamOverviewTableData } from "../../../types/OverviewTableData";
 import "./TeamOverview.css";
-import { TeamLinkBar } from "../generic/TeamLinkBar";
-import { Loading } from "../../../generic/Loading";
-import { TeamOverviewTable } from "./TeamOverviewTable";
-import { PlayerOverviewTable } from "./PlayerOverviewTable";
-import { isWiderThanHigher } from "../../../helpers/windowDimensions";
+import { ClubOrTeamOverview } from "../../../generic/ClubOrTeamOverview";
 import { getUserLS } from "../../../authentication/auth";
-import { Club } from "../../../types/Club";
 
 export const TeamOverview = () => {
 
@@ -22,11 +15,10 @@ export const TeamOverview = () => {
     const [errorMessage, setErrorMessage] = useState("");
     const [teamTableDataArray, setTeamTableDataArray] = useState<TeamOverviewTableData[]>([]);
     const [playerTableDataArray, setPlayerTableDataArray] = useState<PlayerOverviewTableData[]>([]);
+    const [isClubAdmin, setIsClubAdmin] = useState<boolean>(false);
 
     let { teamId } = useParams();
-    // const user = useSelector(userSelector);
     const user = getUserLS();
-    const isDesktop = isWiderThanHigher();
 
     useEffect(
         () => {
@@ -58,90 +50,18 @@ export const TeamOverview = () => {
                     }
                 }
             )
+            setIsClubAdmin(getIsClubAdmin(user,team?.club_id!));
         },
         []
     )
 
-    const generateParentTable = () => {
-        return (
-            <table id='team-overview-parent-table'>
-                <tr>
-                    {generateTeamTableRow()}
-                </tr>
-                <tr>
-                    {generatePlayerTableRow()}
-                </tr>
-            </table>
-        )
-    }
-
-    const generateTeamTableRow = () => {
-        return teamTableDataArray.map(
-            (teamTableData:TeamOverviewTableData) => {
-                return <td className="team-overview-cell"><TeamOverviewTable {...teamTableData}/></td>
-            }
-        )
-    }
-
-    const generatePlayerTableRow = () => {
-        return playerTableDataArray.map(
-            (playerTableData:PlayerOverviewTableData) => {
-                return <td className="team-overview-cell"><PlayerOverviewTable {...playerTableData}/></td>
-            }
-        )
-    }
-
-    const generateTableColumn = () => {
-        var returnArray = [] as JSX.Element[];
-        teamTableDataArray.map(
-            (data:TeamOverviewTableData) => {
-                returnArray.push(<TeamOverviewTable {...data}/>)
-            }
-        )
-        playerTableDataArray.map(
-            (data:PlayerOverviewTableData) => {
-                returnArray.push(<PlayerOverviewTable {...data}/>)
-            }
-        )
-        return returnArray;
-    }
-
-    if (
-        (errorMessage == "") && (
-            (team == null) || (teamTableDataArray.length == 0)
-        )
-    ) {
-        return (
-            <div id='team-overview-parent'>
-                <Loading/>
-            </div>
-        )
-    } else {
-        return (
-            <div id='team-overview-parent'>
-                <h1 className="big-h1-title">
-                    {team?.team_name}
-                </h1>
-                <div id='team-overview-content'>
-                    <TeamLinkBar
-                        isClubAdmin={getIsClubAdmin(user,team)}
-                    />
-                    <div>
-                        {errorMessage}
-                    </div>
-                    {
-                        isDesktop ? (
-                            <div id='team-overview-tables-desktop'>
-                                {generateParentTable()}
-                            </div>
-                        ) : (
-                            <div id='team-overview-tables-mobile'>
-                                {generateTableColumn()}
-                            </div>
-                        )
-                    }
-                </div>
-            </div>
-        );
-    }
+    return (
+        <ClubOrTeamOverview
+            team={team!}
+            errorMessage={errorMessage}
+            teamTableDataArray={teamTableDataArray}
+            playerTableDataArray={playerTableDataArray}
+            isClubAdmin={isClubAdmin}
+        />
+    )
 }

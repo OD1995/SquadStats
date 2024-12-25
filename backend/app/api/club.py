@@ -3,6 +3,7 @@ from uuid import UUID
 from flask import Blueprint, jsonify, request
 import flask_praetorian
 from app import db
+from app.data_handlers.ClubOverview import ClubOverview
 from app.helpers.validators import get_club_id_from_shared_club_id
 from app.models.Club import Club
 from app.models.ClubAdmin import ClubAdmin
@@ -103,6 +104,17 @@ def create_club():
             **current_user.get_ss_user_data(),
             **{"new_club_id" : new_club.club_id}
         }, 200
+    except Exception as e:
+        return {
+            'message' : traceback.format_exc()
+        }, 400
+    
+@club_bp.route("/get-club-overview-stats/<club_id>", methods=['GET'])
+def get_club_overview_stats(club_id):
+    try:
+        club_overview = ClubOverview(club_id=club_id)
+        club_overview_data = club_overview.get_data()
+        return jsonify(club_overview_data)
     except Exception as e:
         return {
             'message' : traceback.format_exc()

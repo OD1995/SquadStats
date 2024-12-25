@@ -21,12 +21,23 @@
 	width: 90vw;
 	height: 100vh;
 	max-height: 100vh;
-	overflow-y: scroll;
+	/* overflow-y: scroll; */
+	overflow: auto;
 }
 
 #mobile-page-content {
 	width: 100vw;
 	height: 90vh;	
+}
+
+.ss-table {
+	width: auto !important;
+    text-align: center;
+	text-wrap: balance;
+}
+
+.table-row-rank {
+	font-weight: bold;
 }
 
 .ss-red-error {
