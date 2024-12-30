@@ -56,6 +56,7 @@
 
 .hamburger-menu {
     padding-right: 5vw;
+    color: black;
 }
 
 #unfolded-mobile-navigation-bar {
@@ -68,4 +69,7 @@
     height: 90vh;
     background-color: #f6f6f6;
     z-index: 1;
+    /* border-top: 1px solid #646cff; */
+    border-top: 1px solid white;
+    padding-top: 5vh;
 }

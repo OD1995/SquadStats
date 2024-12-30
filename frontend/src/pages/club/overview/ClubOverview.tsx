@@ -1,12 +1,12 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Club } from "../../types/Club";
-import ClubService from "../../services/ClubService";
-import { BackendResponse } from "../../types/BackendResponse";
-import { getClub, getIsClubAdmin } from "../../helpers/other";
-import { getUserLS } from "../../authentication/auth";
-import { ClubOrTeamOverview } from "../../generic/ClubOrTeamOverview";
-import { PlayerOverviewTableData, TeamOverviewTableData } from "../../types/OverviewTableData";
+import { Club } from "../../../types/Club";
+import { PlayerOverviewTableData, TeamOverviewTableData } from "../../../types/OverviewTableData";
+import { getUserLS } from "../../../authentication/auth";
+import { getClub, getIsClubAdmin } from "../../../helpers/other";
+import ClubService from "../../../services/ClubService";
+import { BackendResponse } from "../../../types/BackendResponse";
+import { ClubOrTeamOverview } from "../../../generic/club-or-team/ClubOrTeamOverview";
 
 export const ClubOverview = () => {
 

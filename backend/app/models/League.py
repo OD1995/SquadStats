@@ -1,10 +1,16 @@
 from dataclasses import dataclass
+from typing import TYPE_CHECKING, List
 from uuid import UUID, uuid4
 from app.types.enums import DataSource as DataSourceEnum
 from sqlalchemy import String, Enum, ForeignKey
 from app.models import Base
-from app.models.DataSource import DataSource
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+if TYPE_CHECKING:
+    from app.models.TeamLeague import TeamLeague
+else:
+    TeamLeague = 'TeamLeague'
+
 
 @dataclass
 class League(Base):
@@ -19,6 +25,7 @@ class League(Base):
         ForeignKey("data_sources.data_source_id", name='fk_data_sources_data_source_id'),
         index=True
     )
+    team_leagues: Mapped[List[TeamLeague]] = relationship(back_populates='league')
 
     def __init__(
         self,

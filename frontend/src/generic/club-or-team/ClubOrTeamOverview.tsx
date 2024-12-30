@@ -1,14 +1,14 @@
 import "./ClubOrTeamOverview.css";
-import { Club } from "../types/Club";
-import { Team } from "../types/Team";
-import { PlayerOverviewTableData, TeamOverviewTableData } from "../types/OverviewTableData";
-import { TeamOverviewTable } from "../pages/team/overview/TeamOverviewTable";
-import { PlayerOverviewTable } from "../pages/team/overview/PlayerOverviewTable";
-import { Loading } from "./Loading";
-import { ClubLinkBar } from "../pages/club/generic/ClubLinkBar";
-import { TeamLinkBar } from "../pages/team/generic/TeamLinkBar";
-import { isWiderThanHigher } from "../helpers/windowDimensions";
-import { generateId } from "../helpers/other";
+import { Club } from "../../types/Club";
+import { Team } from "../../types/Team";
+import { PlayerOverviewTableData, TeamOverviewTableData } from "../../types/OverviewTableData";
+import { TeamOverviewTable } from "../../pages/team/overview/TeamOverviewTable";
+import { PlayerOverviewTable } from "../../pages/team/overview/PlayerOverviewTable";
+import { Loading } from "./../Loading";
+import { ClubLinkBar } from "../../pages/club/generic/ClubLinkBar";
+import { TeamLinkBar } from "../../pages/team/generic/TeamLinkBar";
+import { isWiderThanHigher } from "../../helpers/windowDimensions";
+import { generateId } from "../../helpers/other";
 
 interface OwnProps {
     team?:Team

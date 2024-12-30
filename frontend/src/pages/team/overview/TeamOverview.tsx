@@ -6,7 +6,7 @@ import { BackendResponse } from "../../../types/BackendResponse";
 import { getIsClubAdmin, getTeam } from "../../../helpers/other";
 import { PlayerOverviewTableData, TeamOverviewTableData } from "../../../types/OverviewTableData";
 import "./TeamOverview.css";
-import { ClubOrTeamOverview } from "../../../generic/ClubOrTeamOverview";
+import { ClubOrTeamOverview } from "../../../generic/club-or-team/ClubOrTeamOverview";
 import { getUserLS } from "../../../authentication/auth";
 
 export const TeamOverview = () => {

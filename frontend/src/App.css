@@ -96,3 +96,16 @@
 .ss-table-head th {
 	font-weight: bold !important;
 }
+
+.parent-div {
+	width: 100%;
+}
+
+:root {
+	/* color-scheme: only light !important; */
+}
+
+body, html {
+	/* background-color: white !important;
+	color: black; */
+}

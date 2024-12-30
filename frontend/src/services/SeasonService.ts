@@ -8,7 +8,15 @@ class SeasonService {
         teamId:string
     ) {
         return makeGetRequest(
-            this.base_url + `/get-seasons/${teamId}`
+            this.base_url + `/get-team-seasons/${teamId}`
+        )
+    }
+
+    getClubSeasons(
+        clubId:string
+    ) {
+        return makeGetRequest(
+            this.base_url + `/get-club-seasons/${clubId}`
         )
     }
 

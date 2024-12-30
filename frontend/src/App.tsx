@@ -10,11 +10,12 @@ import { Login } from './pages/login/Login';
 import { GetStarted } from './pages/get-started/GetStarted';
 import { Home } from './pages/home/Home';
 import { MyClubs } from './pages/my-clubs/MyClubs';
-import { ClubOverview } from './pages/club/ClubOverview';
+import { ClubOverview } from './pages/club/overview/ClubOverview';
 import { TeamOverview } from './pages/team/overview/TeamOverview';
 import { TeamScrape } from './pages/team/scrape/TeamScrape';
 import { TeamNames } from './pages/team/name/TeamNames';
 import { MatchView } from './pages/match/MatchView';
+import { ClubMatches } from './pages/club/matches/ClubMatches';
 
 
 const App = () => {
@@ -39,6 +40,7 @@ const App = () => {
 						<Route path='/add-club' element={<AddClub includeHeirachy={false}/>}/>
 						<Route path='/my-clubs' element={<MyClubs/>}/>
 						<Route path='/club/:clubId/overview' element={<ClubOverview/>}/>
+						<Route path='/club/:clubId/matches' element={<ClubMatches/>}/>
 						<Route path='/team/:teamId/overview' element={<TeamOverview/>}/>
 						<Route path='/team/:teamId/update-data' element={<TeamScrape/>}/>
 						<Route path='/team/:teamId/team-names' element={<TeamNames/>}/>

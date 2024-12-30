@@ -21,7 +21,7 @@ class TeamLeague(Base):
         index=True,
         primary_key=True
     )
-    league: Mapped[League] = relationship(lazy='joined')
+    league: Mapped[League] = relationship(back_populates='team_leagues')
 
     def __init__(
         self,

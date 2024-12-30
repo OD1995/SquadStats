@@ -2,7 +2,7 @@ import { FormControl, MenuItem, Select, SelectChangeEvent } from "@mui/material"
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Team } from "../../../types/Team";
-import { getClubId, getIsClubAdmin, getTeam } from "../../../helpers/other";
+import { getIsClubAdmin, getTeam } from "../../../helpers/other";
 import TeamService from "../../../services/TeamService";
 import { BackendResponse } from "../../../types/BackendResponse";
 import { Season } from "../../../types/Season";

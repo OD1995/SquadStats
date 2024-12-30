@@ -3,6 +3,7 @@ import traceback
 from uuid import UUID
 from flask import Blueprint, jsonify, request
 from app import db
+from app.models.Club import Club
 from app.models.League import League
 from app.models.LeagueSeason import LeagueSeason
 from app.models.Team import Team
@@ -18,8 +19,8 @@ season_bp = Blueprint(
     import_name=__name__
 )
 
-@season_bp.route("/get-seasons/<team_id>", methods=['GET'])
-def get_seasons(team_id):
+@season_bp.route("/get-team-seasons/<team_id>", methods=['GET'])
+def get_team_seasons(team_id):
     try:
         team = db.session.query(Team) \
             .filter_by(team_id=UUID(team_id)) \
@@ -43,6 +44,37 @@ def get_seasons(team_id):
             'message' : traceback.format_exc()
         }, 400
     
+@season_bp.route("/get-club-seasons/<club_id>", methods=['GET'])
+def get_club_seasons(club_id):
+    try:
+        club = db.session.query(Club) \
+            .filter_by(club_id=UUID(club_id)) \
+            .first()
+        league_ids = []
+        team_ids = []
+        for team in club.teams:
+            for tl in team.team_leagues:
+                league_ids.append(tl.league_id)
+            team_ids.append(team.team_id)
+        league_seasons = db.session.query(LeagueSeason) \
+            .join(League) \
+            .filter(League.league_id.in_(league_ids)) \
+            .order_by(LeagueSeason.data_source_season_name.desc()) \
+            .all()
+        result = {}
+        for team_id in team_ids:
+            ls_info_list = []
+            for ls in league_seasons:
+                for team_lg in ls.league.team_leagues:
+                    if team_id == team_lg.team_id:
+                        ls_info_list.append(ls.get_league_season_info())
+            result[str(team_id)] = ls_info_list
+        return jsonify(result), 200
+    except Exception as e:
+        return {
+            'message' : traceback.format_exc()
+        }, 400
+
 @season_bp.route("/update-seasons", methods=['POST'])
 def update_seasons():
     try:

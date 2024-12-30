@@ -12,3 +12,8 @@ export enum PAGE_TYPE {
     LOGIN = 'Login',
     REGISTER = 'Register'
 }
+
+export enum FilterType {
+    H2H = 'H2H',
+    PPG_BY_PLAYER_COUNT = 'PPG By Player Count'
+}

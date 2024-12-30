@@ -1,0 +1,27 @@
+#cot-matches-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.folded-matches-filter {
+    border: 1px solid black;
+    border-radius: 1vw;
+    background-color: #f6f6f6;
+    margin-left: 10vw;
+    margin-right: 10vw;
+    text-align: center;
+    font-weight: bold;
+    color: #646cff;
+}
+
+#mobile-expanded-matches-filter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.match-filter {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}

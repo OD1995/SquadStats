@@ -24,3 +24,9 @@
 .cot-link:hover {
     color: black !important;
 }
+
+.current-cot-link {
+    border: 1px solid #f6f6f6;
+    border-radius: 1vw;
+    padding: 0.75vh;
+}

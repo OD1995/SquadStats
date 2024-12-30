@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { BackendResponse } from "../types/BackendResponse";
 import store from "../store/store";
 import UserManagementService from "./UserManagementService";
@@ -97,6 +97,9 @@ export async function makeGetRequest(
             data: response.data
         }
     } catch (err:any) {
+        // const err = err1 as AxiosError;
+        // console.log(JSON.stringify(err));
+        // const errorMessage = "132";
         const errorMessage = err?.response?.data?.message ?? err.message;
         backendResponse = {
             success: false,

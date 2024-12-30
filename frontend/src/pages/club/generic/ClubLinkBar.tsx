@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom"
-import { ClubOrTeamLinkBar } from "../../../generic/ClubOrTeamLinkBar";
 import { LinkBarInfo } from "../../../types/LinkBarInfo";
+import { ClubOrTeamLinkBar } from "../../../generic/club-or-team/ClubOrTeamLinkBar";
 
 interface OwnProps {
     isClubAdmin:boolean
