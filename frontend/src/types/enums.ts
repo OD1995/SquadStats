@@ -13,7 +13,7 @@ export enum PAGE_TYPE {
     REGISTER = 'Register'
 }
 
-export enum FilterType {
+export enum QueryType {
     H2H = 'H2H',
     PPG_BY_PLAYER_COUNT = 'PPG By Player Count'
 }

@@ -44,6 +44,17 @@ class MatchService {
             this.base_url + `/get-match-info/${matchId}`
         )
     }
+
+    getMatchesData(
+        searchParams:string,
+        clubId:string|null=null
+    ) {
+        var url = this.base_url + `/get-matches-data?${searchParams}`;
+        if (clubId) {
+            url += `&clubId=${clubId}`
+        }
+        return makeGetRequest(url)
+    }
 }
 
 export default new MatchService();

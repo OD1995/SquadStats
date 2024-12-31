@@ -1,36 +1,52 @@
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material"
+import { FormControl, InputLabel, MenuItem, OutlinedInput, Select, SelectChangeEvent } from "@mui/material"
 import { Club } from "../../../types/Club"
 import { Team } from "../../../types/Team"
+import { Season } from "../../../types/Season"
 
 interface OwnProps {
     club:Club
     selectedTeamId:string
     setSelectedTeamId:Function
+    clubSeasons:Record<string, Season[]>
+    setTeamSeasons:Function
 }
 
 export const TeamFilter = (props:OwnProps) => {
     
-    const handleTeamSelect = () => {
-        props.setSelectedTeamId()
+    const handleTeamSelect = (event:SelectChangeEvent) => {
+        const newTeamId = event.target.value as string;
+        props.setSelectedTeamId(newTeamId);
+        props.setTeamSeasons(props.clubSeasons[newTeamId]);
     }
+
+    const options = [
+        {
+            team_id: '',
+            team_name: ''
+        } as Team
+    ].concat(props.club.teams)
 
     return (
         <div
             id="team-filter"
             className="match-filter"
         >
-            <strong>Team</strong>
+            <strong className="filter-select-title">
+                Team^
+            </strong>
             <FormControl>
-                <InputLabel id="demo-simple-select-label">
+                {/* <InputLabel>
                     Team
-                </InputLabel>
+                </InputLabel> */}
                 <Select
                     value={props.selectedTeamId}
                     onChange={handleTeamSelect}
-                    label='Team'
+                    // label='Team'
+                    input={<OutlinedInput sx={{fontSize: '0.8rem'}} />}
+                    className="filter-select"
                 >
                     {
-                        props.club.teams.map(
+                        options.map(
                             (team:Team) => {
                                 return (
                                     <MenuItem

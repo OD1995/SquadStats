@@ -3,14 +3,12 @@ import traceback
 from uuid import UUID
 from flask import Blueprint, jsonify, request
 from app import db
-from app.models.Club import Club
+from app.data_handlers.MatchesFilterDataHandler import MatchesFilterDataHandler
 from app.models.League import League
 from app.models.LeagueSeason import LeagueSeason
 from app.models.Team import Team
 from app.models.TeamLeague import TeamLeague
-from app.models.TeamName import TeamName
 from app.scrapers.clubs.FootballAssociationClubScraper import FootballAssociationClubScraper
-from app.scrapers.leagues.FootballAssociationLeagueScraper import FootballAssociationLeagueScraper
 from app.types.enums import DataSource as DataSourceEnum
 
 season_bp = Blueprint(
@@ -22,23 +20,11 @@ season_bp = Blueprint(
 @season_bp.route("/get-team-seasons/<team_id>", methods=['GET'])
 def get_team_seasons(team_id):
     try:
-        team = db.session.query(Team) \
-            .filter_by(team_id=UUID(team_id)) \
-            .first()
-        league_ids = [
-            tl.league_id
-            for tl in team.team_leagues
-        ]
-        league_seasons = db.session.query(LeagueSeason) \
-            .join(League) \
-            .filter(League.league_id.in_(league_ids)) \
-            .order_by(LeagueSeason.data_source_season_name.desc()) \
-            .all()
-        league_season_info_list = [
-            x.get_league_season_info()
-            for x in league_seasons
-        ]
-        return jsonify(league_season_info_list), 200
+        matches_filter_data_handler = MatchesFilterDataHandler(
+            club_id=None,
+            team_id=team_id
+        )
+        return jsonify(matches_filter_data_handler.get_team_seasons()), 200
     except Exception as e:
         return {
             'message' : traceback.format_exc()
@@ -47,29 +33,11 @@ def get_team_seasons(team_id):
 @season_bp.route("/get-club-seasons/<club_id>", methods=['GET'])
 def get_club_seasons(club_id):
     try:
-        club = db.session.query(Club) \
-            .filter_by(club_id=UUID(club_id)) \
-            .first()
-        league_ids = []
-        team_ids = []
-        for team in club.teams:
-            for tl in team.team_leagues:
-                league_ids.append(tl.league_id)
-            team_ids.append(team.team_id)
-        league_seasons = db.session.query(LeagueSeason) \
-            .join(League) \
-            .filter(League.league_id.in_(league_ids)) \
-            .order_by(LeagueSeason.data_source_season_name.desc()) \
-            .all()
-        result = {}
-        for team_id in team_ids:
-            ls_info_list = []
-            for ls in league_seasons:
-                for team_lg in ls.league.team_leagues:
-                    if team_id == team_lg.team_id:
-                        ls_info_list.append(ls.get_league_season_info())
-            result[str(team_id)] = ls_info_list
-        return jsonify(result), 200
+        matches_filter_data_handler = MatchesFilterDataHandler(
+            club_id=club_id,
+            team_id=None
+        )
+        return jsonify(matches_filter_data_handler.get_club_seasons()), 200
     except Exception as e:
         return {
             'message' : traceback.format_exc()
