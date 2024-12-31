@@ -1,0 +1,12 @@
+.twt-title {
+    font-weight: normal;
+    margin-top: 0.5vh;
+    margin-bottom: 0.5vh;
+    margin-left: 4vw;
+}
+
+.twt-parent {
+    /* margin: 2vw; */
+    display: flex;
+    flex-direction: column;
+}

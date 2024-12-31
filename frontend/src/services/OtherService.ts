@@ -9,6 +9,12 @@ class OtherService {
             this.base_url + "/abrordob-markers"
         )
     }
+
+    getRandom() {
+        return makeGetRequest(
+            this.base_url + "/random"
+        )
+    }
 }
 
 export default new OtherService();

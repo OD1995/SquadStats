@@ -4,13 +4,12 @@ import { SeasonFilter } from "./SeasonFilter";
 import { TeamFilter } from "./TeamFilter";
 import { isWiderThanHigher } from "../../../helpers/windowDimensions";
 import { Modal } from "../../Modal";
-import SeasonService from "../../../services/SeasonService";
 import { Club } from "../../../types/Club";
 import { Team } from "../../../types/Team";
 import { BackendResponse } from "../../../types/BackendResponse";
 import { Season } from "../../../types/Season";
 import { QueryType } from "../../../types/enums";
-import { createSearchParams, URLSearchParamsInit, useNavigate, useSearchParams } from "react-router-dom";
+import { createSearchParams, useNavigate, useSearchParams } from "react-router-dom";
 import MatchService from "../../../services/MatchService";
 import { OppositionFilter } from "./OppositionFilter";
 import ComboService from "../../../services/ComboService";
@@ -19,6 +18,7 @@ interface OwnProps {
     club?:Club
     team?:Team
     setErrorMessage:Function
+    setTableData:Function
 }
 
 export const MatchesFilter = (props:OwnProps) => {
@@ -93,14 +93,16 @@ export const MatchesFilter = (props:OwnProps) => {
         };
         navigate(options, { replace: true });
         setIsExpanded(false);
+        props.setErrorMessage("");
         MatchService.getMatchesData(
-            newSearchParams.toString()
+            newSearchParams.toString(),
+            props.club?.club_id
         ).then(
             (res:BackendResponse) => {
                 if (res.success) {
-
+                    props.setTableData(res.data);
                 } else {
-                    props.setErrorMessage(res.data.message)
+                    props.setErrorMessage(res.data.message);
                 }
             }
         )

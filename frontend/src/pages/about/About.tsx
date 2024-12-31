@@ -6,17 +6,19 @@ import { useEffect, useState } from "react";
 import { MarkerData } from "../../types/MarkerData";
 import OtherService from "../../services/OtherService";
 import { BackendResponse } from "../../types/BackendResponse";
+import { SortableTable } from "../../generic/SortableTable";
+import { GenericTableData } from "../../types/GenericTableData";
 
 export const About = () => {
 
     // const user = useSelector(userSelector);
     // const user = getUserLS();
-    const [data, setData] = useState<MarkerData[]>([]);
+    const [data, setData] = useState<GenericTableData>();
     const [errorMessage, setErrorMessage] = useState<string>();
 
     useEffect(
         () => {
-            OtherService.getAbrodobMarkers(
+            OtherService.getRandom(
             ).then(
                 (res:BackendResponse) => {
                     if (res.success) {
@@ -39,14 +41,11 @@ export const About = () => {
                 {errorMessage}
             </div>
             {
-                data.map(
-                    (md:MarkerData) => {
-                        return (
-                            <div>
-                                {md.marker_id}
-                            </div>
-                        )
-                    }
+                data && (
+                    <SortableTable
+                        rows={data!.rows}
+                        rowsPerPage={10}
+                    />
                 )
             }
         </div>

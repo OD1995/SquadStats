@@ -35,7 +35,14 @@ class MatchesDataHandler:
         self.season = season
         self.opposition = opposition
 
-        self.PPG = 'Points Per Game'
+        self.PPG = 'PPG'
+        self.PLAYED = 'P'
+        self.WINS = 'W'
+        self.DRAWS = 'D'
+        self.LOSSES = 'L'
+        self.GOALS_FOR = 'F'
+        self.GOALS_AGAINST = 'A'
+        self.GOAL_DIFFERENCE = 'GD'
 
     def get_result(self):
         if self.query_type == QueryType.H2H:
@@ -49,7 +56,7 @@ class MatchesDataHandler:
                 .join(Team)
         )
         ## Team/Club filtering
-        if self.team_id == '':
+        if self.team_id in [None, '']:
             matches_query.add_filter(Team.club_id == UUID(self.club_id))
         else:
             matches_query.add_filter(Team.team_id == UUID(self.team_id))
@@ -70,13 +77,13 @@ class MatchesDataHandler:
     ):
         return OrderedDict({
             'Opposition' : team_name,
-            'Played' : 0,
-            'Wins' : 0,
-            'Draws' : 0,
-            'Losses' : 0,
-            'Goals For' : 0,
-            'Goals Against' : 0,
-            'Goal Difference' : 0,
+            self.PLAYED : 0,
+            self.WINS : 0,
+            self.DRAWS : 0,
+            self.LOSSES : 0,
+            self.GOALS_FOR : 0,
+            self.GOALS_AGAINST : 0,
+            self.GOAL_DIFFERENCE : 0,
             self.PPG : 0
         })
                     
@@ -86,19 +93,21 @@ class MatchesDataHandler:
         for match in matches:
             if match.opposition_team_name not in aggregate_data:
                 aggregate_data[match.opposition_team_name] = self.create_aggregate_dict(match.opposition_team_name)
-            aggregate_data[match.opposition_team_name]['Played'] += 1
+            # aggregate_data[match.opposition_team_name][self.PLAYED] += 1
             if match.goal_difference > 0:
-                aggregate_data[match.opposition_team_name]['Wins'] += 1
+                aggregate_data[match.opposition_team_name][self.WINS] += 1
             elif match.goal_difference == 0:
-                aggregate_data[match.opposition_team_name]['Draws'] += 1
+                aggregate_data[match.opposition_team_name][self.DRAWS] += 1
             else:
-                aggregate_data[match.opposition_team_name]['Losses'] += 1
-            aggregate_data[match.opposition_team_name]['Goals For'] += match.goals_for
-            aggregate_data[match.opposition_team_name]['Goals Against'] += match.goals_against
-            aggregate_data[match.opposition_team_name]['Goal Difference'] += match.goal_difference
+                aggregate_data[match.opposition_team_name][self.DRAWS] += 1
+            aggregate_data[match.opposition_team_name][self.GOALS_FOR] += match.goals_for
+            aggregate_data[match.opposition_team_name][self.GOALS_AGAINST] += match.goals_against
+            aggregate_data[match.opposition_team_name][self.GOAL_DIFFERENCE] += match.goal_difference
         for oppo_name, dicto in aggregate_data.items():
-            points = (dicto['Wins'] * 3) + dicto['Draws']
-            aggregate_data[oppo_name][self.PPG] = round(points / dicto['Played'], 2)
+            points = (dicto[self.WINS] * 3) + dicto[self.DRAWS]
+            played = dicto[self.WINS] + dicto[self.DRAWS] + dicto[self.LOSSES]
+            aggregate_data[oppo_name][self.PPG] = round(points / played, 2)
+            aggregate_data[oppo_name][self.PLAYED] = played
         
         return [
             {
