@@ -101,11 +101,6 @@
 	width: 100%;
 }
 
-:root {
-	/* color-scheme: only light !important; */
-}
-
-body, html {
-	/* background-color: white !important;
-	color: black; */
+.page-parent {
+	width: 100%;
 }

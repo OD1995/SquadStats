@@ -1,13 +1,9 @@
-import { useSelector } from "react-redux";
-import { userSelector } from "../../store/slices/userSlice";
 import "./About.css";
-import { getUserLS } from "../../authentication/auth";
 import { useEffect, useState } from "react";
-import { MarkerData } from "../../types/MarkerData";
 import OtherService from "../../services/OtherService";
 import { BackendResponse } from "../../types/BackendResponse";
-import { SortableTable } from "../../generic/SortableTable";
 import { GenericTableData } from "../../types/GenericTableData";
+import { SortableTable } from "../../generic/SortableTable";
 
 export const About = () => {
 
@@ -33,18 +29,16 @@ export const About = () => {
     )
 
     return (
-        <div id='about-parent'>
-            <div>
-                Some text
-            </div>
+        <div id='about-parent' className="page-parent">
             <div>
                 {errorMessage}
             </div>
             {
                 data && (
                     <SortableTable
-                        rows={data!.rows}
                         rowsPerPage={10}
+                        isRanked={true}
+                        {...data}
                     />
                 )
             }

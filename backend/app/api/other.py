@@ -16,15 +16,23 @@ def get_abrordob_markers():
 
 @other_bp.route("/random", methods=['GET'])
 def random():
+
+    def createRow(column_headers):
+        return {
+            ch : randint(0,10)
+            for ch in column_headers
+        }
+    
+    column_headers = [
+        'Column 1',
+        'Column 2',
+        'Column 3',
+    ]
     return {
         'title' : 'This Is Some Random Data',
-        'column_headers' : [
-            'Column 1',
-            'Column 2',
-            'Column 3',
-        ],
+        'column_headers' : column_headers,
         'rows' : [
-            [randint(0,10) for i in range(3)]
+            createRow(column_headers)
             for j in range(50)
         ]
     }

@@ -1,7 +1,7 @@
 #about-parent {
     display: flex;
     flex-direction: row;
-    width: 300px;
+    /* width: 300px; */
     justify-content: space-around;
     container-name: abc;
     container-type: inline-size;
