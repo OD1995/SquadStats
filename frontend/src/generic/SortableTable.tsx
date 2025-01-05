@@ -1,14 +1,15 @@
 import { useMemo, useState } from "react";
 import { 
-    Box, Paper, Table, TableBody, TableCell, 
+    Box,Table, TableBody, TableCell, 
     TableContainer, TableHead, TablePagination, 
     TableRow, TableSortLabel
 } from "@mui/material";
-import { GenericTableData } from "../types/GenericTableData";
+import { GenericTableData, GenericTableRow } from "../types/GenericTableTypes";
+import "./SortableTable.css"
 
 interface OwnProps extends GenericTableData {
     rowsPerPage:number
-    isRanked:boolean
+    // isRanked:boolean
 }
 
 export const SortableTable = (props:OwnProps) => {
@@ -26,14 +27,20 @@ export const SortableTable = (props:OwnProps) => {
     }
 
     const descendingComparator = (
-        a:Record<string, number|string>,
-        b:Record<string, number|string>,
+        a:GenericTableRow,
+        b:GenericTableRow,
         sortBy:string
     ) => {
-        if (b[sortBy] < a[sortBy]) {
+        if (!sortBy) {
+            return 1;
+        }
+        const aVal = a[sortBy].value;
+        const bVal = b[sortBy].value;
+        console.log(aVal, bVal);
+        if (bVal < aVal) {
             return -1;
         }
-        if (b[sortBy] > a[sortBy]) {
+        if (bVal> aVal) {
             return 1;
         }
         return 0;
@@ -56,88 +63,123 @@ export const SortableTable = (props:OwnProps) => {
 
     return (
         <Box
-            sx={{ width: '100%' }}
+            sx={{
+                width: '100%',
+                paddingBottom: '2vh'
+            }}
         >
-            <Paper
-                sx={{ width: '100%', mb: 2 }}
-            >
-                <TableContainer>
-                    <Table
-                        sx={{ minWidth: 750 }}
-                        aria-labelledby="tableTitle"
-                        size={true ? 'small' : 'medium'}
+            {
+                props.title && (
+                    <h4
+                        style={{
+                            marginLeft: "5vw"
+                        }}
                     >
-                        <TableHead>
-                            <TableRow>
-                                {
-                                    (props.isRanked ? [""].concat(props.column_headers) : props.column_headers).map(
-                                        (colHeader:string) => (
-                                            <TableCell
-                                                key={colHeader}
-                                                sx={{fontWeight:"bold"}}
-                                                align="center"
-                                                padding="normal"
-                                                sortDirection={sortDirection}
-                                            >
-                                                <TableSortLabel
-                                                    active={sortBy == colHeader}
-                                                    direction={sortBy == colHeader ? sortDirection : "desc"}
-                                                    onClick={() => handleSortClick(colHeader)}
-                                                >
-                                                    {colHeader}
-                                                </TableSortLabel>
-                                            </TableCell>
-                                        )
-                                    )
-                                }
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
+                        {props.title}
+                    </h4>
+                )
+            }
+            <TableContainer>
+                <Table
+                    // sx={{ minWidth: 750 }}
+                    aria-labelledby="tableTitle"
+                    size={true ? 'small' : 'medium'}
+                >
+                    <TableHead>
+                        <TableRow>
                             {
-                                visibleRows.map(
-                                    (row:Record<string, number|string>, rowNum:number) => (
-                                        <TableRow
-                                            key={rowNum}
+                                (props.is_ranked ? [""].concat(props.column_headers) : props.column_headers).map(
+                                    (colHeader:string) => (
+                                        <TableCell
+                                            key={colHeader}
+                                            sx={{
+                                                fontWeight: "bold",
+                                                padding: "0"
+                                            }}
+                                            align="center"
+                                            sortDirection={sortDirection}
                                         >
-                                            {
-                                                props.isRanked && (
-                                                    <TableCell
-                                                        key={rowNum + "-rank"}
-                                                        sx={{fontWeight:"bold"}}
-                                                        align="center"
-                                                    >
-                                                        {page * props.rowsPerPage + rowNum + 1}
-                                                    </TableCell>
-                                                )
-                                            }
-                                            {
-                                                Object.values(row).map(
-                                                    (val:number|string, colNum:number) => (
-                                                        <TableCell
-                                                            key={`${rowNum}-${colNum}`}
-                                                            align="center"
-                                                        >
-                                                            {val}
-                                                        </TableCell>
-                                                    )
-                                                )
-                                            }
-                                        </TableRow>
+                                            <TableSortLabel
+                                                active={sortBy == colHeader}
+                                                direction={sortBy == colHeader ? sortDirection : "desc"}
+                                                hideSortIcon={true}
+                                                onClick={() => handleSortClick(colHeader)}
+                                            >
+                                                {colHeader}
+                                            </TableSortLabel>
+                                        </TableCell>
                                     )
                                 )
                             }
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-                <TablePagination
-                    component="div"
-                    count={props.rows.length}
-                    rowsPerPage={props.rowsPerPage}
-                    rowsPerPageOptions={[]}
-                    page={page}
-                    onPageChange={handlePageChange}
-                />
-            </Paper>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {
+                            visibleRows.map(
+                                (row:GenericTableRow, rowNum:number) => (
+                                    <TableRow
+                                        key={rowNum}
+                                    >
+                                        {
+                                            props.is_ranked && (
+                                                <TableCell
+                                                    key={rowNum + "-rank"}
+                                                    sx={{
+                                                        fontWeight: "bold",
+                                                        padding: "0"
+                                                    }}
+                                                    align="center"
+                                                >
+                                                    {page * props.rowsPerPage + rowNum + 1}
+                                                </TableCell>
+                                            )
+                                        }
+                                        {
+                                            props.column_headers.map(
+                                                (colHeader:string, colNum:number) => (
+                                                    <TableCell
+                                                        key={`${rowNum}-${colNum}`}
+                                                        className={row[colHeader].class_name}
+                                                        align="center"
+                                                        sx={{
+                                                            padding: "0",
+                                                            maxWidth: "20vw"
+                                                        }}
+                                                    >
+                                                        {
+                                                            (row[colHeader].link) ? (
+                                                                <a href={row[colHeader].link}>
+                                                                    {row[colHeader].value}
+                                                                </a>
+                                                            ) : (
+                                                                <>
+                                                                    {row[colHeader].value}
+                                                                </>
+                                                            )
+                                                        }
+                                                    </TableCell>
+                                                )
+                                            )
+                                        }
+                                    </TableRow>
+                                )
+                            )
+                        }
+                    </TableBody>
+                </Table>
+            </TableContainer>
+            {
+                (props.rowsPerPage < props.rows.length) && (
+                    <TablePagination
+                        component="div"
+                        count={props.rows.length}
+                        rowsPerPage={props.rowsPerPage}
+                        rowsPerPageOptions={[]}
+                        page={page}
+                        onPageChange={handlePageChange}
+                    />
+                )
+            }
         </Box>
     );
 }

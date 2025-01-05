@@ -19,6 +19,7 @@ interface OwnProps {
     team?:Team
     setErrorMessage:Function
     setTableData:Function
+    setIsLoading:Function
 }
 
 export const MatchesFilter = (props:OwnProps) => {
@@ -64,6 +65,7 @@ export const MatchesFilter = (props:OwnProps) => {
             )
             if (searchParams.get("type")) {
                 setSelectedType(searchParams.get("type")!);
+                retrieveData(searchParams.toString());
             }
         },
         []
@@ -93,9 +95,14 @@ export const MatchesFilter = (props:OwnProps) => {
         };
         navigate(options, { replace: true });
         setIsExpanded(false);
+        retrieveData(newSearchParams.toString())
+    }
+
+    const retrieveData = (searchParams:string) => {
+        props.setIsLoading(true);
         props.setErrorMessage("");
         MatchService.getMatchesData(
-            newSearchParams.toString(),
+            searchParams,
             props.club?.club_id
         ).then(
             (res:BackendResponse) => {
@@ -104,6 +111,7 @@ export const MatchesFilter = (props:OwnProps) => {
                 } else {
                     props.setErrorMessage(res.data.message);
                 }
+                props.setIsLoading(false);
             }
         )
     }

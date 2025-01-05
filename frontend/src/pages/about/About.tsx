@@ -2,8 +2,9 @@ import "./About.css";
 import { useEffect, useState } from "react";
 import OtherService from "../../services/OtherService";
 import { BackendResponse } from "../../types/BackendResponse";
-import { GenericTableData } from "../../types/GenericTableData";
+import { GenericTableData } from "../../types/GenericTableTypes";
 import { SortableTable } from "../../generic/SortableTable";
+import { Loading } from "../../generic/Loading";
 
 export const About = () => {
 
@@ -29,19 +30,22 @@ export const About = () => {
     )
 
     return (
-        <div id='about-parent' className="page-parent">
+        <div id='about-parent' className="page-parent" style={{display:"flex",flexDirection:"column"}}>
             <div>
                 {errorMessage}
             </div>
-            {
+            <div>
+                this is a test
+            </div>
+            {/* {
                 data && (
                     <SortableTable
                         rowsPerPage={10}
-                        isRanked={true}
                         {...data}
                     />
                 )
-            }
+            } */}
+            <Loading/>
         </div>
     )
 }

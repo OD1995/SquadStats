@@ -1,16 +1,6 @@
 import traceback
-from uuid import UUID
 from flask import Blueprint, jsonify, request
-import flask_praetorian
-from app import db
-from app.data_handlers.ClubOverview import ClubOverview
 from app.data_handlers.MatchesFilterDataHandler import MatchesFilterDataHandler
-from app.helpers.validators import get_club_id_from_shared_club_id
-from app.models.Club import Club
-from app.models.ClubAdmin import ClubAdmin
-from app.models.DataSource import DataSource
-from app.scrapers.clubs.FootballAssociationClubScraper import FootballAssociationClubScraper
-from app.types.enums import ClubType, DataSource as DataSourceEnum
 
 combo_bp = Blueprint(
     name="combo",

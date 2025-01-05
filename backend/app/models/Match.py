@@ -11,6 +11,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.PlayerMatchPerformance import PlayerMatchPerformance
 from app.models.TeamSeason import TeamSeason
+from app.types.GenericTableRow import GenericTableRow
 from app.types.enums import HomeAwayNeutral, Result
 
 @dataclass
@@ -89,6 +90,34 @@ class Match(Base):
             pmp.get_dict()
             for pmp in self.player_match_performances
         ]
+    
+    def get_short_table_row(
+        self,
+        format_score:bool=False
+    ):
+        row = GenericTableRow(
+            {
+                'Opposition' : f"{self.opposition_team_name} ({self.home_away_neutral.value[0]})",
+                'Result' : f"{self.goals_for}-{self.goals_against}",
+                'Date' : self.date.strftime("%d %b %y")
+            }
+        )
+        row.set_cell_link(
+            column_name='Opposition',
+            link=f"/match/{self.match_id}"
+        )
+        if format_score:
+            if self.goal_difference > 0:
+                res = 'win'
+            elif self.goal_difference == 0:
+                res = 'draw'
+            else:
+                res = 'loss'
+            row.set_cell_class_name(
+                column_name='Result',
+                class_name=f'{res}-result'
+            )
+        return row
 
     def to_dict(
         self,

@@ -1,12 +1,21 @@
 #loading-logo {
-    height: 8vw;
+    /* height: 8vw; */
+    width: 15vw;
     margin-top: 8vw;
+    margin-bottom: 4vw;
     border: 1px solid black;
 }
 
 #loading-div-parent {
     display: flex;
     justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
+
+#loading-div {
+    display: flex;
+    flex-direction: column;
     align-items: center;
 }
 

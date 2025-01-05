@@ -8,6 +8,7 @@ export const Loading = () => {
                     id='loading-logo'
                     src="/logos/square.png"
                 />
+                Loading...
             </div>
         </div>
     )

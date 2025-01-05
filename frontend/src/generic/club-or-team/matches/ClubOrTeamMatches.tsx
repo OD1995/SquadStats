@@ -4,10 +4,13 @@ import { Club } from "../../../types/Club";
 import { Team } from "../../../types/Team";
 import "./ClubOrTeamMatches.css";
 import { MatchesFilter } from "./MatchesFilter";
-import { GenericTableData } from "../../../types/GenericTableData";
+import { GenericTableData } from "../../../types/GenericTableTypes";
 import { useState } from "react";
 import { Table } from "../../Table";
 import { TableWithTitle } from "../../TableWithTitle";
+import { SortableTable } from "../../SortableTable";
+import { Loading } from "../../Loading";
+import { generateId } from "../../../helpers/other";
 
 interface OwnProps {
     club?:Club
@@ -20,6 +23,7 @@ interface OwnProps {
 export const ClubOrTeamMatches = (props:OwnProps) => {
 
     const [tableData, setTableData] = useState<GenericTableData[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     return (
         <div id='cot-matches-parent' className="parent-div">
@@ -44,20 +48,23 @@ export const ClubOrTeamMatches = (props:OwnProps) => {
                     team={props.team}
                     setErrorMessage={props.setErrorMessage}
                     setTableData={setTableData}
+                    setIsLoading={setIsLoading}
                 />
                 <div>
                     {props.errorMessage}
                 </div>
                 <div id='cotm-table-content'>
                     {
+                        isLoading && <Loading/>
+                    }
+                    {
                         tableData.map(
                             (data:GenericTableData) => {
                                 return (
-                                    <TableWithTitle
-                                        title={data.title}
-                                        columnHeadersStr={data.column_headers}
-                                        rowsStr={data.rows}
-                                        tableClassName="cotm-twt"
+                                    <SortableTable
+                                        key={generateId()}
+                                        rowsPerPage={10}
+                                        {...data}
                                     />
                                 )
                             }

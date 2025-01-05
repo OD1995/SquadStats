@@ -8,6 +8,8 @@ from app.models.LeagueSeason import LeagueSeason
 from app.models.Match import Match
 from app.models.Team import Team
 from app.models.TeamSeason import TeamSeason
+from app.types.GenericTableData import GenericTableData
+from app.types.GenericTableRow import GenericTableRow
 from app.types.enums import QueryType
 from app import db
 from operator import itemgetter
@@ -35,6 +37,7 @@ class MatchesDataHandler:
         self.season = season
         self.opposition = opposition
 
+        self.OPPO = 'Opposition'
         self.PPG = 'PPG'
         self.PLAYED = 'P'
         self.WINS = 'W'
@@ -43,6 +46,18 @@ class MatchesDataHandler:
         self.GOALS_FOR = 'F'
         self.GOALS_AGAINST = 'A'
         self.GOAL_DIFFERENCE = 'GD'
+
+        self.H2H_COLS = [
+            self.OPPO,
+            self.PLAYED,
+            self.WINS,
+            self.DRAWS,
+            self.LOSSES,
+            self.GOALS_FOR,
+            self.GOALS_AGAINST,
+            self.GOAL_DIFFERENCE,
+            self.PPG
+        ]
 
     def get_result(self):
         if self.query_type == QueryType.H2H:
@@ -53,7 +68,8 @@ class MatchesDataHandler:
         matches_query = QueryBuilder(
             db.session.query(Match) \
                 .join(TeamSeason) \
-                .join(Team)
+                .join(Team) \
+                .order_by(Match.date)
         )
         ## Team/Club filtering
         if self.team_id in [None, '']:
@@ -71,51 +87,85 @@ class MatchesDataHandler:
             matches_query.add_filter(Match.opposition_team_name == self.opposition)
         return matches_query.all()
 
-    def create_aggregate_dict(
+    def create_h2h_aggregate_row(
         self,
         team_name
     ):
-        return OrderedDict({
-            'Opposition' : team_name,
-            self.PLAYED : 0,
-            self.WINS : 0,
-            self.DRAWS : 0,
-            self.LOSSES : 0,
-            self.GOALS_FOR : 0,
-            self.GOALS_AGAINST : 0,
-            self.GOAL_DIFFERENCE : 0,
-            self.PPG : 0
-        })
+        dicto = {
+            cn : 0
+            for cn in self.H2H_COLS
+        }
+        dicto[self.OPPO] = team_name
+        return GenericTableRow(init=dicto)
                     
     def get_h2h_result(self):
         matches = self.get_matches()
+        oppo_filter_exists = self.opposition not in [None, '']
         aggregate_data = {}
         for match in matches:
             if match.opposition_team_name not in aggregate_data:
-                aggregate_data[match.opposition_team_name] = self.create_aggregate_dict(match.opposition_team_name)
-            # aggregate_data[match.opposition_team_name][self.PLAYED] += 1
-            if match.goal_difference > 0:
-                aggregate_data[match.opposition_team_name][self.WINS] += 1
-            elif match.goal_difference == 0:
-                aggregate_data[match.opposition_team_name][self.DRAWS] += 1
+                agg_row = self.create_h2h_aggregate_row(match.opposition_team_name)
             else:
-                aggregate_data[match.opposition_team_name][self.DRAWS] += 1
-            aggregate_data[match.opposition_team_name][self.GOALS_FOR] += match.goals_for
-            aggregate_data[match.opposition_team_name][self.GOALS_AGAINST] += match.goals_against
-            aggregate_data[match.opposition_team_name][self.GOAL_DIFFERENCE] += match.goal_difference
-        for oppo_name, dicto in aggregate_data.items():
-            points = (dicto[self.WINS] * 3) + dicto[self.DRAWS]
-            played = dicto[self.WINS] + dicto[self.DRAWS] + dicto[self.LOSSES]
-            aggregate_data[oppo_name][self.PPG] = round(points / played, 2)
-            aggregate_data[oppo_name][self.PLAYED] = played
+                agg_row = aggregate_data[match.opposition_team_name]
+            increments = [
+                (self.GOALS_FOR, match.goals_for),
+                (self.GOALS_AGAINST, match.goals_against),
+                (self.GOAL_DIFFERENCE, match.goal_difference)
+            ]
+            if match.goal_difference > 0:
+                increments.append((self.WINS, 1))
+            elif match.goal_difference == 0:
+                increments.append((self.DRAWS, 1))
+            else:
+                increments.append((self.LOSSES, 1))
+            for cn, inc in increments:
+                agg_row.increment_cell_value(
+                    column_name=cn,
+                    increment=inc
+                )
+            aggregate_data[match.opposition_team_name] = agg_row
+        for oppo_name in aggregate_data.keys():
+            agg_row = aggregate_data[oppo_name]
+            wins = agg_row.get_cell_value(self.WINS)
+            draws = agg_row.get_cell_value(self.DRAWS)
+            losses = agg_row.get_cell_value(self.LOSSES)
+            points = (wins * 3) + draws
+            played = wins + draws + losses
+            agg_row.set_cell_value(self.PPG, round(points / played, 2))
+            agg_row.set_cell_value(self.PLAYED, played)
+            aggregate_data[oppo_name] = agg_row
         
+        return_me = [
+            GenericTableData(
+                column_headers=self.H2H_COLS,
+                rows=sorted(
+                    list(aggregate_data.values()),
+                    key=lambda x: (x.get_cell_value(self.PPG), x.get_cell_value(self.GOAL_DIFFERENCE)),
+                    reverse=True
+                ),
+                title='H2H',
+                is_ranked=not oppo_filter_exists
+            )
+        ]
+
+        if oppo_filter_exists:
+            headers = [
+                'Opposition',
+                'Result',
+                'Date'
+            ]
+            return_me.append(
+                GenericTableData(
+                    column_headers=headers,
+                    rows=[
+                        m.get_short_table_row(format_score=True)
+                        for m in matches
+                    ],
+                    title='Matches'
+                )
+            )
+
         return [
-            {
-                'title' : 'H2H',
-                'column_headers' : list(list(aggregate_data.values())[0].keys()),
-                'rows' : [
-                    list(dicto.values())
-                    for dicto in sorted(list(aggregate_data.values()), key=itemgetter(self.PPG), reverse=True)
-                ]
-            }
+            r.to_dict()
+            for r in return_me
         ]

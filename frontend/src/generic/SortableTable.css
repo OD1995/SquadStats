@@ -1,0 +1,11 @@
+.win-result {
+    color: green !important;
+}
+
+.loss-result {
+    color: red !important;
+}
+
+.draw-result {
+    color: grey !important;
+}

@@ -313,7 +313,8 @@ def get_matches_data():
             season=request.args.get("selectedSeason"),
             opposition=request.args.get("selectedOpposition"),     
         )
-        return jsonify(matches_data.get_result()), 200
+        result = matches_data.get_result()
+        return jsonify(result), 200
     except Exception as e:
         return {
             'message' : traceback.format_exc()
