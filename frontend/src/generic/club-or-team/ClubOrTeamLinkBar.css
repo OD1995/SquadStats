@@ -12,13 +12,14 @@
 }
 
 .mobile-cot-link-bar {
-    padding-top: 1vw;
-    padding-bottom: 1vw;
+    padding-top: 2vw;
+    padding-bottom: 2vw;
 }
 
 .cot-link {
     color: white;
     text-align: center;
+    white-space: pre-line;
 }
 
 .cot-link:hover {
@@ -28,5 +29,5 @@
 .current-cot-link {
     border: 1px solid #f6f6f6;
     border-radius: 1vw;
-    padding: 0.75vh;
+    padding: 0.5vh;
 }

@@ -157,6 +157,10 @@ def scrape_matches():
                 db.session.query(PlayerMatchPerformance) \
                     .filter(or_(*pmp_delete_filters)) \
                     .delete()
+            
+            db.session.query(MatchError) \
+                .filter(MatchError.match_id.in_(match_id_list)) \
+                .delete()
             db.session.add_all(new_players)
             db.session.add_all(new_metrics)
             db.session.add_all(new_player_match_perfs)

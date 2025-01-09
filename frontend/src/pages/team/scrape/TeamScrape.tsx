@@ -34,9 +34,11 @@ export const TeamScrape = () => {
     const [seasons, setSeasons] = useState([]);
 
     const [isPlayerInfoView, setIsPlayerInfoView] = useState<boolean>(false);
+    const [allMatches, setAllMatches] = useState<Match[]>([]);
     const [successMatches, setSuccessMatches] = useState<Match[]>([]);
     const [errorMatches, setErrorMatches] = useState<Match[]>([]);
     const [tickedBoxes, setTickedBoxes] = useState<boolean[]>([]);
+    const [dataLoaded, setDataLoaded] = useState<boolean>(false);
 
     let { teamId } = useParams();
     // const user = useSelector(userSelector);
@@ -115,6 +117,7 @@ export const TeamScrape = () => {
                 bads.push(match);
             }
         }
+        setAllMatches(matches);
         setSuccessMatches(goods);
         setErrorMatches(bads);
     }
@@ -134,7 +137,7 @@ export const TeamScrape = () => {
         setErrorMessage("");
         setIsLoading(true);
         var matchIds = [];
-        for (const [idx, match] of successMatches.entries()) {
+        for (const [idx, match] of allMatches.entries()) {
             if (tickedBoxes[idx]) {
                 matchIds.push(match.match_id)
             }
@@ -177,6 +180,7 @@ export const TeamScrape = () => {
                 setSelectMatchesToUpdateDisabled(false);
             }
         )
+        setDataLoaded(true);
     }
 
     const handleUpdateListButtonPress = () => {
@@ -206,6 +210,7 @@ export const TeamScrape = () => {
         'Competition',
         'Goals For',
         'Goals Against',
+        'Notes',
         'Player Info Already Scraped'
     ]
 
@@ -319,7 +324,8 @@ export const TeamScrape = () => {
                                 {
                                     isPlayerInfoView ? (
                                         <PlayerInfoView
-                                            successMatches={successMatches}
+                                            // successMatches={successMatches}
+                                            matches={allMatches}
                                             cols={successCols}
                                             tickedBoxes={tickedBoxes}
                                             setTickedBoxes={setTickedBoxes}
@@ -329,6 +335,7 @@ export const TeamScrape = () => {
                                             successMatches={successMatches}
                                             errorMatches={errorMatches}
                                             successCols={successCols}
+                                            dataLoaded={dataLoaded}
                                         />
                                     )
                                 }                        

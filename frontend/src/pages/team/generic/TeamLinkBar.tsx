@@ -22,6 +22,11 @@ export const TeamLinkBar = (props:OwnProps) => {
                 to: `/team/${teamId}/overview`
             },
             {
+                label: 'Update Data',
+                to: `/team/${teamId}/update-data`,
+                adminRequired: true
+            },
+            {
                 label: 'Matches',
                 to: `/team/${teamId}/matches`
             },
@@ -36,6 +41,7 @@ export const TeamLinkBar = (props:OwnProps) => {
     return (
         <ClubOrTeamLinkBar
             links={getLinks()}
+            isClubAdmin={props.isClubAdmin}
         />
     )
 }

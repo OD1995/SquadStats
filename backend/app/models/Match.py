@@ -3,7 +3,8 @@ from turtle import back
 from typing import List
 from uuid import UUID, uuid4
 from datetime import date as dateDT, time as timeDT
-from sqlalchemy import Enum, ForeignKey, String
+from sqlalchemy import Enum, ForeignKey, String, null
+from app.helpers.misc import is_other_result_type
 from app.models import Base
 from app.models.Competition import Competition
 from app.models.MatchError import MatchError
@@ -45,6 +46,7 @@ class Match(Base):
         Enum(HomeAwayNeutral),
         nullable=True
     )
+    notes: Mapped[str] = mapped_column(String(100), nullable=True)
     match_errors: Mapped[List["MatchError"]] = relationship(lazy='joined')
     team_season: Mapped[TeamSeason] = relationship(back_populates='matches')
     player_match_performances: Mapped[List[PlayerMatchPerformance]] = relationship(lazy='joined')
@@ -66,7 +68,8 @@ class Match(Base):
         date:dateDT,
         time:timeDT,
         location:str,
-        home_away_neutral:HomeAwayNeutral
+        home_away_neutral:HomeAwayNeutral,
+        notes:str
     ):
         self.match_id = uuid4()
         self.data_source_match_id = data_source_match_id
@@ -84,6 +87,7 @@ class Match(Base):
         self.time = time
         self.location = location
         self.home_away_neutral = home_away_neutral
+        self.notes = notes
 
     def get_pmp(self):
         return [
@@ -118,6 +122,13 @@ class Match(Base):
                 class_name=f'{res}-result'
             )
         return row
+    
+    def get_player_info_scraped(self):
+        if len(self.player_match_performances) > 0:
+            return True
+        if is_other_result_type(self.notes):
+            return True
+        return False
 
     def to_dict(
         self,
@@ -140,6 +151,7 @@ class Match(Base):
             'location' : self.location,
             'home_away_neutral' : self.home_away_neutral,
             'match_errors' : self.match_errors,
-            'player_info_scraped' : len(self.player_match_performances) > 0,
-            'player_performance_data' : self.get_pmp() if include_player_stats else []
+            'player_info_scraped' : self.get_player_info_scraped(),
+            'player_performance_data' : self.get_pmp() if include_player_stats else [],
+            'notes' : self.notes
         }

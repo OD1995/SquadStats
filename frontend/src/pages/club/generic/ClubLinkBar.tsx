@@ -31,6 +31,7 @@ export const ClubLinkBar = (props:OwnProps) => {
     return (
         <ClubOrTeamLinkBar
             links={getLinks()}
+            isClubAdmin={props.isClubAdmin}
         />
     )
 }

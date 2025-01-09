@@ -73,53 +73,59 @@ export const ClubOrTeamOverview = (props:OwnProps) => {
         return returnArray;
     }
 
-    if (
-        (props.errorMessage == "") && (
-            (props.teamTableDataArray.length == 0) || (
-                (props.team == null) && (props.club == null)
-            )
-        )
-    ) {
-        return (
-            <div id='team-overview-parent'>
-                <Loading/>
-            </div>
-        )
-    } else {
-        return (
-            <div id='cot-overview-parent'>
-                <h1 className="big-h1-title">
-                    {props.team?.team_name ?? props.club?.club_name}
-                </h1>
-                <div id='cot-overview-content'>
-                    {
-                        props.club ? (
-                            <ClubLinkBar
-                                isClubAdmin={props.isClubAdmin}
-                            />
-                        ) : (
-                            <TeamLinkBar
-                                isClubAdmin={props.isClubAdmin}
-                                clubId={props.team?.club_id!}
-                            />
+    // if (
+    //     (props.errorMessage == "") && (
+    //         (props.teamTableDataArray.length == 0) || (
+    //             (props.team == null) && (props.club == null)
+    //         )
+    //     )
+    // ) {
+    //     return (
+    //         <div id='team-overview-parent'>
+    //             <Loading/>
+    //         </div>
+    //     )
+    // } else {
+    return (
+        <div id='cot-overview-parent'>
+            <h1 className="big-h1-title">
+                {props.team?.team_name ?? props.club?.club_name}
+            </h1>
+            <div id='cot-overview-content'>
+                {
+                    props.club ? (
+                        <ClubLinkBar
+                            isClubAdmin={props.isClubAdmin}
+                        />
+                    ) : (
+                        <TeamLinkBar
+                            isClubAdmin={props.isClubAdmin}
+                            clubId={props.team?.club_id!}
+                        />
+                    )
+                }
+                {
+                    ((props.errorMessage == "") && (
+                        (props.teamTableDataArray.length == 0) || (
+                            (props.team == null) && (props.club == null)
                         )
-                    }
-                    <div>
-                        {props.errorMessage}
-                    </div>
-                    {
-                        isDesktop ? (
-                            <div id='cot-overview-tables-desktop'>
-                                {generateParentTable(props.teamTableDataArray, props.playerTableDataArray)}
-                            </div>
-                        ) : (
-                            <div id='cot-overview-tables-mobile'>
-                                {generateTableColumn(props.teamTableDataArray, props.playerTableDataArray)}
-                            </div>
-                        )
-                    }
+                    )) && <Loading/>
+                }
+                <div>
+                    {props.errorMessage}
                 </div>
+                {
+                    isDesktop ? (
+                        <div id='cot-overview-tables-desktop'>
+                            {generateParentTable(props.teamTableDataArray, props.playerTableDataArray)}
+                        </div>
+                    ) : (
+                        <div id='cot-overview-tables-mobile'>
+                            {generateTableColumn(props.teamTableDataArray, props.playerTableDataArray)}
+                        </div>
+                    )
+                }
             </div>
-        );
-    }
+        </div>
+    );
 }

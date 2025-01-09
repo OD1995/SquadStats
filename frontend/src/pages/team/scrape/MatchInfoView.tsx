@@ -10,6 +10,7 @@ interface MatchInfoViewProps {
     successMatches:Match[]
     errorMatches:Match[]
     successCols:string[]
+    dataLoaded:boolean
 }
 
 export const MatchInfoView = (props:MatchInfoViewProps) => {
@@ -42,6 +43,7 @@ export const MatchInfoView = (props:MatchInfoViewProps) => {
             {value:match.competition_acronym},
             {value:match.goals_for},
             {value:match.goals_against},
+            {value:match.notes},
             {value:playerInfoScrapedIcon}
         ] as TableCellValue[];
     }
@@ -53,50 +55,53 @@ export const MatchInfoView = (props:MatchInfoViewProps) => {
         'Errors'
     ]
     
-    return (
-        <>
-            {
-                (props.successMatches.length > 0) && (
-                        <>
-                            <h3 style={{color: 'green'}}>
-                                Match Info - Success
-                            </h3>
-                            <Table
-                                headers={generateHeaderRow(props.successCols)}
-                                rows={props.successMatches.map(
-                                    (match:Match) => generateBodyRow(createTableCellValForSuccessTable(match))
-                                )}
-                            />
-                        </>
-                )
-            }
-            {
-                (props.errorMatches.length > 0) && (
-                        <>
-                            <h3
-                                style={{
-                                    color: 'red',
-                                    alignSelf: 'baseline'
-                                }}
-                            >
-                                Match Info - Failure
-                            </h3>
-                            <i
-                                style={{
-                                    color: 'red'
-                                }}
-                            >
-                                Most errors will be because neither team name is expected. You can change that <Link target='_blank' to={`/team/${teamId}/team-names`}>here</Link>
-                            </i>
-                            <Table
-                                headers={generateHeaderRow(errorCols)}
-                                rows={props.errorMatches.map(
-                                    (match:Match) => generateBodyRow(createTableCellValForErrorTable(match))
-                                )}
-                            />
-                        </>
-                )
-            }
-        </>
-    )
+    if (props.dataLoaded) {
+
+        return (
+            <>
+                {
+                    (props.errorMatches.length > 0) && (
+                            <>
+                                <h3
+                                    style={{
+                                        color: 'red',
+                                        alignSelf: 'baseline'
+                                    }}
+                                >
+                                    Match Info - Failure
+                                </h3>
+                                <i
+                                    style={{
+                                        color: 'red'
+                                    }}
+                                >
+                                    Most errors will be because neither team name is expected. You can change that <Link target='_blank' to={`/team/${teamId}/team-names`}>here</Link>
+                                </i>
+                                <Table
+                                    headers={generateHeaderRow(errorCols)}
+                                    rows={props.errorMatches.map(
+                                        (match:Match) => generateBodyRow(createTableCellValForErrorTable(match))
+                                    )}
+                                    notSsTable={true}
+                                />
+                            </>
+                    )
+                }
+                {
+                    (props.errorMatches.length > 0) && (
+                        <h3 style={{color: 'green'}}>
+                            Match Info - Success
+                        </h3>
+                    )
+                }
+                <Table
+                    headers={generateHeaderRow(props.successCols)}
+                    rows={props.successMatches.map(
+                        (match:Match) => generateBodyRow(createTableCellValForSuccessTable(match))
+                    )}
+                    notSsTable={true}
+                />
+            </>
+        )
+    }
 }

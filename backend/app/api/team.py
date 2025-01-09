@@ -51,7 +51,11 @@ def save_team_names():
             )
             db.session.merge(team_name)
         db.session.commit()
-        return jsonify(success=True)
+        team_names = db.session.query(TeamName) \
+            .filter_by(team_id=UUID(team_name_dict['team_id'])) \
+            .order_by(TeamName.is_default_name.desc()) \
+            .all()
+        return jsonify(team_names)
     except Exception as e:
         return {
             'message' : traceback.format_exc()

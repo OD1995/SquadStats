@@ -17,5 +17,5 @@ export interface Match {
     home_away_neutral: string,
     match_errors:MatchError[]
     player_info_scraped:boolean,
-    // player_performance_data:
+    notes:string
 }

@@ -90,6 +90,8 @@ class FootballAssociationFixtureScraper(FixtureScraper):
     ) -> dict:
         table_section = soup.find("section", {"id" : "fixture-details"})
         table_div = table_section.find("div", {"class" : "padding-bottom divider"})
+        if table_div is None:
+            return {}
         table = table_div.find("table", {"class" : "cell-dividers"})
         column_headers = [
             x.text

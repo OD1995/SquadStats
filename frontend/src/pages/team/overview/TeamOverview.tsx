@@ -50,9 +50,15 @@ export const TeamOverview = () => {
                     }
                 }
             )
-            setIsClubAdmin(getIsClubAdmin(user,team?.club_id!));
         },
         []
+    )
+
+    useEffect(
+        () => {
+            setIsClubAdmin(getIsClubAdmin(user,team?.club_id!));
+        },
+        [team]
     )
 
     return (

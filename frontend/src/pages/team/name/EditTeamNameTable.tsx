@@ -12,6 +12,7 @@ interface EditTeamNameTableProps {
     setErrorMessage:Function
     setEditMode:Function
     teamId:string
+    setTeamNames:Function
 }
 
 export const EditTeamNameTable = (props:EditTeamNameTableProps) => {
@@ -94,6 +95,7 @@ export const EditTeamNameTable = (props:EditTeamNameTableProps) => {
         .then(
             (response:BackendResponse) => {
                 if (response.success) {
+                    props.setTeamNames(response.data);
                     props.setEditMode(false);
                 } else {
                     props.setErrorMessage(response.data.message);

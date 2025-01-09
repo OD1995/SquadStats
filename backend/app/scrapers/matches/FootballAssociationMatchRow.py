@@ -1,6 +1,5 @@
 from datetime import datetime
-from email.policy import default
-from app.models.MatchError import MatchError
+from app.helpers.misc import is_other_result_type
 from app.types.enums import HomeAwayNeutral, Result
 
 
@@ -20,6 +19,7 @@ class FootballAssociationMatchRow:
         self.home_and_away = [self.HOME, self.AWAY]
         self.match_errors = []
         self.goals_and_names_already_retrieved = False
+        self.notes = None
     
     def get_fa_match_id(self):
         try:
@@ -118,10 +118,23 @@ class FootballAssociationMatchRow:
             ]
         else:
             score_text = score_text.split("\r\n")[0].strip()
-        home_score, away_score = [
-            int(goals)
-            for goals in score_text.split(" - ")
-        ]
+        
+        if is_other_result_type(score_text):
+            home_score = None
+            away_score = None
+            new_note = score_text.split("\r")[0]
+            if self.notes is None:
+                self.notes = new_note
+            else:
+                self.notes += f", {new_note}"
+        else:
+            try:
+                home_score, away_score = [
+                    int(goals)
+                    for goals in score_text.split(" - ")
+                ]
+            except ValueError:
+                a=1
         self.home_away = self.get_home_or_away(home_away_team_names)
         if self.home_away == self.HOME:
             self.goals_for = home_score
@@ -142,7 +155,7 @@ class FootballAssociationMatchRow:
             self.pens_for = away_pens
             self.pens_against = home_pens
         self.goals_and_names_already_retrieved = True
-
+    
     def combine_team_names(
         self,
         home_away_team_names:dict
@@ -257,3 +270,6 @@ class FootballAssociationMatchRow:
         error_msg += f"Expected - {expected_team_names}"
         self.match_errors.append(error_msg)
         return None
+    
+    def get_notes(self):
+        return self.notes

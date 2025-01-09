@@ -3,7 +3,6 @@ from concurrent.futures import ThreadPoolExecutor
 from multiprocessing import Pool
 import aiohttp
 from bs4 import BeautifulSoup
-import requests
 from app.scrapers.fixtures.FootballAssociationFixtureScraper import FootballAssociationFixtureScraper
 from app.scrapers.seasons.SeasonScraper import SeasonScraper
 

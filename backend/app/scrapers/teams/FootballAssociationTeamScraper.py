@@ -148,6 +148,7 @@ class FootballAssociationTeamScraper(TeamScraper):
                 match.time=match_row.get_time()
                 match.location=None
                 match.home_away_neutral=match_row.get_home_away_neutral()
+                match.notes = match_row.get_notes()
                 still_exists[fa_match_id] = True
                 delete_match_errors.append(match.match_id)
             else:
@@ -166,7 +167,8 @@ class FootballAssociationTeamScraper(TeamScraper):
                     date=match_row.get_date(),
                     time=match_row.get_time(),
                     location=None,
-                    home_away_neutral=match_row.get_home_away_neutral()
+                    home_away_neutral=match_row.get_home_away_neutral(),
+                    notes=match_row.get_notes()
                 )
                 new_matches.append(match)
             match_errors = [

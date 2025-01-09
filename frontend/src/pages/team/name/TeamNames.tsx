@@ -19,6 +19,7 @@ export const TeamNames = () => {
     const [teamNames, setTeamNames] = useState([]);
     const [errorMessage, setErrorMessage] = useState("");
     const [editMode, setEditMode] = useState<boolean>(false);
+    const [dataLoaded, setDataLoaded] = useState<boolean>(false);
 
     let { teamId } = useParams();
     // const user = useSelector(userSelector);
@@ -48,6 +49,7 @@ export const TeamNames = () => {
                 (res:BackendResponse) => {
                     if (res.success) {
                         setTeamNames(res.data);
+                        setDataLoaded(true);
                     } else {
                         setErrorMessage(res.data.message);
                     }
@@ -86,34 +88,37 @@ export const TeamNames = () => {
     return (
         <div id='club-overview-parent-div'>
             <h1 className="big-h1-title">
-                {team?.team_name} - Team Names
+                {team?.team_name}
             </h1>
             <div id='club-overview-content'>
                 <div>
                     {errorMessage}
                 </div>
                 {
-                    editMode ? (
-                        <EditTeamNameTable
-                            teamNames={teamNames}
-                            generateHeaders={generateHeaders}
-                            setErrorMessage={setErrorMessage}
-                            setEditMode={setEditMode}
-                            teamId={teamId!}
-                        />
-                    ) : (
-                        <>
-                            <Table
-                                headers={generateHeaders()}
-                                rows={teamNames.map((teamName:TeamName) => generateTeamNameRow(teamName))}
+                    dataLoaded && (
+                        editMode ? (
+                            <EditTeamNameTable
+                                teamNames={teamNames}
+                                generateHeaders={generateHeaders}
+                                setErrorMessage={setErrorMessage}
+                                setEditMode={setEditMode}
+                                teamId={teamId!}
+                                setTeamNames={setTeamNames}
                             />
-                            <button
-                                onClick={() => setEditMode(!editMode)}
-                            >
-                                Edit
-                            </button>
-                        </>
-                    )
+                        ) : (
+                            <>
+                                <Table
+                                    headers={generateHeaders()}
+                                    rows={teamNames.map((teamName:TeamName) => generateTeamNameRow(teamName))}
+                                />
+                                <button
+                                    onClick={() => setEditMode(!editMode)}
+                                >
+                                    Edit
+                                </button>
+                            </>
+                        )
+                    )                    
                 }
             </div>
         </div>

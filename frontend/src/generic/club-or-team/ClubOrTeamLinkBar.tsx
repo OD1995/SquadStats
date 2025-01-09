@@ -6,6 +6,7 @@ import { generateId } from "../../helpers/other"
 
 interface OwnProps {
     links:LinkBarInfo[]
+    isClubAdmin:boolean
 }
 
 export const ClubOrTeamLinkBar = (props:OwnProps) => {
@@ -27,15 +28,18 @@ export const ClubOrTeamLinkBar = (props:OwnProps) => {
             {
                 props.links.map(
                     (link:LinkBarInfo) => {
-                        return (
-                            <Link
-                                key={generateId()}
-                                to={link.to}
-                                className={getClassName(link.to)}
-                            >
-                                {link.label}
-                            </Link>
-                        )
+                        const returnMe = props.isClubAdmin || (link.adminRequired !== true);
+                        if (returnMe) {
+                            return (
+                                <Link
+                                    key={generateId()}
+                                    to={link.to}
+                                    className={getClassName(link.to)}
+                                >
+                                    {link.label.replace(" ","\n")}
+                                </Link>
+                            )
+                        }
                     }
                 )
             }

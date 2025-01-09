@@ -8,7 +8,8 @@ import { useEffect } from "react";
 import { Checkbox } from "@mui/material";
 
 interface PlayerInfoViewProps {
-    successMatches:Match[]
+    // successMatches:Match[]
+    matches:Match[]
     cols:string[]
     tickedBoxes:boolean[]
     setTickedBoxes:Function
@@ -19,7 +20,7 @@ export const PlayerInfoView = (props:PlayerInfoViewProps) => {
     useEffect(
         () => {
             var tb = [];
-            for (const match of props.successMatches) {
+            for (const match of props.matches) {
                 tb.push(!match.player_info_scraped);
             }
             props.setTickedBoxes(tb);
@@ -56,6 +57,7 @@ export const PlayerInfoView = (props:PlayerInfoViewProps) => {
             {value:match.competition_acronym},
             {value:match.goals_for},
             {value:match.goals_against},
+            {value:match.notes},
             {value:playerInfoScrapedIcon},
             {value:checkbox}
         ] as TableCellValue[];
@@ -73,9 +75,10 @@ export const PlayerInfoView = (props:PlayerInfoViewProps) => {
                 </i>
                 <Table
                     headers={generateHeaderRow(props.cols.concat('Queued To Scrape'))}
-                    rows={props.successMatches.map(
+                    rows={props.matches.map(
                         (match:Match, ix:number) => generateBodyRow(createTableCellVal(match,ix))
                     )}
+                    notSsTable={true}
                 />            
             </>
         );
