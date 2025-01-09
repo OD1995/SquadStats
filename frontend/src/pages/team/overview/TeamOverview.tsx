@@ -4,17 +4,17 @@ import { useParams } from "react-router-dom";
 import TeamService from "../../../services/TeamService";
 import { BackendResponse } from "../../../types/BackendResponse";
 import { getIsClubAdmin, getTeam } from "../../../helpers/other";
-import { PlayerOverviewTableData, TeamOverviewTableData } from "../../../types/OverviewTableData";
 import "./TeamOverview.css";
-import { ClubOrTeamOverview } from "../../../generic/club-or-team/ClubOrTeamOverview";
 import { getUserLS } from "../../../authentication/auth";
+import { GenericTableData } from "../../../types/GenericTableTypes";
+import { ClubOrTeamOverview } from "../../../generic/club-or-team/ClubOrTeamOverview";
 
 export const TeamOverview = () => {
 
     const [team, setTeam] = useState<Team|null>(null);
     const [errorMessage, setErrorMessage] = useState("");
-    const [teamTableDataArray, setTeamTableDataArray] = useState<TeamOverviewTableData[]>([]);
-    const [playerTableDataArray, setPlayerTableDataArray] = useState<PlayerOverviewTableData[]>([]);
+    const [teamTableDataArray, setTeamTableDataArray] = useState<GenericTableData[]>([]);
+    const [playerTableDataArray, setPlayerTableDataArray] = useState<GenericTableData[]>([]);
     const [isClubAdmin, setIsClubAdmin] = useState<boolean>(false);
 
     let { teamId } = useParams();

@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import List
 from app.types.GenericTableCell import GenericTableCell
 
 @dataclass
@@ -6,9 +7,11 @@ class GenericTableRow:
 
     def __init__(
         self,
-        init:dict
+        init:dict={},
+        row_data:dict={}
     ):
         self.row_data = {}
+        self.row_data = row_data
         for k,v in init.items():
             self.row_data[k] = GenericTableCell(value=v)
 

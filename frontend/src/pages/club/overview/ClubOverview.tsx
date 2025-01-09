@@ -1,19 +1,19 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Club } from "../../../types/Club";
-import { PlayerOverviewTableData, TeamOverviewTableData } from "../../../types/OverviewTableData";
 import { getUserLS } from "../../../authentication/auth";
 import { getClub, getIsClubAdmin } from "../../../helpers/other";
 import ClubService from "../../../services/ClubService";
 import { BackendResponse } from "../../../types/BackendResponse";
 import { ClubOrTeamOverview } from "../../../generic/club-or-team/ClubOrTeamOverview";
+import { GenericTableData } from "../../../types/GenericTableTypes";
 
 export const ClubOverview = () => {
 
     const [club, setClub] = useState<Club>();
     const [errorMessage, setErrorMessage] = useState("");
-    const [teamTableDataArray, setTeamTableDataArray] = useState<TeamOverviewTableData[]>([]);
-    const [playerTableDataArray, setPlayerTableDataArray] = useState<PlayerOverviewTableData[]>([]);
+    const [teamTableDataArray, setTeamTableDataArray] = useState<GenericTableData[]>([]);
+    const [playerTableDataArray, setPlayerTableDataArray] = useState<GenericTableData[]>([]);
 
     let { clubId } = useParams();
     const user = getUserLS();

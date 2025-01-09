@@ -1,21 +1,20 @@
 import "./ClubOrTeamOverview.css";
 import { Club } from "../../types/Club";
 import { Team } from "../../types/Team";
-import { PlayerOverviewTableData, TeamOverviewTableData } from "../../types/OverviewTableData";
-import { TeamOverviewTable } from "../../pages/team/overview/TeamOverviewTable";
-import { PlayerOverviewTable } from "../../pages/team/overview/PlayerOverviewTable";
-import { Loading } from "./../Loading";
+import { Loading } from "../Loading";
 import { ClubLinkBar } from "../../pages/club/generic/ClubLinkBar";
 import { TeamLinkBar } from "../../pages/team/generic/TeamLinkBar";
 import { isWiderThanHigher } from "../../helpers/windowDimensions";
 import { generateId } from "../../helpers/other";
+import { BetterTable } from "../BetterTable";
+import { GenericTableData } from "../../types/GenericTableTypes";
 
 interface OwnProps {
     team?:Team
     club?:Club
     errorMessage:string
-    teamTableDataArray:TeamOverviewTableData[]
-    playerTableDataArray:PlayerOverviewTableData[]
+    teamTableDataArray:GenericTableData[]
+    playerTableDataArray:GenericTableData[]
     isClubAdmin:boolean
 }
 
@@ -23,69 +22,65 @@ export const ClubOrTeamOverview = (props:OwnProps) => {
 
     const isDesktop = isWiderThanHigher();
 
-    const generateParentTable = (
-        teamTableDataArray:TeamOverviewTableData[],
-        playerTableDataArray:PlayerOverviewTableData[]
-    ) => {
+    const generateParentTable = () => {
         return (
             <table id='team-overview-parent-table'>
                 <tr>
-                    {generateTeamTableRow(teamTableDataArray)}
+                    {generateTeamTableRow()}
                 </tr>
                 <tr>
-                    {generatePlayerTableRow(playerTableDataArray)}
+                    {generatePlayerTableRow()}
                 </tr>
             </table>
         )
     }
 
-    const generateTeamTableRow = (teamTableDataArray:TeamOverviewTableData[]) => {
-        return teamTableDataArray.map(
-            (teamTableData:TeamOverviewTableData) => {
-                return <td key={generateId()} className="team-overview-cell"><TeamOverviewTable {...teamTableData}/></td>
+    const generateTeamTableRow = () => {
+        return props.teamTableDataArray.map(
+            (teamTableData:GenericTableData) => {
+                return (
+                    <td key={generateId()} className="team-overview-cell">
+                        {/* <TeamOverviewTable testType='2' {...teamTableData}/> */}
+                        <BetterTable
+                            rowsPerPage={5}
+                            {...teamTableData}
+                        />
+                    </td>
+                )
             }
         )
     }
 
-    const generatePlayerTableRow = (playerTableDataArray:PlayerOverviewTableData[]) => {
-        return playerTableDataArray.map(
-            (playerTableData:PlayerOverviewTableData) => {
-                return <td key={generateId()} className="team-overview-cell"><PlayerOverviewTable {...playerTableData}/></td>
+    const generatePlayerTableRow = () => {
+        return props.playerTableDataArray.map(
+            (playerTableData:GenericTableData) => {
+                return (
+                    <td key={generateId()} className="team-overview-cell">
+                        {/* <PlayerOverviewTable testType='2' {...playerTableData}/> */}
+                        <BetterTable
+                            rowsPerPage={5}
+                            {...playerTableData}
+                        />
+                    </td>
+                )
             }
         )
     }
 
-    const generateTableColumn = (
-        teamTableDataArray:TeamOverviewTableData[],
-        playerTableDataArray:PlayerOverviewTableData[]
-    ) => {
-        var returnArray = [] as JSX.Element[];
-        teamTableDataArray.map(
-            (data:TeamOverviewTableData) => {
-                returnArray.push(<TeamOverviewTable key={generateId()} {...data}/>)
-            }
-        )
-        playerTableDataArray.map(
-            (data:PlayerOverviewTableData) => {
-                returnArray.push(<PlayerOverviewTable key={generateId()} {...data}/>)
-            }
-        )
-        return returnArray;
+    const generateTableColumn = () => {
+        return props.teamTableDataArray.concat(props.playerTableDataArray).map(
+            (data:GenericTableData) => (
+                <BetterTable
+                    key={generateId()}
+                    rowsPerPage={5}
+                    titleClassName="overview-table-title"
+                    {...data}
+                    notSortable
+                />
+            )
+        );
     }
 
-    // if (
-    //     (props.errorMessage == "") && (
-    //         (props.teamTableDataArray.length == 0) || (
-    //             (props.team == null) && (props.club == null)
-    //         )
-    //     )
-    // ) {
-    //     return (
-    //         <div id='team-overview-parent'>
-    //             <Loading/>
-    //         </div>
-    //     )
-    // } else {
     return (
         <div id='cot-overview-parent'>
             <h1 className="big-h1-title">
@@ -117,11 +112,11 @@ export const ClubOrTeamOverview = (props:OwnProps) => {
                 {
                     isDesktop ? (
                         <div id='cot-overview-tables-desktop'>
-                            {generateParentTable(props.teamTableDataArray, props.playerTableDataArray)}
+                            {generateParentTable()}
                         </div>
                     ) : (
                         <div id='cot-overview-tables-mobile'>
-                            {generateTableColumn(props.teamTableDataArray, props.playerTableDataArray)}
+                            {generateTableColumn()}
                         </div>
                     )
                 }

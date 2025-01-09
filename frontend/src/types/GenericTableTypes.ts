@@ -3,6 +3,8 @@ export interface GenericTableData {
     column_headers:string[]
     rows:GenericTableRow[]
     is_ranked?:boolean
+    sort_by?:string
+    sort_direction?:"asc"|"desc"
 }
 
 export interface GenericTableRow extends Record<string, GenericTableCell> {

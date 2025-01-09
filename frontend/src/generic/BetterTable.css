@@ -9,3 +9,12 @@
 .draw-result {
     color: grey !important;
 }
+
+.sortable-table-title {
+    margin-left: 5vw;
+}
+
+.overview-table-title {
+    font-size: 0.67em;
+    margin-left: 5vw;
+}

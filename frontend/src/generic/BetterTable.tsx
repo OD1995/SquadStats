@@ -1,22 +1,35 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { 
     Box,Table, TableBody, TableCell, 
     TableContainer, TableHead, TablePagination, 
     TableRow, TableSortLabel
 } from "@mui/material";
 import { GenericTableData, GenericTableRow } from "../types/GenericTableTypes";
-import "./SortableTable.css"
+import "./BetterTable.css"
 
 interface OwnProps extends GenericTableData {
     rowsPerPage:number
-    // isRanked:boolean
+    titleClassName?:string
+    notSortable?:boolean
 }
 
-export const SortableTable = (props:OwnProps) => {
+export const BetterTable = (props:OwnProps) => {
 
     const [sortBy, setSortBy] = useState<string>();
     const [sortDirection, setSortDirection] = useState<"asc"|"desc">("asc");
     const [page, setPage] = useState<number>(0);
+
+    useEffect(
+        () => {
+            if (props.sort_by) {
+                setSortBy(props.sort_by);
+                if (props.sort_direction) {
+                    setSortDirection(props.sort_direction);
+                }
+            }
+        },
+        []
+    )
 
     const handleSortClick = (columnToSortBy:string) => {
         const direction = columnToSortBy == sortBy ? 
@@ -47,13 +60,17 @@ export const SortableTable = (props:OwnProps) => {
     }
 
     const visibleRows = useMemo(
-        () =>
-            [...props.rows]
-            .sort(sortDirection == "desc"
-                ? (a, b) => descendingComparator(a, b, sortBy!)
-                : (a, b) => -descendingComparator(a, b, sortBy!)
-            )
-            .slice(page * props.rowsPerPage, page * props.rowsPerPage + props.rowsPerPage),
+        () => {
+            if (props.notSortable) {
+                return props.rows
+            }
+            return [...props.rows]
+                .sort(sortDirection == "desc"
+                    ? (a, b) => descendingComparator(a, b, sortBy!)
+                    : (a, b) => -descendingComparator(a, b, sortBy!)
+                )
+                .slice(page * props.rowsPerPage, page * props.rowsPerPage + props.rowsPerPage)
+        },
         [sortBy, sortDirection, page, props.rowsPerPage],
     );
 
@@ -70,10 +87,8 @@ export const SortableTable = (props:OwnProps) => {
         >
             {
                 props.title && (
-                    <h4
-                        style={{
-                            marginLeft: "5vw"
-                        }}
+                    <h4 
+                        className={props.titleClassName ?? "sortable-table-title"}
                     >
                         {props.title}
                     </h4>
@@ -99,14 +114,22 @@ export const SortableTable = (props:OwnProps) => {
                                             align="center"
                                             sortDirection={sortDirection}
                                         >
-                                            <TableSortLabel
-                                                active={sortBy == colHeader}
-                                                direction={sortBy == colHeader ? sortDirection : "desc"}
-                                                hideSortIcon={true}
-                                                onClick={() => handleSortClick(colHeader)}
-                                            >
-                                                {colHeader}
-                                            </TableSortLabel>
+                                            {
+                                                props.notSortable ? (
+                                                    <span>
+                                                        {colHeader}
+                                                    </span>
+                                                ) : (
+                                                    <TableSortLabel
+                                                        active={sortBy == colHeader}
+                                                        direction={sortBy == colHeader ? sortDirection : "desc"}
+                                                        hideSortIcon={true}
+                                                        onClick={() => handleSortClick(colHeader)}
+                                                    >
+                                                        {colHeader}
+                                                    </TableSortLabel>
+                                                )
+                                            }
                                         </TableCell>
                                     )
                                 )

@@ -16,7 +16,7 @@ export interface TeamOverviewTableData {
 export interface PlayerOverviewTableData {
     title:string,
     column_headers:string[],
-    rows:PlayerOverviewTableRow[]    
+    rows:PlayerOverviewTableRow[]
 }
 
 export interface PlayerOverviewTableRow {

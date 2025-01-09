@@ -13,6 +13,7 @@ from app.types.GenericTableRow import GenericTableRow
 from app.types.enums import QueryType
 from app import db
 from operator import itemgetter
+from copy import deepcopy
 
 class MatchesDataHandler:
 
@@ -96,13 +97,15 @@ class MatchesDataHandler:
             for cn in self.H2H_COLS
         }
         dicto[self.OPPO] = team_name
-        return GenericTableRow(init=dicto)
-                    
+        return deepcopy(GenericTableRow(init=dicto))
+                        
     def get_h2h_result(self):
         matches = self.get_matches()
         oppo_filter_exists = self.opposition not in [None, '']
         aggregate_data = {}
         for match in matches:
+            if match.goals_for is None:
+                continue
             if match.opposition_team_name not in aggregate_data:
                 agg_row = self.create_h2h_aggregate_row(match.opposition_team_name)
             else:
@@ -144,7 +147,9 @@ class MatchesDataHandler:
                     reverse=True
                 ),
                 title='H2H',
-                is_ranked=not oppo_filter_exists
+                is_ranked=not oppo_filter_exists,
+                sort_by=self.PPG,
+                sort_direction='desc'
             )
         ]
 

@@ -6,9 +6,7 @@ import "./ClubOrTeamMatches.css";
 import { MatchesFilter } from "./MatchesFilter";
 import { GenericTableData } from "../../../types/GenericTableTypes";
 import { useState } from "react";
-import { Table } from "../../Table";
-import { TableWithTitle } from "../../TableWithTitle";
-import { SortableTable } from "../../SortableTable";
+import { BetterTable } from "../../BetterTable";
 import { Loading } from "../../Loading";
 import { generateId } from "../../../helpers/other";
 
@@ -61,7 +59,7 @@ export const ClubOrTeamMatches = (props:OwnProps) => {
                         tableData.map(
                             (data:GenericTableData) => {
                                 return (
-                                    <SortableTable
+                                    <BetterTable
                                         key={generateId()}
                                         rowsPerPage={10}
                                         {...data}

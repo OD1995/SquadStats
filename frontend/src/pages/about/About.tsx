@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import OtherService from "../../services/OtherService";
 import { BackendResponse } from "../../types/BackendResponse";
 import { GenericTableData } from "../../types/GenericTableTypes";
-import { SortableTable } from "../../generic/SortableTable";
+// import { SortableTable } from "../../generic/BetterTable";
 import { Loading } from "../../generic/Loading";
 
 export const About = () => {
