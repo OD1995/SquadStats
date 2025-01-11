@@ -6,7 +6,7 @@ import { Loading } from "../../generic/Loading";
 import "./MatchView.css"
 import { MatchData } from "../../types/MatchData";
 import { MatchInfoSection } from "./MatchInfoSection";
-import { PlayerDataSection } from "./PlayerDataSection";
+import { BetterTable } from "../../generic/BetterTable";
 
 export const MatchView = () => {
 
@@ -54,9 +54,9 @@ export const MatchView = () => {
                     teamName={matchData.team_name}
                     competitionFullName={matchData.competition_full_name}
                 />
-                <PlayerDataSection
-                    playerData={matchData.player_data}
-                    uniqueMetrics={matchData.unique_metric_names}
+                <BetterTable
+                    {...matchData.player_data}
+                    rowsPerPage={1000}
                 />
             </div>
         )

@@ -110,7 +110,7 @@ def update_seasons():
             x.get_league_season_info()
             for x in league_seasons
         ]
-        return jsonify(league_season_info_list), 200
+        return jsonify(league_season_info_list)
     except Exception as e:
         return {
             'message' : traceback.format_exc()

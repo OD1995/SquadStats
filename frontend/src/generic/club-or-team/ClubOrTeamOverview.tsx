@@ -40,7 +40,6 @@ export const ClubOrTeamOverview = (props:OwnProps) => {
             (teamTableData:GenericTableData) => {
                 return (
                     <td key={generateId()} className="team-overview-cell">
-                        {/* <TeamOverviewTable testType='2' {...teamTableData}/> */}
                         <BetterTable
                             rowsPerPage={5}
                             {...teamTableData}
@@ -56,7 +55,6 @@ export const ClubOrTeamOverview = (props:OwnProps) => {
             (playerTableData:GenericTableData) => {
                 return (
                     <td key={generateId()} className="team-overview-cell">
-                        {/* <PlayerOverviewTable testType='2' {...playerTableData}/> */}
                         <BetterTable
                             rowsPerPage={5}
                             {...playerTableData}
@@ -75,7 +73,6 @@ export const ClubOrTeamOverview = (props:OwnProps) => {
                     rowsPerPage={5}
                     titleClassName="overview-table-title"
                     {...data}
-                    notSortable
                 />
             )
         );

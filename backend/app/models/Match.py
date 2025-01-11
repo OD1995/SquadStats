@@ -129,6 +129,24 @@ class Match(Base):
         if is_other_result_type(self.notes):
             return True
         return False
+    
+    def get_pmps_by_player_id(self):
+        pmps_by_player_id = {}
+        for pmp in self.player_match_performances:
+            player_dict = pmps_by_player_id.get(
+                str(pmp.player_id),
+                {}
+            )
+            player_dict[pmp.metric.get_best_metric_name()] = pmp.value
+            pmps_by_player_id[str(pmp.player_id)] = player_dict
+        return pmps_by_player_id
+    
+    def get_player_count(self):
+        player_count = 0
+        for player_dict in self.get_pmps_by_player_id().values():
+            if "Bench Unused" not in player_dict:
+                player_count += 1
+        return player_count
 
     def to_dict(
         self,

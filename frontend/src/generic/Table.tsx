@@ -13,13 +13,17 @@ export const Table = (props:TableProps) => {
     // }
 
     const createEmptyRow = () => {
+        var colWidth = 1;
+        if (props.headers) {
+            colWidth = props.headers.props.children.length;
+        }
         return (
             <tr
                 key={generateId()}
                 style={{'textAlign': 'center'}}
             >
                 <td
-                    colSpan={props.headers.props.children.length}
+                    colSpan={colWidth}
                     // style={{
                     //     'columnSpan': props.headers.props.children.length,
                     //     // 'textAlign': 'center'

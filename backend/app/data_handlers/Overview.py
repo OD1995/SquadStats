@@ -1,5 +1,6 @@
 from sqlalchemy import Row
 from app.models.Match import Match
+from app.models.Player import Player
 from app.types.GenericTableCell import GenericTableCell
 from app.types.GenericTableData import GenericTableData
 from app.types.GenericTableRow import GenericTableRow
@@ -38,7 +39,8 @@ class Overview:
             column_headers=column_headers,
             rows=rows,
             title=title.upper(),
-            is_ranked=True
+            is_ranked=True,
+            not_sortable=True
         ).to_dict()
             
     def create_table_data_for_player_stats(
@@ -68,5 +70,6 @@ class Overview:
             column_headers=column_headers,
             rows=rows,
             title=title.upper(),
-            is_ranked=True
+            is_ranked=True,
+            not_sortable=True
         ).to_dict()

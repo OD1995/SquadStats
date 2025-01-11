@@ -10,7 +10,6 @@ import "./BetterTable.css"
 interface OwnProps extends GenericTableData {
     rowsPerPage:number
     titleClassName?:string
-    notSortable?:boolean
 }
 
 export const BetterTable = (props:OwnProps) => {
@@ -27,6 +26,10 @@ export const BetterTable = (props:OwnProps) => {
                     setSortDirection(props.sort_direction);
                 }
             }
+            // if (props.column_headers.length == 0) {
+            //     setSortBy("");
+            //     setSortDirection("");
+            // }
         },
         []
     )
@@ -49,7 +52,6 @@ export const BetterTable = (props:OwnProps) => {
         }
         const aVal = a[sortBy].value;
         const bVal = b[sortBy].value;
-        console.log(aVal, bVal);
         if (bVal < aVal) {
             return -1;
         }
@@ -61,7 +63,7 @@ export const BetterTable = (props:OwnProps) => {
 
     const visibleRows = useMemo(
         () => {
-            if (props.notSortable) {
+            if (props.not_sortable) {
                 return props.rows
             }
             return [...props.rows]
@@ -74,8 +76,25 @@ export const BetterTable = (props:OwnProps) => {
         [sortBy, sortDirection, page, props.rowsPerPage],
     );
 
-    const handlePageChange = (event:unknown, newPage:number) => {
+    const handlePageChange = (_:unknown, newPage:number) => {
         setPage(newPage);
+    }
+
+    const getEmptyRow = () => {
+        return (
+            <TableRow>
+                <TableCell 
+                    sx={{
+                        textAlign: 'center',
+                        columnSpan: props.column_headers.length
+                    }}
+                >
+                    <i>
+                        No data available
+                    </i>
+                </TableCell>
+            </TableRow>
+        )
     }
 
     return (
@@ -115,7 +134,7 @@ export const BetterTable = (props:OwnProps) => {
                                             sortDirection={sortDirection}
                                         >
                                             {
-                                                props.notSortable ? (
+                                                props.not_sortable ? (
                                                     <span>
                                                         {colHeader}
                                                     </span>
@@ -138,55 +157,59 @@ export const BetterTable = (props:OwnProps) => {
                     </TableHead>
                     <TableBody>
                         {
-                            visibleRows.map(
-                                (row:GenericTableRow, rowNum:number) => (
-                                    <TableRow
-                                        key={rowNum}
-                                    >
-                                        {
-                                            props.is_ranked && (
-                                                <TableCell
-                                                    key={rowNum + "-rank"}
-                                                    sx={{
-                                                        fontWeight: "bold",
-                                                        padding: "0"
-                                                    }}
-                                                    align="center"
-                                                >
-                                                    {page * props.rowsPerPage + rowNum + 1}
-                                                </TableCell>
-                                            )
-                                        }
-                                        {
-                                            props.column_headers.map(
-                                                (colHeader:string, colNum:number) => (
+                            (visibleRows.length > 0) ? (
+                                visibleRows.map(
+                                    (row:GenericTableRow, rowNum:number) => (
+                                        <TableRow
+                                            key={rowNum}
+                                        >
+                                            {
+                                                props.is_ranked && (
                                                     <TableCell
-                                                        key={`${rowNum}-${colNum}`}
-                                                        className={row[colHeader].class_name}
-                                                        align="center"
+                                                        key={rowNum + "-rank"}
                                                         sx={{
-                                                            padding: "0",
-                                                            maxWidth: "20vw"
+                                                            fontWeight: "bold",
+                                                            padding: "0"
                                                         }}
+                                                        align="center"
                                                     >
-                                                        {
-                                                            (row[colHeader].link) ? (
-                                                                <a href={row[colHeader].link}>
-                                                                    {row[colHeader].value}
-                                                                </a>
-                                                            ) : (
-                                                                <>
-                                                                    {row[colHeader].value}
-                                                                </>
-                                                            )
-                                                        }
+                                                        {page * props.rowsPerPage + rowNum + 1}
                                                     </TableCell>
                                                 )
-                                            )
-                                        }
-                                    </TableRow>
+                                            }
+                                            {
+                                                props.column_headers.map(
+                                                    (colHeader:string, colNum:number) => {
+                                                        var styles = row[colHeader].styles ?? {} as Record<string,string>;
+                                                        styles['padding'] = "0";
+                                                        styles['maxWidth'] = '20vw';
+                                                        return (
+                                                            <TableCell
+                                                                key={`${rowNum}-${colNum}`}
+                                                                className={row[colHeader].class_name}
+                                                                align="center"
+                                                                sx={styles}
+                                                            >
+                                                                {
+                                                                    (row[colHeader].link) ? (
+                                                                        <a href={row[colHeader].link}>
+                                                                            {row[colHeader].value}
+                                                                        </a>
+                                                                    ) : (
+                                                                        <>
+                                                                            {row[colHeader].value}
+                                                                        </>
+                                                                    )
+                                                                }
+                                                            </TableCell>
+                                                        )
+                                                    }
+                                                )
+                                            }
+                                        </TableRow>
+                                    )
                                 )
-                            )
+                            ) : getEmptyRow()
                         }
                     </TableBody>
                 </Table>

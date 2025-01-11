@@ -15,7 +15,7 @@ def get_matches_filter_data():
             club_id=request.args.get("clubId"),
             team_id=request.args.get("teamId"),
         )
-        return jsonify(matches_filter_data_handler.get_data()), 200
+        return jsonify(matches_filter_data_handler.get_data())
     except Exception as e:
         return {
             'message' : traceback.format_exc()

@@ -24,6 +24,10 @@ class HomeAwayNeutral(str, Enum):
 class Metric(str, Enum):
     APPEARANCES: str = 'Appearances'
     OVERALL_GOALS: str = 'Overall Goals'
+    FEATURED_PLAYER: str = 'Featured Player'
+    GOALS: str = 'Goals'
+    ASSISTS: str = 'Assists'
+    PLAYER_OF_MATCH: str = 'Player Of Match'
 
 class QueryType(str, Enum):
     H2H: str = 'H2H'

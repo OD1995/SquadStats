@@ -1,3 +1,4 @@
+from copy import deepcopy
 from dataclasses import dataclass
 from typing import List
 from app.types.GenericTableCell import GenericTableCell
@@ -13,7 +14,7 @@ class GenericTableRow:
         self.row_data = {}
         self.row_data = row_data
         for k,v in init.items():
-            self.row_data[k] = GenericTableCell(value=v)
+            self.row_data[k] = deepcopy(GenericTableCell(value=v))
 
     def increment_cell_value(
         self,
@@ -48,6 +49,17 @@ class GenericTableRow:
         class_name:str
     ):
         self.row_data[column_name].set_class_name(class_name)
+
+    def add_to_cell_styles(
+        self,
+        column_name:str,
+        property:str,
+        value:str
+    ):
+        self.row_data[column_name].add_to_styles(
+            property=property,
+            value=value
+        )
 
     def to_dict(self):
         return {

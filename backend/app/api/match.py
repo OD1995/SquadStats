@@ -4,6 +4,7 @@ from uuid import UUID
 from flask import Blueprint, jsonify, request
 from sqlalchemy import and_, or_
 from app import db
+from app.data_handlers.MatchInfoDataHandler import MatchInfoDataHandler
 from app.data_handlers.MatchesDataHandler import MatchesDataHandler
 from app.models.DataSource import DataSource
 from app.models.League import League
@@ -16,6 +17,7 @@ from app.models.PlayerMatchPerformance import PlayerMatchPerformance
 from app.models.Team import Team
 from app.models.TeamSeason import TeamSeason
 from app.scrapers.teams.FootballAssociationTeamScraper import FootballAssociationTeamScraper
+from app.types.GenericTableData import GenericTableData
 from app.types.enums import DataSource as DataSourceEnum
 
 match_bp = Blueprint(
@@ -280,28 +282,9 @@ def update_matches():
 @match_bp.route("/get-match-info/<match_id>", methods=['GET'])
 def get_match_info(match_id):
     try:
-        match = db.session.query(Match) \
-            .filter_by(match_id=UUID(match_id)) \
-            .first()
-        pmp_dict = {}
-        unique_metrics = {}
-        for pmp in match.player_match_performances:
-            player_id_key = str(pmp.player_id)
-            metric_name = pmp.metric.get_best_metric_name()
-            if player_id_key not in pmp_dict:
-                pmp_dict[player_id_key] = {
-                    'player_name' : pmp.player.get_best_name()
-                }
-            pmp_dict[player_id_key][metric_name] = pmp.value
-            unique_metrics[metric_name] = 1
-        return_dict = {
-            'player_data' : pmp_dict,
-            'unique_metric_names' : list(unique_metrics.keys()),
-            'match_info' : match.to_dict(),
-            'team_name' : match.team_season.team.get_default_team_name(),
-            'competition_full_name' : match.competition.competition_name
-        }
-        return jsonify(return_dict), 200
+        match_info_data_handler = MatchInfoDataHandler(match_id)
+        result = match_info_data_handler.get_result()
+        return jsonify(result)
     except Exception as e:
         return {
             'message' : traceback.format_exc()
@@ -310,15 +293,15 @@ def get_match_info(match_id):
 @match_bp.route("/get-matches-data", methods=['GET'])
 def get_matches_data():
     try:
-        matches_data = MatchesDataHandler(
+        matches_data_handler = MatchesDataHandler(
             club_id=request.args.get("clubId"),
             query_type=request.args.get("type"),
             team_id=request.args.get("selectedTeamId"),
             season=request.args.get("selectedSeason"),
             opposition=request.args.get("selectedOpposition"),     
         )
-        result = matches_data.get_result()
-        return jsonify(result), 200
+        result = matches_data_handler.get_result()
+        return jsonify(result)
     except Exception as e:
         return {
             'message' : traceback.format_exc()

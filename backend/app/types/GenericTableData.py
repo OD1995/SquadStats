@@ -11,6 +11,7 @@ class GenericTableData:
         rows:List[GenericTableRow],
         title:str=None,
         is_ranked:bool=False,
+        not_sortable:bool=False,
         sort_by:str=None,
         sort_direction:str=None
     ):
@@ -18,6 +19,7 @@ class GenericTableData:
         self.rows = rows
         self.title = title
         self.is_ranked = is_ranked
+        self.not_sortable = not_sortable
         self.sort_by = sort_by
         self.sort_direction = sort_direction
 
