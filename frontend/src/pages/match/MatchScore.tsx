@@ -39,40 +39,9 @@ export const MatchScore = (props:OwnProps) => {
         },
         []
     )
-
-    // const generateMiddleColumn = (pens:number|null) => {
-    //     if (pens) {
-    //         return (
-    //             <div id="middle-column" className="match-score-column">
-    //                 <h3>&nbsp;</h3>
-    //                 <h4>&nbsp;</h4>
-    //                 <h6>PENALTIES</h6>
-    //             </div>
-    //         )
-    //     } else {
-    //         return null;
-    //     }
-    // }
-
-    // const generateScoreColumn = (
-    //     type:string,
-    //     teamName:string,
-    //     score:number,
-    //     pens:number|null
-    // ) => {
-    //     return (
-    //         <div id={type + "-column"} className="match-score-column">
-    //             <h3>{teamName}</h3>
-    //             <h4>{score}</h4>
-    //             {
-    //                 pens && <h6>{pens}</h6>
-    //             }
-    //         </div>
-    //     )
-    // }
-
-    const generateScoreTable = () => {
-        return (
+    
+    return (
+        <div id='match-score' className="match-info-div">
             <table>
                 <tr>
                     <td><b>{homeTeam}</b></td>
@@ -94,15 +63,6 @@ export const MatchScore = (props:OwnProps) => {
                     <td>{awayScore}</td>
                 </tr>
             </table>
-        )
-    }
-    
-    return (
-        <div id='match-score' className="match-info-div">
-            {/* {generateScoreColumn('home',homeTeam,homeScore!,homePens)}
-            {generateMiddleColumn(homePens)}
-            {generateScoreColumn('away',awayTeam,awayScore!,awayPens)} */}
-            {generateScoreTable()}
         </div>
     )
 }

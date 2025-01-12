@@ -28,8 +28,11 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    /* margin-top: 2vh; */
     margin-bottom: 5vh;
+}
+
+#split-by-filter {
+    margin-bottom: 3vh !important;
 }
 
 .filter-select {

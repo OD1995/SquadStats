@@ -1,4 +1,3 @@
-import { MatchesOrPlayersFilterMandatory } from "./MatchesOrPlayersFilterMandatory";
 import { MatchesOrPlayersFilterOptional } from "./MatchesOrPlayersFilterOptional";
 import { useEffect, useState } from "react";
 import { isWiderThanHigher } from "../../../helpers/windowDimensions";
@@ -10,6 +9,8 @@ import { Season } from "../../../types/Season";
 import { createSearchParams, useNavigate, useSearchParams } from "react-router-dom";
 import MatchService from "../../../services/MatchService";
 import ComboService from "../../../services/ComboService";
+import { SplitByFilter } from "../matches/SplitByFilter";
+import { SPLIT_BY_TYPE } from "../../../types/enums";
 
 
 interface OwnProps {
@@ -31,7 +32,7 @@ export const MatchesOrPlayersFilter = (props:OwnProps) => {
     
     const [selectedTeamId, setSelectedTeamId] = useState<string>("");
     const [selectedSeason, setSelectedSeason] = useState("");
-    const [selectedType, setSelectedType] = useState<string>("");
+    const [selectedSplitBy, setSelectedSplitBy] = useState<string>(SPLIT_BY_TYPE.NA);
     const [selectedOpposition, setSelectedOpposition] = useState<string>("");
     
     const isDesktop = isWiderThanHigher();
@@ -63,7 +64,7 @@ export const MatchesOrPlayersFilter = (props:OwnProps) => {
                 }
             )
             if (searchParams.get("type")) {
-                setSelectedType(searchParams.get("type")!);
+                setSelectedSplitBy(searchParams.get("type")!);
                 retrieveData(searchParams.toString());
             }
         },
@@ -73,8 +74,8 @@ export const MatchesOrPlayersFilter = (props:OwnProps) => {
     const handleSubmitClick = () => {
         setFiltersErrorMessage("");
         const params = {} as Record<string,string>;
-        if (selectedType) {
-            params['type'] = selectedType;
+        if (selectedSplitBy) {
+            params['splitBy'] = selectedSplitBy;
         } else {
             setFiltersErrorMessage("You must select a value for 'Type'");
             return;
@@ -125,11 +126,13 @@ export const MatchesOrPlayersFilter = (props:OwnProps) => {
 
     const content = (
         <>
-            <MatchesOrPlayersFilterMandatory
-                selectedType={selectedType}
-                setSelectedType={setSelectedType}
+            <SplitByFilter
+                splitBy={selectedSplitBy}
+                setSplitBy={setSelectedSplitBy}
             />
             <MatchesOrPlayersFilterOptional
+                club={props.club}
+                team={props.team}
                 selectedTeamId={selectedTeamId}
                 setSelectedTeamId={setSelectedTeamId}
                 clubSeasons={clubSeasons!}
@@ -140,7 +143,7 @@ export const MatchesOrPlayersFilter = (props:OwnProps) => {
                 selectedOpposition={selectedOpposition}
                 setSelectedOpposition={setSelectedOpposition}
                 oppositionOptions={oppositionOptions}
-                selectedType={selectedType}
+                selectedSplitBy={selectedSplitBy}
             />
             <div id='mop-filter-button-div'>
                 <button

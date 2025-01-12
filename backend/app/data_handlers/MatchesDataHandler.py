@@ -3,14 +3,13 @@ from uuid import UUID
 from app.helpers.QueryBuilder import QueryBuilder
 from app.helpers.misc import get_colour
 from app.helpers.validators import is_valid_uuid
-from app.models.Club import Club
 from app.models.LeagueSeason import LeagueSeason
 from app.models.Match import Match
 from app.models.Team import Team
 from app.models.TeamSeason import TeamSeason
 from app.types.GenericTableData import GenericTableData
 from app.types.GenericTableRow import GenericTableRow
-from app.types.enums import QueryType
+from app.types.enums import SplitByType
 from app import db
 from copy import deepcopy
 
@@ -18,20 +17,20 @@ class MatchesDataHandler:
 
     def __init__(
         self,
-        query_type:str,
+        split_by:str,
         club_id:str|None,
         team_id:str,
         season:str,
         opposition:str|None
     ):
         """
-        query_type - should be one of QueryType options
+        split_by - should be one of SplitByType options
         club_id - None (if focus is on team matches) or uuid
         team_id - '' or uuid
         season - '' or uuid (league_season_id) or str (data_source_season_name, if focus is on all club matches)
         opposition - None or str (opposition_team_name)
         """
-        self.query_type = query_type
+        self.split_by = split_by
         self.club_id = club_id
         self.team_id = team_id
         self.season = season
@@ -73,11 +72,11 @@ class MatchesDataHandler:
         ]
 
     def get_result(self):
-        if self.query_type == QueryType.MATCH_HISTORY:
+        if self.split_by == SplitByType.NA:
             return self.get_match_history_result()
-        if self.query_type == QueryType.H2H:
+        if self.split_by == SplitByType.OPPOSITION:
             return self.get_h2h_result()
-        if self.query_type == QueryType.PPG_BY_PLAYER_COUNT:
+        if self.split_by == SplitByType.PLAYER_COUNT:
             return self.get_ppg_by_player_count_result()
         raise Exception('Unexpected query type')
     
@@ -147,7 +146,7 @@ class MatchesDataHandler:
                     key=lambda x: x.get_cell_value(self.PLAYER_COUNT),
                     reverse=True
                 ),
-                title='PPG By Player Counts'.upper(),
+                title='SPLIT BY PLAYER COUNT',
                 not_sortable=False,
                 sort_by=self.PLAYER_COUNT,
                 sort_direction='asc'
@@ -196,7 +195,7 @@ class MatchesDataHandler:
                     key=lambda x: (x.get_cell_value(self.PPG), x.get_cell_value(self.GOAL_DIFFERENCE)),
                     reverse=True
                 ),
-                title='H2H',
+                title='SPLIT BY OPPOSITION',
                 is_ranked=not oppo_filter_exists,
                 sort_by=self.PPG,
                 sort_direction='desc'

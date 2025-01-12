@@ -1,37 +1,34 @@
-import { FormControl, InputLabel, MenuItem, OutlinedInput, Select, SelectChangeEvent } from "@mui/material";
-import { QueryType } from "../../../types/enums";
+import { FormControl, MenuItem, OutlinedInput, Select, SelectChangeEvent } from "@mui/material";
+import { SPLIT_BY_TYPE } from "../../../types/enums";
 
 interface OwnProps {
-    type:string
-    setType:Function
+    splitBy:string
+    setSplitBy:Function
 }
 
-export const MatchTypeFilter = (props:OwnProps) => {
+export const SplitByFilter = (props:OwnProps) => {
 
     const handleTypeSelect = (event:SelectChangeEvent) => {
-        props.setType(event.target.value as string);
+        props.setSplitBy(event.target.value as string);
     }
 
     const options = [
-        QueryType.MATCH_HISTORY,
-        QueryType.H2H,
-        QueryType.PPG_BY_PLAYER_COUNT
+        SPLIT_BY_TYPE.NA,
+        SPLIT_BY_TYPE.OPPOSITION,
+        SPLIT_BY_TYPE.PLAYER_COUNT
     ]
 
     return (
         <div
-            id="match-type-filter"
+            id="split-by-filter"
             className="match-filter"
         >
             <strong className="filter-select-title">
-                Type
+                Split By
             </strong>
             <FormControl>
-                {/* <InputLabel>
-                    Type
-                </InputLabel> */}
                 <Select
-                    value={props.type}
+                    value={props.splitBy}
                     onChange={handleTypeSelect}
                     label='Type'
                     className="filter-select"

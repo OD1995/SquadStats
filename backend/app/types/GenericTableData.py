@@ -32,6 +32,7 @@ class GenericTableData:
             ],
             "title" : self.title,
             "is_ranked" : self.is_ranked,
+            'not_sortable' : self.not_sortable,
             'sort_by' : self.sort_by,
             'sort_direction' : self.sort_direction
         }

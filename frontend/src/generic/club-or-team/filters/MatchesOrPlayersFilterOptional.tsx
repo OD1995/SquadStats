@@ -1,5 +1,5 @@
 import { Club } from "../../../types/Club";
-import { QueryType } from "../../../types/enums";
+import { SPLIT_BY_TYPE } from "../../../types/enums";
 import { Season } from "../../../types/Season";
 import { Team } from "../../../types/Team";
 import { OppositionFilter } from "../matches/OppositionFilter";
@@ -16,7 +16,7 @@ interface OwnProps {
     selectedSeason:string
     setSelectedSeason:Function
     teamSeasons:Season[]
-    selectedType:string
+    selectedSplitBy:string
     selectedOpposition:string
     setSelectedOpposition:Function
     oppositionOptions:string[]
@@ -37,7 +37,7 @@ export const MatchesOrPlayersFilterOptional = (props:OwnProps) => {
     return (
         <div> 
             <h4 className="small-caps-subtitle">
-                OPTIONAL
+                OPTIONAL FILTERS
             </h4>           
             {
                 props.club && (
@@ -55,9 +55,8 @@ export const MatchesOrPlayersFilterOptional = (props:OwnProps) => {
                 setSelectedSeason={props.setSelectedSeason}
                 seasonOptions={getSeasons()}
             />
-            
             {
-                (props.selectedType == QueryType.H2H) && (
+                (props.selectedSplitBy == SPLIT_BY_TYPE.OPPOSITION) && (
                     <OppositionFilter
                         selectedOpposition={props.selectedOpposition}
                         setSelectedOpposition={props.setSelectedOpposition}

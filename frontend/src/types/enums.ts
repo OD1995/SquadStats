@@ -13,8 +13,8 @@ export enum PAGE_TYPE {
     REGISTER = 'Register'
 }
 
-export enum QueryType {
-    MATCH_HISTORY = 'Match History',
-    H2H = 'H2H',
-    PPG_BY_PLAYER_COUNT = 'PPG By Player Count',
+export enum SPLIT_BY_TYPE {
+    NA = 'N/A',
+    OPPOSITION = 'Opposition',
+    PLAYER_COUNT = 'Player Count',
 }
