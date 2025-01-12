@@ -18,7 +18,7 @@ export const OppositionFilter = (props:OwnProps) => {
             className="match-filter"
         >
             <strong className="filter-select-title">
-                Opposition^
+                Opposition
             </strong>
             <FormControl>
                 {/* <InputLabel>

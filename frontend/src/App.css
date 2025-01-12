@@ -104,3 +104,8 @@
 .page-parent {
 	width: 100%;
 }
+
+.small-caps-subtitle {
+    font-size: 0.67em;
+    font-weight: normal;
+}

@@ -14,6 +14,7 @@ export enum PAGE_TYPE {
 }
 
 export enum QueryType {
+    MATCH_HISTORY = 'Match History',
     H2H = 'H2H',
-    PPG_BY_PLAYER_COUNT = 'PPG By Player Count'
+    PPG_BY_PLAYER_COUNT = 'PPG By Player Count',
 }

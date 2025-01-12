@@ -4,11 +4,11 @@ class ComboService {
 
     base_url = "/combo"
 
-    getMatchesFilterData(
+    getMatchesOrPlayersFilterData(
         params:string
     ) {
         return makeGetRequest(
-            this.base_url + `/get-matches-filter-data?${params}`
+            this.base_url + `/get-matches-or-players-filter-data?${params}`
         )
     }
 }

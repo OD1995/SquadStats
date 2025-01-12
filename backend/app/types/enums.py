@@ -30,5 +30,6 @@ class Metric(str, Enum):
     PLAYER_OF_MATCH: str = 'Player Of Match'
 
 class QueryType(str, Enum):
+    MATCH_HISTORY: str = 'Match History'
     H2H: str = 'H2H'
     PPG_BY_PLAYER_COUNT: str = 'PPG By Player Count'

@@ -26,7 +26,7 @@ export const SeasonFilter = (props:OwnProps) => {
             className="match-filter"
         >
             <strong className="filter-select-title">
-                Season^
+                Season
             </strong>
             <FormControl>
                 {/* <InputLabel>

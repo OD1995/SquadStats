@@ -3,7 +3,7 @@
     flex-direction: column;
 }
 
-.folded-matches-filter {
+.folded-mop-filter {
     border: 1px solid black;
     border-radius: 1vw;
     background-color: #f6f6f6;
@@ -14,11 +14,11 @@
     color: #646cff;
 }
 
-#mobile-folded-matches-filter {
+#mobile-folded-mop-filter {
     margin-bottom: 2vh;
 }
 
-#mobile-expanded-matches-filter {
+#mobile-expanded-mop-filter {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -42,7 +42,7 @@
     font-size: smaller;
 }
 
-#matches-filter-button-div {
+#mop-filter-button-div {
     width: 100%;
     text-align: right;
 }

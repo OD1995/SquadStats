@@ -32,7 +32,7 @@ export const TeamFilter = (props:OwnProps) => {
             className="match-filter"
         >
             <strong className="filter-select-title">
-                Team^
+                Team
             </strong>
             <FormControl>
                 {/* <InputLabel>

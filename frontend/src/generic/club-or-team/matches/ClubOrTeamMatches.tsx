@@ -63,6 +63,7 @@ export const ClubOrTeamMatches = (props:OwnProps) => {
                                         key={generateId()}
                                         rowsPerPage={10}
                                         {...data}
+                                        titleClassName="small-caps-subtitle  sortable-table-title"
                                     />
                                 )
                             }

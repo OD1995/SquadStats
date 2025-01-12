@@ -15,6 +15,7 @@
 }
 
 .overview-table-title {
-    font-size: 0.67em;
     margin-left: 5vw;
+    margin-top: 0.5vh;
+    margin-bottom: 0.5vh;
 }

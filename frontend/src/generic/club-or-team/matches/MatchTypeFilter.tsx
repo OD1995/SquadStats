@@ -13,6 +13,7 @@ export const MatchTypeFilter = (props:OwnProps) => {
     }
 
     const options = [
+        QueryType.MATCH_HISTORY,
         QueryType.H2H,
         QueryType.PPG_BY_PLAYER_COUNT
     ]
@@ -23,7 +24,7 @@ export const MatchTypeFilter = (props:OwnProps) => {
             className="match-filter"
         >
             <strong className="filter-select-title">
-                Type*
+                Type
             </strong>
             <FormControl>
                 {/* <InputLabel>

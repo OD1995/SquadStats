@@ -46,3 +46,9 @@
     text-align: center;
     min-width: 30vw;
 }
+
+#date-time-div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

@@ -1,3 +1,4 @@
+from copy import deepcopy
 from dataclasses import dataclass
 from turtle import back
 from typing import List
@@ -99,18 +100,30 @@ class Match(Base):
         self,
         format_score:bool=False
     ):
-        row = GenericTableRow(
-            {
-                'Opposition' : f"{self.opposition_team_name} ({self.home_away_neutral.value[0]})",
-                'Result' : f"{self.goals_for}-{self.goals_against}",
-                'Date' : self.date.strftime("%d %b %y")
-            }
+        score_formattable = False
+        opposition = f"{self.opposition_team_name} ({self.home_away_neutral.value[0]})"
+        if (self.goals_for is not None) & (self.goals_against is not None):
+            result = f"{self.goals_for}-{self.goals_against}"
+            score_formattable = True
+        elif self.notes is not None:
+            result = self.notes
+        else:
+            result = 'n/a'            
+        dt = self.date.strftime("%d %b %y")
+        row = deepcopy(
+            GenericTableRow(
+                {
+                    'Opposition' : opposition,
+                    'Result' : result,
+                    'Date' : dt
+                }
+            )
         )
         row.set_cell_link(
             column_name='Opposition',
             link=f"/match/{self.match_id}"
         )
-        if format_score:
+        if format_score & score_formattable:
             if self.goal_difference > 0:
                 res = 'win'
             elif self.goal_difference == 0:

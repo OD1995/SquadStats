@@ -36,7 +36,7 @@ export const ClubOrTeamLinkBar = (props:OwnProps) => {
                                     to={link.to}
                                     className={getClassName(link.to)}
                                 >
-                                    {link.label.replace(" ","\n")}
+                                    {isDesktop ? link.label : link.label.replace(" ","\n")}
                                 </Link>
                             )
                         }

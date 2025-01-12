@@ -73,6 +73,8 @@ class MatchesDataHandler:
         ]
 
     def get_result(self):
+        if self.query_type == QueryType.MATCH_HISTORY:
+            return self.get_match_history_result()
         if self.query_type == QueryType.H2H:
             return self.get_h2h_result()
         if self.query_type == QueryType.PPG_BY_PLAYER_COUNT:
@@ -102,17 +104,19 @@ class MatchesDataHandler:
             matches_query.add_filter(Match.opposition_team_name == self.opposition)
         return matches_query.all()
     
+    def get_match_history_result(self):
+        matches = self.get_matches()
+        return [
+            self.get_matches_table(matches).to_dict()
+        ]
+    
     def get_ppg_by_player_count_result(self):
         matches = self.get_matches()
         aggregate_data = {}
         for match in matches:
             if match.goals_for is None:
                 continue
-            if match.data_source_match_id == '27594909':
-                a=1
             player_count = match.get_player_count()
-            if player_count in [0,1]:
-                a=1
             agg_row = aggregate_data.get(
                 player_count,
                 self.create_ppg_by_player_count_aggregate_row(player_count)
@@ -143,9 +147,8 @@ class MatchesDataHandler:
                     key=lambda x: x.get_cell_value(self.PLAYER_COUNT),
                     reverse=True
                 ),
-                title='PPG By Player Counts',
-                # is_ranked=True,
-                is_sortable=False,
+                title='PPG By Player Counts'.upper(),
+                not_sortable=False,
                 sort_by=self.PLAYER_COUNT,
                 sort_direction='asc'
             ).to_dict()
@@ -201,26 +204,30 @@ class MatchesDataHandler:
         ]
 
         if oppo_filter_exists:
-            headers = [
-                'Opposition',
-                'Result',
-                'Date'
-            ]
-            return_me.append(
-                GenericTableData(
-                    column_headers=headers,
-                    rows=[
-                        m.get_short_table_row(format_score=True)
-                        for m in matches
-                    ],
-                    title='Matches'
-                )
-            )
+            return_me.append(self.get_matches_table(matches))
 
         return [
             r.to_dict()
             for r in return_me
         ]
+    
+    def get_matches_table(
+        self,
+        matches:List[Match]
+    ):
+        headers = [
+            'Opposition',
+            'Result',
+            'Date'
+        ]
+        return GenericTableData(
+            column_headers=headers,
+            rows=[
+                m.get_short_table_row(format_score=True)
+                for m in matches
+            ],
+            title='Matches'.upper()
+        )
 
     def create_h2h_aggregate_row(
         self,

@@ -35,15 +35,23 @@ export const ClubOrTeamOverview = (props:OwnProps) => {
         )
     }
 
+    const generateTable = (data:GenericTableData) => {
+        return (
+            <BetterTable
+                key={generateId()}
+                rowsPerPage={5}
+                titleClassName="overview-table-title small-caps-subtitle"
+                {...data}
+            />
+        )
+    }
+
     const generateTeamTableRow = () => {
         return props.teamTableDataArray.map(
             (teamTableData:GenericTableData) => {
                 return (
                     <td key={generateId()} className="team-overview-cell">
-                        <BetterTable
-                            rowsPerPage={5}
-                            {...teamTableData}
-                        />
+                        {generateTable(teamTableData)}
                     </td>
                 )
             }
@@ -55,10 +63,7 @@ export const ClubOrTeamOverview = (props:OwnProps) => {
             (playerTableData:GenericTableData) => {
                 return (
                     <td key={generateId()} className="team-overview-cell">
-                        <BetterTable
-                            rowsPerPage={5}
-                            {...playerTableData}
-                        />
+                        {generateTable(playerTableData)}
                     </td>
                 )
             }
@@ -67,14 +72,7 @@ export const ClubOrTeamOverview = (props:OwnProps) => {
 
     const generateTableColumn = () => {
         return props.teamTableDataArray.concat(props.playerTableDataArray).map(
-            (data:GenericTableData) => (
-                <BetterTable
-                    key={generateId()}
-                    rowsPerPage={5}
-                    titleClassName="overview-table-title"
-                    {...data}
-                />
-            )
+            (data:GenericTableData) => generateTable(data)
         );
     }
 

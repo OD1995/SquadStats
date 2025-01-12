@@ -28,6 +28,6 @@
 
 .current-cot-link {
     border: 1px solid #f6f6f6;
-    border-radius: 1vw;
+    border-radius: 0.5em;
     padding: 0.5vh;
 }
