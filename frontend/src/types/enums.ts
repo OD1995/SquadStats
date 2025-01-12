@@ -17,5 +17,19 @@ export enum SPLIT_BY_TYPE {
     NA = 'N/A',
     OPPOSITION = 'Opposition',
     PLAYER_COUNT = 'Player Count',
-    SEASON = 'Season'
+    SEASON = 'Season',
+    YEAR = 'Year'
+}
+
+export enum LEADERBOARD_TYPE {
+    APPEARANCES = 'Appearances',
+    APPEARANCES_BY_SEASON = 'Appearances By Season',
+    APPEARANCES_BY_YEAR = 'Appearances By Year',
+    GOALS = 'Goals',
+    GOALS_PER_GAME = 'Goals Per Game'
+}
+
+export enum METRIC {
+    APPEARANCES = 'Appearances',
+    GOALS = 'Goals'
 }

@@ -91,7 +91,7 @@ export const TeamNames = () => {
                 {team?.team_name}
             </h1>
             <div id='club-overview-content'>
-                <div>
+                <div className="error-message">
                     {errorMessage}
                 </div>
                 {

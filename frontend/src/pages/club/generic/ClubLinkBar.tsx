@@ -21,7 +21,7 @@ export const ClubLinkBar = (props:OwnProps) => {
                 to: `/club/${clubId}/matches`
             },
             {
-                label: 'Players',
+                label: 'Player Leaderboards',
                 to: `/club/${clubId}/players`
             }
         ] as LinkBarInfo[];

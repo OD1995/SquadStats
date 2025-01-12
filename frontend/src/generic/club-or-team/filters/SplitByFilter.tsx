@@ -4,6 +4,7 @@ import { SPLIT_BY_TYPE } from "../../../types/enums";
 interface OwnProps {
     splitBy:string
     setSplitBy:Function
+    splitByOptions:SPLIT_BY_TYPE[]
 }
 
 export const SplitByFilter = (props:OwnProps) => {
@@ -11,13 +12,6 @@ export const SplitByFilter = (props:OwnProps) => {
     const handleTypeSelect = (event:SelectChangeEvent) => {
         props.setSplitBy(event.target.value as string);
     }
-
-    const options = [
-        SPLIT_BY_TYPE.NA,
-        SPLIT_BY_TYPE.OPPOSITION,
-        SPLIT_BY_TYPE.PLAYER_COUNT,
-        SPLIT_BY_TYPE.SEASON
-    ]
 
     return (
         <div
@@ -36,7 +30,7 @@ export const SplitByFilter = (props:OwnProps) => {
                     input={<OutlinedInput sx={{fontSize: '0.8rem'}} />}
                 >
                     {
-                        options.map(
+                        props.splitByOptions.map(
                             (option:string) => {
                                 return (
                                     <MenuItem

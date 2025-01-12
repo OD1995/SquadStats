@@ -45,6 +45,10 @@
 	color: red;
 }
 
+.error-message {
+	color: red;
+}
+
 .ss-black-button {
 	background-color: black;
 	color: white;
@@ -108,4 +112,9 @@
 .small-caps-subtitle {
     font-size: 0.67em;
     font-weight: normal;
+}
+
+.small-caps-select-group-subtitle {
+	font-size: 0.6em !important;
+	margin-left: 2vw;
 }

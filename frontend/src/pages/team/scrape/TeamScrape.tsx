@@ -318,7 +318,7 @@ export const TeamScrape = () => {
                     {
                         isLoading ? <Loading/> : (
                             <>
-                                <p>
+                                <p className="error-message">
                                     {errorMessage}
                                 </p>
                                 {

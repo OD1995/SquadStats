@@ -25,12 +25,14 @@ export const ClubOrTeamOverview = (props:OwnProps) => {
     const generateParentTable = () => {
         return (
             <table id='team-overview-parent-table'>
-                <tr>
-                    {generateTeamTableRow()}
-                </tr>
-                <tr>
-                    {generatePlayerTableRow()}
-                </tr>
+                <thead>
+                    <tr>
+                        {generateTeamTableRow()}
+                    </tr>
+                    <tr>
+                        {generatePlayerTableRow()}
+                    </tr>
+                </thead>
             </table>
         )
     }
@@ -101,7 +103,7 @@ export const ClubOrTeamOverview = (props:OwnProps) => {
                         )
                     )) && <Loading/>
                 }
-                <div>
+                <div className="error-message">
                     {props.errorMessage}
                 </div>
                 {

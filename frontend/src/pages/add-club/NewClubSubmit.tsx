@@ -76,7 +76,7 @@ export const NewClubSubmit = (props:NewClubSubmitProps) => {
             >
                 Submit
             </button>
-            <p>
+            <p className="error-message">
                 {errorMessage}
             </p>
         </div>

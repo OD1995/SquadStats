@@ -3,7 +3,7 @@ import { getUserLS } from "../../authentication/auth"
 import { getClub, getIsClubAdmin } from "../../helpers/other"
 import { ClubOrTeamMatchesOrPlayers } from "../../generic/club-or-team/ClubOrTeamMatchesOrPlayers";
 
-export const ClubMatches = () => {
+export const ClubPlayers = () => {
 
     const user = getUserLS();
     const { clubId } = useParams();
@@ -12,7 +12,7 @@ export const ClubMatches = () => {
         <ClubOrTeamMatchesOrPlayers
             club={getClub(user, clubId)!}
             isClubAdmin={getIsClubAdmin(user, clubId!)}
-            matches
+            players
         />
     )
 }

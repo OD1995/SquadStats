@@ -42,7 +42,7 @@ export const MatchView = () => {
         )
     } else if (matchData == null) {
         return (
-            <div id='match-view-parent'>
+            <div id='match-view-parent' className="error-message">
                 {errorMessage}
             </div>
         )

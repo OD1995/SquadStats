@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { getUserLS } from "../../authentication/auth"
-import { ClubOrTeamMatches } from "../../generic/club-or-team/matches/ClubOrTeamMatches"
 import { getIsClubAdmin, getTeam } from "../../helpers/other"
+import { ClubOrTeamMatchesOrPlayers } from "../../generic/club-or-team/ClubOrTeamMatchesOrPlayers";
 
 export const TeamMatches = () => {
 
@@ -10,9 +10,10 @@ export const TeamMatches = () => {
     const team = getTeam(user, teamId)!;
 
     return (
-        <ClubOrTeamMatches
+        <ClubOrTeamMatchesOrPlayers
             team={team}
             isClubAdmin={getIsClubAdmin(user, team.club_id)}
+            matches
         />
     )
 }

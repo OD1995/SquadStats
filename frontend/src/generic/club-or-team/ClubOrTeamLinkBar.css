@@ -7,7 +7,7 @@
     align-items: center;
     background-color: #646cff;
     margin-bottom: 3vh;
-    font-size: min(3.5vmin, 15px);
+    font-size: min(3.25vmin, 15px);
     container-name: cot-link-bar-container;
 }
 
@@ -27,7 +27,9 @@
 }
 
 .current-cot-link {
-    border: 1px solid #f6f6f6;
-    border-radius: 0.5em;
-    padding: 0.5vh;
+    /* border: 1px solid #f6f6f6; */
+    /* border-radius: 0.5em; */
+    /* padding: 0.5vh; */
+    color: #FFF764;
+    /* color: #64ffa9; */
 }

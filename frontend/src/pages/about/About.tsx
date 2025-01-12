@@ -31,7 +31,7 @@ export const About = () => {
 
     return (
         <div id='about-parent' className="page-parent" style={{display:"flex",flexDirection:"column"}}>
-            <div>
+            <div className="error-message">
                 {errorMessage}
             </div>
             <div>
