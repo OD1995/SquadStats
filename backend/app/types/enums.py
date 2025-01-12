@@ -33,3 +33,4 @@ class SplitByType(str, Enum):
     NA: str = 'N/A'
     OPPOSITION: str = 'Opposition'
     PLAYER_COUNT: str = 'Player Count'
+    SEASON: str = 'Season'

@@ -14,7 +14,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.models.PlayerMatchPerformance import PlayerMatchPerformance
 from app.models.TeamSeason import TeamSeason
 from app.types.GenericTableRow import GenericTableRow
-from app.types.enums import HomeAwayNeutral, Result
+from app.types.enums import HomeAwayNeutral, Result, SplitByType
 
 @dataclass
 class Match(Base):
@@ -160,6 +160,20 @@ class Match(Base):
             if "Bench Unused" not in player_dict:
                 player_count += 1
         return player_count
+    
+    def get_agg_data_key(
+        self,
+        split_by:SplitByType
+    ):
+        match split_by:
+            case SplitByType.OPPOSITION:
+                return self.opposition_team_name
+            case SplitByType.PLAYER_COUNT:
+                return self.get_player_count()
+            case SplitByType.SEASON:
+                return self.team_season.league_season.data_source_season_name
+            case _:
+                raise Exception(f"Unexpected split by type: {split_by}")
 
     def to_dict(
         self,

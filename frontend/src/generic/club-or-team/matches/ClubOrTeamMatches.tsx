@@ -14,14 +14,13 @@ interface OwnProps {
     club?:Club
     team?:Team
     isClubAdmin:boolean
-    errorMessage:string
-    setErrorMessage:Function
 }
 
 export const ClubOrTeamMatches = (props:OwnProps) => {
 
     const [tableData, setTableData] = useState<GenericTableData[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [errorMessage, setErrorMessage] = useState<string>("");
 
     return (
         <div id='cot-matches-parent' className="parent-div">
@@ -44,12 +43,12 @@ export const ClubOrTeamMatches = (props:OwnProps) => {
                 <MatchesFilter
                     club={props.club}
                     team={props.team}
-                    setErrorMessage={props.setErrorMessage}
+                    setErrorMessage={setErrorMessage}
                     setTableData={setTableData}
                     setIsLoading={setIsLoading}
                 />
                 <div>
-                    {props.errorMessage}
+                    {errorMessage}
                 </div>
                 <div id='cotm-table-content'>
                     {

@@ -17,4 +17,5 @@ export enum SPLIT_BY_TYPE {
     NA = 'N/A',
     OPPOSITION = 'Opposition',
     PLAYER_COUNT = 'Player Count',
+    SEASON = 'Season'
 }

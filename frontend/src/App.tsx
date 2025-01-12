@@ -14,8 +14,9 @@ import { TeamOverview } from './pages/team/overview/TeamOverview';
 import { TeamScrape } from './pages/team/scrape/TeamScrape';
 import { TeamNames } from './pages/team/name/TeamNames';
 import { MatchView } from './pages/match/MatchView';
-import { ClubMatches } from './pages/club/matches/ClubMatches';
-import { ClubOverview } from './pages/club/overview/ClubOverview';
+import { ClubMatches } from './pages/club/ClubMatches';
+import { ClubOverview } from './pages/club/ClubOverview';
+import { TeamMatches } from './pages/team/TeamMatches';
 
 
 const App = () => {
@@ -43,6 +44,7 @@ const App = () => {
 						<Route path='/club/:clubId/matches' element={<ClubMatches/>}/>
 						<Route path='/team/:teamId/overview' element={<TeamOverview/>}/>
 						<Route path='/team/:teamId/update-data' element={<TeamScrape/>}/>
+						<Route path='/team/:teamId/matches' element={<TeamMatches/>}/>
 						<Route path='/team/:teamId/team-names' element={<TeamNames/>}/>
 						<Route path='/match/:matchId' element={<MatchView/>}/>
 						<Route path="*" element={<Navigate to="/about" replace/>}/>

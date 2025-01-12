@@ -19,22 +19,25 @@ class MatchesDataHandler:
         self,
         split_by:str,
         club_id:str|None,
-        team_id:str,
+        team_id:str|None,
         season:str,
-        opposition:str|None
+        opposition:str|None,
+        team_id_filter:str|None
     ):
         """
         split_by - should be one of SplitByType options
         club_id - None (if focus is on team matches) or uuid
-        team_id - '' or uuid
+        team_id - None (if focus is on club matches) or uuid
         season - '' or uuid (league_season_id) or str (data_source_season_name, if focus is on all club matches)
         opposition - None or str (opposition_team_name)
+        team_id_filter - '' or uuid
         """
         self.split_by = split_by
         self.club_id = club_id
         self.team_id = team_id
         self.season = season
         self.opposition = opposition
+        self.team_id_filter = team_id_filter
 
         self.OPPO = 'Opposition'
         self.PPG = 'PPG'
@@ -46,9 +49,9 @@ class MatchesDataHandler:
         self.GOALS_AGAINST = 'A'
         self.GOAL_DIFFERENCE = 'GD'
         self.PLAYER_COUNT = 'Player Count'
+        self.SEASON = 'Season'
 
-        self.H2H_COLS = [
-            self.OPPO,
+        self.GENERIC_COLUMNS = [
             self.PLAYED,
             self.WINS,
             self.DRAWS,
@@ -59,27 +62,25 @@ class MatchesDataHandler:
             self.PPG
         ]
 
-        self.PPG_BY_PLAYER_COUNT_COLS = [
-            self.PLAYER_COUNT,
-            self.PPG,
-            self.PLAYED,
-            self.WINS,
-            self.DRAWS,
-            self.LOSSES,
-            self.GOALS_FOR,
-            self.GOALS_AGAINST,
-            self.GOAL_DIFFERENCE,
-        ]
+        self.split_column_dict = {
+            SplitByType.OPPOSITION : self.OPPO,
+            SplitByType.PLAYER_COUNT : self.PLAYER_COUNT,
+            SplitByType.SEASON : self.SEASON
+        }
+
 
     def get_result(self):
         if self.split_by == SplitByType.NA:
-            return self.get_match_history_result()
-        if self.split_by == SplitByType.OPPOSITION:
-            return self.get_h2h_result()
-        if self.split_by == SplitByType.PLAYER_COUNT:
-            return self.get_ppg_by_player_count_result()
-        raise Exception('Unexpected query type')
+            return self.get_all_matches_result()
+        if self.split_by in [
+            SplitByType.OPPOSITION,
+            SplitByType.PLAYER_COUNT,
+            SplitByType.SEASON
+        ]:
+            return self.get_split_by_result()
+        raise Exception('Unexpected split by type')
     
+
     def get_matches(self) -> List[Match]:
         matches_query = QueryBuilder(
             db.session.query(Match) \
@@ -92,6 +93,8 @@ class MatchesDataHandler:
             matches_query.add_filter(Team.club_id == UUID(self.club_id))
         else:
             matches_query.add_filter(Team.team_id == UUID(self.team_id))
+        if self.team_id_filter is not None:
+            matches_query.add_filter(Team.team_id == UUID(self.team_id_filter))
         ## Season filtering
         if self.season not in [None, '']:
             matches_query.add_join(LeagueSeason)
@@ -103,33 +106,36 @@ class MatchesDataHandler:
             matches_query.add_filter(Match.opposition_team_name == self.opposition)
         return matches_query.all()
     
-    def get_match_history_result(self):
+
+    def get_all_matches_result(self):
         matches = self.get_matches()
         return [
             self.get_matches_table(matches).to_dict()
         ]
     
-    def get_ppg_by_player_count_result(self):
+
+    def get_split_by_result(self):
         matches = self.get_matches()
         aggregate_data = {}
         for match in matches:
             if match.goals_for is None:
                 continue
-            player_count = match.get_player_count()
+            aggregate_data_key = match.get_agg_data_key(self.split_by)
             agg_row = aggregate_data.get(
-                player_count,
-                self.create_ppg_by_player_count_aggregate_row(player_count)
+                aggregate_data_key,
+                self.create_aggregate_row(aggregate_data_key)
             )
             agg_row = self.increment_match_values(
                 match=match,
                 agg_row=agg_row
             )
-            aggregate_data[player_count] = agg_row
-        for player_count in aggregate_data.keys():
-            agg_row = aggregate_data[player_count]
+            aggregate_data[aggregate_data_key] = agg_row
+        for key in aggregate_data.keys():
+            agg_row = aggregate_data[key]
             res = self.calculate_aggregate_info(agg_row)
             for c in [self.PPG, self.PLAYED]:
                 agg_row.set_cell_value(c, res[c])
+            aggregate_data[key] = agg_row
             agg_row.add_to_cell_styles(
                 column_name=self.PPG,
                 property='backgroundColor',
@@ -137,66 +143,23 @@ class MatchesDataHandler:
                     red_to_green=agg_row.get_cell_value(self.PPG) / 3.0
                 )
             )
-            aggregate_data[player_count] = agg_row
-        return [
-            GenericTableData(
-                column_headers=self.PPG_BY_PLAYER_COUNT_COLS,
-                rows=sorted(
-                    list(aggregate_data.values()),
-                    key=lambda x: x.get_cell_value(self.PLAYER_COUNT),
-                    reverse=True
-                ),
-                title='SPLIT BY PLAYER COUNT',
-                not_sortable=False,
-                sort_by=self.PLAYER_COUNT,
-                sort_direction='asc'
-            ).to_dict()
-        ]
-
-    def create_ppg_by_player_count_aggregate_row(
-        self,
-        player_count:int
-    ):
-        dicto = {
-            cn : 0
-            for cn in self.PPG_BY_PLAYER_COUNT_COLS
-        }
-        dicto[self.PLAYER_COUNT] = player_count
-        return deepcopy(GenericTableRow(init=dicto))      
-                        
-    def get_h2h_result(self):
-        matches = self.get_matches()
-        oppo_filter_exists = self.opposition not in [None, '']
-        aggregate_data = {}
-        for match in matches:
-            if match.goals_for is None:
-                continue
-            agg_row = aggregate_data.get(
-                match.opposition_team_name,
-                self.create_h2h_aggregate_row(match.opposition_team_name)
-            )
-            agg_row = self.increment_match_values(
-                match=match,
-                agg_row=agg_row
-            )
-            aggregate_data[match.opposition_team_name] = agg_row
-        for oppo_name in aggregate_data.keys():
-            agg_row = aggregate_data[oppo_name]
-            res = self.calculate_aggregate_info(agg_row)
-            for c in [self.PPG, self.PLAYED]:
-                agg_row.set_cell_value(c, res[c])
-            aggregate_data[oppo_name] = agg_row
         
+        oppo_filter_exists = self.opposition not in [None, '']
+        is_table_ranked = True
+        double_oppo = (self.split_by == SplitByType.OPPOSITION) & oppo_filter_exists
+        double_season = (self.split_by == SplitByType.SEASON) & (self.season not in [None, ''])
+        if double_oppo | double_season:
+            is_table_ranked = False
         return_me = [
             GenericTableData(
-                column_headers=self.H2H_COLS,
+                column_headers=self.get_split_by_cols(),
                 rows=sorted(
                     list(aggregate_data.values()),
                     key=lambda x: (x.get_cell_value(self.PPG), x.get_cell_value(self.GOAL_DIFFERENCE)),
                     reverse=True
                 ),
-                title='SPLIT BY OPPOSITION',
-                is_ranked=not oppo_filter_exists,
+                title=f'SPLIT BY {self.split_by.upper()}',
+                is_ranked=is_table_ranked,
                 sort_by=self.PPG,
                 sort_direction='desc'
             )
@@ -210,6 +173,24 @@ class MatchesDataHandler:
             for r in return_me
         ]
     
+
+    def get_split_by_cols(self):
+        split_column = self.split_column_dict[self.split_by]
+        return [split_column] + self.GENERIC_COLUMNS
+
+
+    def create_aggregate_row(
+        self,
+        aggregate_data_key:str
+    ):
+        dicto = {
+            cn : 0
+            for cn in self.get_split_by_cols()
+        }
+        dicto[self.split_column_dict[self.split_by]] = aggregate_data_key
+        return deepcopy(GenericTableRow(init=dicto))
+        
+
     def get_matches_table(
         self,
         matches:List[Match]
@@ -225,19 +206,9 @@ class MatchesDataHandler:
                 m.get_short_table_row(format_score=True)
                 for m in matches
             ],
-            title='Matches'.upper()
+            title='MATCHES'
         )
 
-    def create_h2h_aggregate_row(
-        self,
-        team_name
-    ):
-        dicto = {
-            cn : 0
-            for cn in self.H2H_COLS
-        }
-        dicto[self.OPPO] = team_name
-        return deepcopy(GenericTableRow(init=dicto))
     
     def increment_match_values(
         self,
@@ -261,6 +232,7 @@ class MatchesDataHandler:
                 increment=inc
             )
         return agg_row
+    
     
     def calculate_aggregate_info(
         self,

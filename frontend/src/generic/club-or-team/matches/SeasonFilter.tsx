@@ -1,4 +1,4 @@
-import { FormControl, InputLabel, MenuItem, OutlinedInput, Select, SelectChangeEvent } from "@mui/material";
+import { FormControl, MenuItem, OutlinedInput, Select, SelectChangeEvent } from "@mui/material";
 import { Season } from "../../../types/Season";
 
 interface OwnProps {

@@ -15,7 +15,8 @@ export const SplitByFilter = (props:OwnProps) => {
     const options = [
         SPLIT_BY_TYPE.NA,
         SPLIT_BY_TYPE.OPPOSITION,
-        SPLIT_BY_TYPE.PLAYER_COUNT
+        SPLIT_BY_TYPE.PLAYER_COUNT,
+        SPLIT_BY_TYPE.SEASON
     ]
 
     return (

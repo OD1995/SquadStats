@@ -295,8 +295,9 @@ def get_matches_data():
     try:
         matches_data_handler = MatchesDataHandler(
             club_id=request.args.get("clubId"),
+            team_id=request.args.get("teamId"),
             split_by=request.args.get("splitBy"),
-            team_id=request.args.get("selectedTeamId"),
+            team_id_filter=request.args.get("selectedTeamId"),
             season=request.args.get("selectedSeason"),
             opposition=request.args.get("selectedOpposition"),     
         )

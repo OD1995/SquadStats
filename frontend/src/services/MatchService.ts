@@ -47,13 +47,17 @@ class MatchService {
 
     getMatchesData(
         searchParams:string,
-        clubId:string|null=null
+        clubId:string|null=null,
+        teamId:string|null=null
     ) {
         var url = this.base_url + `/get-matches-data?${searchParams}`;
         if (clubId) {
-            url += `&clubId=${clubId}`
+            url += `&clubId=${clubId}`;
         }
-        return makeGetRequest(url)
+        if (teamId) {
+            url += `&teamId=${teamId}`;
+        }
+        return makeGetRequest(url);
     }
 }
 

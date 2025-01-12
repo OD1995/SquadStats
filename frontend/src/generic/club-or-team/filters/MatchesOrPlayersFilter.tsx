@@ -53,9 +53,12 @@ export const MatchesOrPlayersFilter = (props:OwnProps) => {
                 (res:BackendResponse) => {
                     if (res.success) {
                         setClubSeasons(res.data.club_seasons);
-                        const tmSsns = searchParams.get("selectedTeamId") ?
-                            res.data.team_seasons[searchParams.get("selectedTeamId")!] :
-                            res.data.team_seasons[''];
+                        var tmSsns = res.data.club_seasons[''];
+                        if (searchParams.get("selectedTeamId")) {
+                            tmSsns = res.data.club_seasons[searchParams.get("selectedTeamId")!];
+                        } else if (props.team) {
+                            tmSsns = res.data.team_seasons;
+                        }
                         setTeamSeasons(tmSsns);
                         setOppositionOptions(res.data.oppositions);
                     } else {
@@ -63,8 +66,8 @@ export const MatchesOrPlayersFilter = (props:OwnProps) => {
                     }
                 }
             )
-            if (searchParams.get("type")) {
-                setSelectedSplitBy(searchParams.get("type")!);
+            if (searchParams.get("splitBy")) {
+                setSelectedSplitBy(searchParams.get("splitBy")!);
                 retrieveData(searchParams.toString());
             }
         },
@@ -104,7 +107,8 @@ export const MatchesOrPlayersFilter = (props:OwnProps) => {
         props.setErrorMessage("");
         MatchService.getMatchesData(
             searchParams,
-            props.club?.club_id
+            props.club?.club_id,
+            props.team?.team_id
         ).then(
             (res:BackendResponse) => {
                 if (res.success) {
