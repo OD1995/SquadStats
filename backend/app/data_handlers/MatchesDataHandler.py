@@ -81,30 +81,30 @@ class MatchesDataHandler:
         raise Exception('Unexpected split by type')
     
 
-    def get_matches(self) -> List[Match]:
-        matches_query = QueryBuilder(
-            db.session.query(Match) \
-                .join(TeamSeason) \
-                .join(Team) \
-                .order_by(Match.date)
-        )
-        ## Team/Club filtering
-        if self.team_id in [None, '']:
-            matches_query.add_filter(Team.club_id == UUID(self.club_id))
-        else:
-            matches_query.add_filter(Team.team_id == UUID(self.team_id))
-        if self.team_id_filter is not None:
-            matches_query.add_filter(Team.team_id == UUID(self.team_id_filter))
-        ## Season filtering
-        if self.season not in [None, '']:
-            matches_query.add_join(LeagueSeason)
-            if is_valid_uuid(self.season):
-                matches_query.add_filter(LeagueSeason.league_id == UUID(self.season))
-            else:
-                matches_query.add_filter(LeagueSeason.data_source_season_name == self.season)
-        if self.opposition not in [None, '']:
-            matches_query.add_filter(Match.opposition_team_name == self.opposition)
-        return matches_query.all()
+    # def get_matches(self) -> List[Match]:
+    #     matches_query = QueryBuilder(
+    #         db.session.query(Match) \
+    #             .join(TeamSeason) \
+    #             .join(Team) \
+    #             .order_by(Match.date)
+    #     )
+    #     ## Team/Club filtering
+    #     if self.team_id in [None, '']:
+    #         matches_query.add_filter(Team.club_id == UUID(self.club_id))
+    #     else:
+    #         matches_query.add_filter(Team.team_id == UUID(self.team_id))
+    #     if self.team_id_filter is not None:
+    #         matches_query.add_filter(Team.team_id == UUID(self.team_id_filter))
+    #     ## Season filtering
+    #     if self.season not in [None, '']:
+    #         matches_query.add_join(LeagueSeason)
+    #         if is_valid_uuid(self.season):
+    #             matches_query.add_filter(LeagueSeason.league_id == UUID(self.season))
+    #         else:
+    #             matches_query.add_filter(LeagueSeason.data_source_season_name == self.season)
+    #     if self.opposition not in [None, '']:
+    #         matches_query.add_filter(Match.opposition_team_name == self.opposition)
+    #     return matches_query.all()
     
 
     def get_all_matches_result(self):

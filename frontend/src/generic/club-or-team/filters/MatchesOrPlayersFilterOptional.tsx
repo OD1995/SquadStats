@@ -9,8 +9,8 @@ import { TeamFilter } from "../matches/TeamFilter";
 interface OwnProps {
     club?:Club
     team?:Team
-    selectedTeamId:string
     clubSeasons:Record<string,Season[]>
+    selectedTeamId:string
     setSelectedTeamId:Function
     setTeamSeasons:Function
     selectedSeason:string

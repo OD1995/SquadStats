@@ -80,14 +80,19 @@ export const BetterTable = (props:OwnProps) => {
         setPage(newPage);
     }
 
+    const getColSpan = () => {
+        return props.column_headers.length + (props.is_ranked ? 1 : 0)
+    }
+
     const getEmptyRow = () => {
         return (
             <TableRow>
                 <TableCell 
                     sx={{
                         textAlign: 'center',
-                        columnSpan: props.column_headers.length
+                        // columnSpan: 10//getColSpan()
                     }}
+                    colSpan={getColSpan()}
                 >
                     <i>
                         No data available

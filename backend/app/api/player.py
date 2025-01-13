@@ -16,10 +16,10 @@ def get_leaderboard_data():
         matches_data_handler = LeaderboardDataHandler(
             club_id=request.args.get("clubId"),
             team_id=request.args.get("teamId"),
-            leaderboard_type=request.args.get("leaderboardType"),
-            # team_id_filter=request.args.get("selectedTeamId"),
-            # season=request.args.get("selectedSeason"),
-            # opposition=request.args.get("selectedOpposition"),     
+            metric=request.args.get("metric"),
+            team_id_filter=request.args.get("selectedTeamId"),
+            season=request.args.get("selectedSeason"),
+            opposition=request.args.get("selectedOpposition"),     
         )
         result = matches_data_handler.get_result()
         return jsonify(result)

@@ -1,8 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Club } from "../../../types/Club";
 import { Team } from "../../../types/Team";
 import { MatchesOrPlayersFilter } from "../filters/MatchesOrPlayersFilter";
 import { LeaderboardTypeFilter } from "./LeaderboardTypeFilter";
+import { SPLIT_BY_TYPE } from "../../../types/enums";
+import PlayerService from "../../../services/PlayerService";
+import { BackendResponse } from "../../../types/BackendResponse";
+import { useSearchParams } from "react-router-dom";
 
 interface OwnProps {
     club?:Club
@@ -14,55 +18,69 @@ interface OwnProps {
 
 export const PlayersFilter = (props:OwnProps) => {
 
-    const [isExpanded, setIsExpanded] = useState<boolean>(false);
-    const [filtersErrorMessage, setFiltersErrorMessage] = useState<string>("");
+    // const [isExpanded, setIsExpanded] = useState<boolean>(false);
+    // const [filtersErrorMessage, setFiltersErrorMessage] = useState<string>("");
 
-    const [selectedMetric, setSelectedMetric] = useState<string>("");
+    const [metric, setMetric] = useState<string>("");
+    const [playersSplitBy, setPlayersSplitBy] = useState<string>("");
     const [perGame, setPerGame] = useState<boolean>(false);
-    const [splitBy, setSplitBy] = useState<string>("");
 
-    const handleModalClose = () => {
+    const [searchParams, setSearchParams] = useSearchParams();
 
-    }
-
-    const handleSubmitClick = () => {
-
-    }
-
-    const content = (
-        <>
-            <LeaderboardTypeFilter
-                metric={selectedMetric}
-                setMetric={setSelectedMetric}
-                perGame={perGame}
-                setPerGame={setPerGame}
-                splitBy={splitBy}
-                setSplitBy={setSplitBy}
-            />
-            <div id='mop-filter-button-div'>
-                <button
-                    className="ss-green-button"
-                    onClick={handleSubmitClick}
-                >
-                    Submit
-                </button>
-            </div>
-            {
-                (filtersErrorMessage.length > 0) && (
-                    <div style={{color:"red"}}>{filtersErrorMessage}</div>
-                )
+    useEffect(
+        () => {
+            if (searchParams.get("metric")) {
+                setMetric(searchParams.get("metric")!);
+                retrieveData(searchParams.toString());
             }
-        </>
+        },
+        []
+    )
+
+    const retrieveData = (searchParams:string) => {
+        props.setIsLoading(true);
+        props.setErrorMessage("");
+        PlayerService.getLeaderboardData(
+            searchParams,
+            props.club?.club_id,
+            props.team?.team_id
+        ).then(
+            (res:BackendResponse) => {
+                if (res.success) {
+                    props.setTableData(res.data);
+                } else {
+                    props.setErrorMessage(res.data.message);
+                }
+                props.setIsLoading(false);
+            }
+        )   
+    }
+
+    const firstSelector = (
+        <LeaderboardTypeFilter
+            metric={metric}
+            setMetric={setMetric}
+            perGame={perGame}
+            setPerGame={setPerGame}
+            splitBy={playersSplitBy}
+            setSplitBy={setPlayersSplitBy}
+        />
     )
 
     return (
         <MatchesOrPlayersFilter
             {...props}
             filterTitle="LEADERBOARD"
-            handleModalClose={handleModalClose}
-            isExpanded={isExpanded}
-            setIsExpanded={setIsExpanded}
-            content={content}
+            // handleSubmitClick={handleSubmitClick}
+            // isExpanded={isExpanded}
+            // setIsExpanded={setIsExpanded}
+            // filtersErrorMessage={filtersErrorMessage}
+            firstSelector={firstSelector}
+            selectedSplitBy={playersSplitBy}
+            // setSelectedSplitBy={setSplitBy}
+            metric={metric}
+            retrieveData={retrieveData}
+            players
         />
     )
 }

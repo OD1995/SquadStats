@@ -145,21 +145,28 @@ class Match(Base):
     
     def get_pmps_by_player_id(self):
         pmps_by_player_id = {}
+        player_by_player_id = {}
         for pmp in self.player_match_performances:
+            key = str(pmp.player_id)
+            player_by_player_id[key] = pmp.player
             player_dict = pmps_by_player_id.get(
-                str(pmp.player_id),
+                key,
                 {}
             )
             player_dict[pmp.metric.get_best_metric_name()] = pmp.value
-            pmps_by_player_id[str(pmp.player_id)] = player_dict
-        return pmps_by_player_id
+            pmps_by_player_id[key] = player_dict
+        return pmps_by_player_id, player_by_player_id
     
     def get_player_count(self):
-        player_count = 0
-        for player_dict in self.get_pmps_by_player_id().values():
+        return len(self.get_active_player_dict())
+    
+    def get_active_player_dict(self):
+        active_player_dict = {}
+        pmps_by_player_id, player_by_player_id = self.get_pmps_by_player_id()
+        for player_id, player_dict in pmps_by_player_id.items():
             if "Bench Unused" not in player_dict:
-                player_count += 1
-        return player_count
+                active_player_dict[player_id] = player_by_player_id[player_id]
+        return active_player_dict
     
     def get_agg_data_key(
         self,

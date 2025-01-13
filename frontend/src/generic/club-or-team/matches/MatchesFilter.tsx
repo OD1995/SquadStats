@@ -20,16 +20,10 @@ interface OwnProps {
 }
 
 export const MatchesFilter = (props:OwnProps) => {
-
-    const [clubSeasons, setClubSeasons] = useState<Record<string,Season[]>>();
-    const [filtersErrorMessage, setFiltersErrorMessage] = useState<string>("");
-    const [teamSeasons, setTeamSeasons] = useState<Season[]>([]);
-    const [oppositionOptions, setOppositionOptions] = useState<string[]>([]);
-    const [isExpanded, setIsExpanded] = useState<boolean>(false);
-    
+    // const [isExpanded, setIsExpanded] = useState<boolean>(false);
+    const [matchesSplitBy, setMatchesSplitBy] = useState<string>(SPLIT_BY_TYPE.NA);
     const [selectedTeamId, setSelectedTeamId] = useState<string>("");
     const [selectedSeason, setSelectedSeason] = useState("");
-    const [selectedSplitBy, setSelectedSplitBy] = useState<string>(SPLIT_BY_TYPE.NA);
     const [selectedOpposition, setSelectedOpposition] = useState<string>("");
     
 
@@ -39,64 +33,41 @@ export const MatchesFilter = (props:OwnProps) => {
 
     useEffect(
         () => {
-            const params = {
-                teamId: props.team?.team_id,
-                clubId: props.club?.club_id
-            } as Record<string,string>;
-            ComboService.getMatchesOrPlayersFilterData(
-                createSearchParams(params).toString()
-            ).then(
-                (res:BackendResponse) => {
-                    if (res.success) {
-                        setClubSeasons(res.data.club_seasons);
-                        var tmSsns = res.data.club_seasons[''];
-                        if (searchParams.get("selectedTeamId")) {
-                            tmSsns = res.data.club_seasons[searchParams.get("selectedTeamId")!];
-                        } else if (props.team) {
-                            tmSsns = res.data.team_seasons;
-                        }
-                        setTeamSeasons(tmSsns);
-                        setOppositionOptions(res.data.oppositions);
-                    } else {
-                        props.setErrorMessage(res.data.message);
-                    }
-                }
-            )
-            if (searchParams.get("splitBy")) {
-                setSelectedSplitBy(searchParams.get("splitBy")!);
+            if (searchParams.get("matchesSplitBy")) {
+                setMatchesSplitBy(searchParams.get("matchesSplitBy")!);
                 retrieveData(searchParams.toString());
             }
         },
         []
     )
 
-    const handleSubmitClick = () => {
-        setFiltersErrorMessage("");
-        const params = {} as Record<string,string>;
-        if (selectedSplitBy) {
-            params['splitBy'] = selectedSplitBy;
-        } else {
-            setFiltersErrorMessage("You must select a value for 'Type'");
-            return;
-        }
-        if (selectedTeamId) {
-            params['selectedTeamId'] = selectedTeamId;
-        }
-        if (selectedSeason) {
-            params['selectedSeason'] = selectedSeason;
-        }
-        if (selectedOpposition) {
-            params['selectedOpposition'] = selectedOpposition;
-        }
-        const newSearchParams = createSearchParams(params);
-        const options = {
-            search: `?${newSearchParams}`,
-        };
-        navigate(options, { replace: true });
-        setIsExpanded(false);
-        props.setTableData([]);
-        retrieveData(newSearchParams.toString())
-    }
+    // const handleSubmitClick = () => {
+    //     setFiltersErrorMessage("");
+    //     const params = {} as Record<string,string>;
+    //     if (selectedSplitBy) {
+    //         params['splitBy'] = selectedSplitBy;
+    //     } else {
+    //         setFiltersErrorMessage("You must select a value for 'Type'");
+    //         return;
+    //     }
+    //     if (selectedTeamId) {
+    //         params['selectedTeamId'] = selectedTeamId;
+    //     }
+    //     if (selectedSeason) {
+    //         params['selectedSeason'] = selectedSeason;
+    //     }
+    //     if (selectedOpposition) {
+    //         params['selectedOpposition'] = selectedOpposition;
+    //     }
+    //     const newSearchParams = createSearchParams(params);
+    //     const options = {
+    //         search: `?${newSearchParams}`,
+    //     };
+    //     navigate(options, { replace: true });
+    //     setIsExpanded(false);
+    //     props.setTableData([]);
+    //     retrieveData(newSearchParams.toString())
+    // }
 
     const retrieveData = (searchParams:string) => {
         props.setIsLoading(true);
@@ -117,13 +88,6 @@ export const MatchesFilter = (props:OwnProps) => {
         )
     }
 
-    const handleModalClose = () => {
-        setIsExpanded(false);
-        if (!searchParams.get("selectedTeamId")) {
-            setTeamSeasons(clubSeasons![''])
-        }
-    }
-
     const splitByOptions = [
         SPLIT_BY_TYPE.NA,
         SPLIT_BY_TYPE.OPPOSITION,
@@ -131,52 +95,28 @@ export const MatchesFilter = (props:OwnProps) => {
         SPLIT_BY_TYPE.SEASON
     ];
 
-    const content = (
-        <>
-            <SplitByFilter
-                splitBy={selectedSplitBy}
-                setSplitBy={setSelectedSplitBy}
-                splitByOptions={splitByOptions}
-            />
-            <MatchesOrPlayersFilterOptional
-                club={props.club}
-                team={props.team}
-                selectedTeamId={selectedTeamId}
-                setSelectedTeamId={setSelectedTeamId}
-                clubSeasons={clubSeasons!}
-                teamSeasons={teamSeasons}
-                setTeamSeasons={setTeamSeasons}
-                selectedSeason={selectedSeason}
-                setSelectedSeason={setSelectedSeason}
-                selectedOpposition={selectedOpposition}
-                setSelectedOpposition={setSelectedOpposition}
-                oppositionOptions={oppositionOptions}
-                selectedSplitBy={selectedSplitBy}
-            />
-            <div id='mop-filter-button-div'>
-                <button
-                    className="ss-green-button"
-                    onClick={handleSubmitClick}
-                >
-                    Submit
-                </button>
-            </div>
-            {
-                (filtersErrorMessage.length > 0) && (
-                    <div style={{color:"red"}}>{filtersErrorMessage}</div>
-                )
-            }
-        </>
+    const firstSelector = (
+        <SplitByFilter
+            splitBy={matchesSplitBy}
+            setSplitBy={setMatchesSplitBy}
+            splitByOptions={splitByOptions}
+        />
     )
 
     return (
         <MatchesOrPlayersFilter
             {...props}
             filterTitle="MATCHES"
-            handleModalClose={handleModalClose}
-            content={content}
-            isExpanded={isExpanded}
-            setIsExpanded={setIsExpanded}
+            // handleSubmitClick={handleSubmitClick}
+            // isExpanded={isExpanded}
+            // setIsExpanded={setIsExpanded}
+            firstSelector={firstSelector}
+            // filtersErrorMessage={filtersErrorMessage}
+            selectedSplitBy={matchesSplitBy}
+            // setSelectedSplitBy={setSelectedSplitBy}
+            // selectedSeason={selectedSeason}
+            // setSelectedSeason={}
+            retrieveData={retrieveData}
         />
     )
 }
