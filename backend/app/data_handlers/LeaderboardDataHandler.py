@@ -1,15 +1,20 @@
 from typing import List
-from app.data_handlers.AnalysisDataHandler import AnalysisDataHandler
+from uuid import UUID
+from app.data_handlers.DataHandler import DataHandler
 from app.helpers.QueryBuilder import QueryBuilder
 from app import db
+from app.helpers.validators import is_valid_uuid
+from app.models.LeagueSeason import LeagueSeason
+from app.models.Match import Match
 from app.models.Player import Player
 from app.models.PlayerMatchPerformance import PlayerMatchPerformance
+from app.models.Team import Team
 from app.types.GenericTableCell import GenericTableCell
 from app.types.GenericTableData import GenericTableData
 from app.types.GenericTableRow import GenericTableRow
 from app.types.enums import LeaderboardType, Metric
 
-class LeaderboardDataHandler(AnalysisDataHandler):
+class LeaderboardDataHandler(DataHandler):
 
 #     Appearances
 # Appearances
@@ -71,6 +76,26 @@ class LeaderboardDataHandler(AnalysisDataHandler):
         
     def get_goals_result(self):
         pass
+
+    def get_filters(self):
+        filters = []
+        ## Team/Club filtering
+        if self.team_id in [None, '']:
+            filters.append(Team.club_id == UUID(self.club_id))
+        else:
+            filters.append(Team.team_id == UUID(self.team_id))
+        if self.team_id_filter is not None:
+            filters.append(Team.team_id == UUID(self.team_id_filter))
+        ## Season filtering
+        if self.season not in [None, '']:
+            # matches_query.add_join(LeagueSeason)
+            if is_valid_uuid(self.season):
+                filters.append(LeagueSeason.league_season_id == UUID(self.season))
+            else:
+                filters.append(LeagueSeason.data_source_season_name == self.season)
+        if self.opposition not in [None, '']:
+            filters.append(Match.opposition_team_name == self.opposition)
+        return filters
         
     def get_app_result(self):
         # pmp_list = self.get_pmps()
@@ -93,7 +118,9 @@ class LeaderboardDataHandler(AnalysisDataHandler):
         #             player_app_count += 
         result_dict = {}
         player_id_dict = {}
-        matches = self.get_matches()
+        matches = self.get_matches(
+            filters=self.get_filters()
+        )
         for match in matches:
             for player_id, player_obj in match.get_active_player_dict().items():
                 player_id_dict[player_id] = player_obj
