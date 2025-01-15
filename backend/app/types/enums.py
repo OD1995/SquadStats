@@ -34,6 +34,7 @@ class SplitByType(str, Enum):
     OPPOSITION: str = 'Opposition'
     PLAYER_COUNT: str = 'Player Count'
     SEASON: str = 'Season'
+    YEAR: str = 'Year'
 
 class LeaderboardType(str, Enum):    
     APPEARANCES: str = 'Appearances'

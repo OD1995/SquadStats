@@ -22,7 +22,7 @@ export const PlayersFilter = (props:OwnProps) => {
     // const [filtersErrorMessage, setFiltersErrorMessage] = useState<string>("");
 
     const [metric, setMetric] = useState<string>("");
-    const [playersSplitBy, setPlayersSplitBy] = useState<string>("");
+    const [playersSplitBy, setPlayersSplitBy] = useState<string>(SPLIT_BY_TYPE.NA);
     const [perGame, setPerGame] = useState<boolean>(false);
 
     const [searchParams, setSearchParams] = useSearchParams();

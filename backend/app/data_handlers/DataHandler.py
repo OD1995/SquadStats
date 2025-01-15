@@ -23,23 +23,66 @@ class DataHandler:
     def __init__(self):
         pass
 
+    def get_complicated_player_performances(
+        self,
+        query_selectors=[],
+        filters=[],
+        order_by_list=[],
+        group_by_list=[],
+        # sort_value_desc=True,
+        limit=None,
+        # split_by=None
+    ):
+        # query_selectors = [Player]
+        # group_by_list = [Player]
+        # if split_by is not None:
+        #     query_selectors.append(split_by)
+        #     group_by_list.append(split_by)
+        # query_selectors.append(func.sum(PlayerMatchPerformance.value))
+        # query = QueryBuilder(
+        query = db.session.query(*query_selectors) \
+            .join(Player) \
+            .join(Match) \
+            .join(TeamSeason) \
+            .join(Metric) \
+            .join(Team) \
+            .join(LeagueSeason) \
+            .filter(*filters) \
+            .limit(limit) \
+            .group_by(*group_by_list) \
+            .order_by(*order_by_list)
+        # )
+        # for filter in filters:
+        #     query.add_filter(filter)
+        # query.limit(limit)
+        return query.all()
+
     def get_player_performances(
         self,
         filters=[],
         sort_value_desc=True,
-        limit=None
+        limit=None,
+        split_by=None
     ):
+        query_selectors = [Player]
+        group_by_list = [Player]
+        if split_by is not None:
+            query_selectors.append(split_by)
+            group_by_list.append(split_by)
+        query_selectors.append(func.sum(PlayerMatchPerformance.value))
         query = QueryBuilder(
             db.session.query(
-                Player,
-                func.sum(PlayerMatchPerformance.value)
+                # Player,
+                # func.sum(PlayerMatchPerformance.value)
+                *query_selectors
             ) \
                 .join(Player) \
                 .join(Match) \
                 .join(TeamSeason) \
                 .join(Metric) \
                 .join(Team) \
-                .group_by(Player) \
+                .join(LeagueSeason) \
+                .group_by(*group_by_list) \
                 .order_by(
                     func.sum(PlayerMatchPerformance.value).desc() \
                         if sort_value_desc else \
