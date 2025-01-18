@@ -70,6 +70,13 @@
 	cursor: pointer;
 }
 
+.ss-red-button {
+	background-color: red;
+	color: white;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
 .disabled-button {
     cursor: not-allowed;
 	background-color: grey;

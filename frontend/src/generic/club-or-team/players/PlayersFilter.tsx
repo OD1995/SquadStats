@@ -24,6 +24,7 @@ export const PlayersFilter = (props:OwnProps) => {
     const [metric, setMetric] = useState<string>("");
     const [playersSplitBy, setPlayersSplitBy] = useState<string>(SPLIT_BY_TYPE.NA);
     const [perGame, setPerGame] = useState<boolean>(false);
+    const [minApps, setMinApps] = useState<number>(10);
 
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -32,6 +33,17 @@ export const PlayersFilter = (props:OwnProps) => {
             if (searchParams.get("metric")) {
                 setMetric(searchParams.get("metric")!);
                 retrieveData(searchParams.toString());
+            }
+            if (searchParams.get("perGame")) {
+                var val = searchParams.get("perGame")!;
+                if (val == "True") {
+                    setPerGame(true);
+                } else if (val == "False") {
+                    setPerGame(false);
+                }
+            }
+            if (searchParams.get("minApps")) {
+                setMinApps(Number(searchParams.get("minApps")));
             }
         },
         []
@@ -81,6 +93,9 @@ export const PlayersFilter = (props:OwnProps) => {
             metric={metric}
             retrieveData={retrieveData}
             players
+            perGame={perGame}
+            minApps={minApps}
+            setMinApps={setMinApps}
         />
     )
 }

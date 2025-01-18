@@ -5,6 +5,7 @@ import { Team } from "../../../types/Team";
 import { OppositionFilter } from "../matches/OppositionFilter";
 import { SeasonFilter } from "../matches/SeasonFilter";
 import { TeamFilter } from "../matches/TeamFilter";
+import { MinAppsFilter } from "../players/MinAppsFilter";
 
 interface OwnProps {
     club?:Club
@@ -20,6 +21,9 @@ interface OwnProps {
     selectedOpposition:string
     setSelectedOpposition:Function
     oppositionOptions:string[]
+    perGame?:boolean
+    minApps:number
+    setMinApps:Function
 }
 
 export const MatchesOrPlayersFilterOptional = (props:OwnProps) => {
@@ -61,6 +65,14 @@ export const MatchesOrPlayersFilterOptional = (props:OwnProps) => {
                         selectedOpposition={props.selectedOpposition}
                         setSelectedOpposition={props.setSelectedOpposition}
                         oppositionOptions={props.oppositionOptions}
+                    />
+                )
+            }
+            {
+                (props.perGame) && (
+                    <MinAppsFilter
+                        minApps={props.minApps}
+                        setMinApps={props.setMinApps}
                     />
                 )
             }

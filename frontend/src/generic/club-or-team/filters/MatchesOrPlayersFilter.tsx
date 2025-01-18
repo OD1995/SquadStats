@@ -36,6 +36,9 @@ interface OwnProps {
     players?:boolean
     matches?:boolean
     // getData:Function
+    perGame?:boolean
+    minApps?:number
+    setMinApps?:Function
 }
 
 export const MatchesOrPlayersFilter = (props:OwnProps) => {
@@ -49,7 +52,7 @@ export const MatchesOrPlayersFilter = (props:OwnProps) => {
 
     const [filtersErrorMessage, setFiltersErrorMessage] = useState<string>("");
     const [selectedTeamId, setSelectedTeamId] = useState<string>("");
-    const [selectedSeason, setSelectedSeason] = useState("");
+    const [seasonFilter, setSeasonFilter] = useState("");
     const [selectedOpposition, setSelectedOpposition] = useState<string>("");
 
     const [searchParams, setSearchParams] = useSearchParams();
@@ -80,7 +83,15 @@ export const MatchesOrPlayersFilter = (props:OwnProps) => {
                     }
                 }
             )
-
+            if (searchParams.get("seasonFilter")) {
+                setSeasonFilter(searchParams.get("seasonFilter")!);
+            }
+            if (searchParams.get("oppositionFilter")) {
+                setSelectedOpposition(searchParams.get("oppositionFilter")!);
+            }
+            if (searchParams.get("teamIdFilter")) {
+                setSelectedTeamId(searchParams.get("teamIdFilter")!);
+            }
         },
         []
     )
@@ -88,7 +99,10 @@ export const MatchesOrPlayersFilter = (props:OwnProps) => {
     const handleSubmitClick = () => {
         setFiltersErrorMessage("");
         const params = {} as Record<string,string>;
-        if (props.selectedSplitBy) {
+        if (
+            props.selectedSplitBy && 
+            ((props.selectedSplitBy != SPLIT_BY_TYPE.NA) || props.matches)
+        ) {
             params['splitBy'] = props.selectedSplitBy;
         } else {
             if (props.matches) {
@@ -96,17 +110,30 @@ export const MatchesOrPlayersFilter = (props:OwnProps) => {
                 return;
             }
         }
+        if (props.matches) {
+            params['splitBy'] = props.selectedSplitBy;
+        }
+        if (props.players) {
+            params['perGame'] = props.perGame ? "True" : "False";
+            if (props.perGame) {
+                params['minApps'] = props.minApps!.toString();
+            } else {
+                delete params['minApps'];
+            }
+        }
         if (props.metric) {
             params['metric'] = props.metric;
         }
         if (selectedTeamId) {
-            params['selectedTeamId'] = selectedTeamId;
+            // params['selectedTeamId'] = selectedTeamId;
+            params['teamIdFilter'] = selectedTeamId;
         }
-        if (selectedSeason) {
-            params['selectedSeason'] = selectedSeason;
+        if (seasonFilter) {
+            // params['selectedSeason'] = selectedSeason;
+            params['seasonFilter'] = seasonFilter;
         }
         if (selectedOpposition) {
-            params['selectedOpposition'] = selectedOpposition;
+            params['oppositionFilter'] = selectedOpposition;
         }
         const newSearchParams = createSearchParams(params);
         const options = {
@@ -149,12 +176,15 @@ export const MatchesOrPlayersFilter = (props:OwnProps) => {
                 clubSeasons={clubSeasons!}
                 teamSeasons={teamSeasons}
                 setTeamSeasons={setTeamSeasons}
-                selectedSeason={selectedSeason}
-                setSelectedSeason={setSelectedSeason}
+                selectedSeason={seasonFilter}
+                setSelectedSeason={setSeasonFilter}
                 selectedOpposition={selectedOpposition}
                 setSelectedOpposition={setSelectedOpposition}
                 oppositionOptions={oppositionOptions}
                 selectedSplitBy={props.selectedSplitBy}
+                perGame={props.perGame}
+                minApps={props.minApps!}
+                setMinApps={props.setMinApps!}
             />
             <div id='mop-filter-button-div'>
                 <button
@@ -174,7 +204,7 @@ export const MatchesOrPlayersFilter = (props:OwnProps) => {
     
     const handleModalClose = () => {
         setIsExpanded(false);
-        if (!searchParams.get("selectedTeamId")) {
+        if ((props.club) && (!searchParams.get("selectedTeamId"))) {
             setTeamSeasons(clubSeasons![''])
         }
     }

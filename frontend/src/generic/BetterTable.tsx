@@ -34,6 +34,13 @@ export const BetterTable = (props:OwnProps) => {
         []
     )
 
+    const getFontSize = () => {
+        var val = 1.15;
+        val -= (0.1 * props.column_headers.length);
+        val = Math.max(val, 0.6);
+        return `${val}rem !important`
+    }
+
     const handleSortClick = (columnToSortBy:string) => {
         const direction = columnToSortBy == sortBy ? 
             (sortDirection == "asc" ? "desc" : "asc") : 
@@ -120,7 +127,10 @@ export const BetterTable = (props:OwnProps) => {
             }
             <TableContainer>
                 <Table
-                    // sx={{ minWidth: 750 }}
+                    sx={{
+                        // minWidth: 750,
+                        // fontSize: getFontSize()
+                    }}
                     aria-labelledby="tableTitle"
                     size={true ? 'small' : 'medium'}
                 >
@@ -133,7 +143,10 @@ export const BetterTable = (props:OwnProps) => {
                                             key={colHeader}
                                             sx={{
                                                 fontWeight: "bold",
-                                                padding: "0"
+                                                padding: "0",
+                                                fontSize: getFontSize(),
+                                                // paddingLeft: "2%",
+                                                // paddingRight: "2%"
                                             }}
                                             align="center"
                                             sortDirection={sortDirection}
@@ -188,6 +201,9 @@ export const BetterTable = (props:OwnProps) => {
                                                         var styles = row[colHeader].styles ?? {} as Record<string,string>;
                                                         styles['padding'] = "0";
                                                         styles['maxWidth'] = '20vw';
+                                                        styles["fontSize"] = getFontSize();
+                                                        // styles["paddingLeft"] = "2%",
+                                                        // styles["paddingRight"] = "2%";
                                                         return (
                                                             <TableCell
                                                                 key={`${rowNum}-${colNum}`}

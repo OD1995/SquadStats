@@ -29,9 +29,6 @@ export const SeasonFilter = (props:OwnProps) => {
                 Season
             </strong>
             <FormControl>
-                {/* <InputLabel>
-                    Season
-                </InputLabel> */}
                 <Select
                     value={props.selectedSeason}
                     onChange={handleSeasonSelect}

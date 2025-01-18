@@ -23,36 +23,25 @@ class MatchesDataHandler(DataHandler):
         split_by:str,
         club_id:str|None,
         team_id:str|None,
-        season:str,
-        opposition:str|None,
+        season_filter:str|None,
+        opposition_filter:str|None,
         team_id_filter:str|None
     ):
         """
         split_by - should be one of SplitByType options
         club_id - None (if focus is on team matches) or uuid
         team_id - None (if focus is on club matches) or uuid
-        season - '' or uuid (league_season_id) or str (data_source_season_name, if focus is on all club matches)
-        opposition - None or str (opposition_team_name)
+        season_filter - '' or uuid (league_season_id) or str (data_source_season_name, if focus is on all club matches)
+        opposition_filter - None or str (opposition_team_name)
         team_id_filter - '' or uuid
         """
+        DataHandler.__init__(self)
         self.split_by = split_by
         self.club_id = club_id
         self.team_id = team_id
-        self.season = season
-        self.opposition = opposition
+        self.season_filter = season_filter
+        self.opposition_filter = opposition_filter
         self.team_id_filter = team_id_filter
-
-        self.OPPO = 'Opposition'
-        self.PPG = 'PPG'
-        self.PLAYED = 'P'
-        self.WINS = 'W'
-        self.DRAWS = 'D'
-        self.LOSSES = 'L'
-        self.GOALS_FOR = 'F'
-        self.GOALS_AGAINST = 'A'
-        self.GOAL_DIFFERENCE = 'GD'
-        self.PLAYER_COUNT = 'Player Count'
-        self.SEASON = 'Season'
 
         self.GENERIC_COLUMNS = [
             self.PLAYED,
@@ -64,12 +53,6 @@ class MatchesDataHandler(DataHandler):
             self.GOAL_DIFFERENCE,
             self.PPG
         ]
-
-        self.split_column_dict = {
-            SplitByType.OPPOSITION : self.OPPO,
-            SplitByType.PLAYER_COUNT : self.PLAYER_COUNT,
-            SplitByType.SEASON : self.SEASON
-        }
 
 
     def get_result(self):
@@ -83,25 +66,25 @@ class MatchesDataHandler(DataHandler):
             return self.get_split_by_result()
         raise Exception('Unexpected split by type')
     
-    def get_filters(self):
-        filters = []
-        ## Team/Club filtering
-        if self.team_id in [None, '']:
-            filters.append(Team.club_id == UUID(self.club_id))
-        else:
-            filters.append(Team.team_id == UUID(self.team_id))
-        if self.team_id_filter is not None:
-            filters.append(Team.team_id == UUID(self.team_id_filter))
-        ## Season filtering
-        if self.season not in [None, '']:
-            # matches_query.add_join(LeagueSeason)
-            if is_valid_uuid(self.season):
-                filters.append(LeagueSeason.league_season_id == UUID(self.season))
-            else:
-                filters.append(LeagueSeason.data_source_season_name == self.season)
-        if self.opposition not in [None, '']:
-            filters.append(Match.opposition_team_name == self.opposition)
-        return filters
+    # def get_filters(self):
+    #     filters = []
+    #     ## Team/Club filtering
+    #     if self.team_id in [None, '']:
+    #         filters.append(Team.club_id == UUID(self.club_id))
+    #     else:
+    #         filters.append(Team.team_id == UUID(self.team_id))
+    #     if self.team_id_filter is not None:
+    #         filters.append(Team.team_id == UUID(self.team_id_filter))
+    #     ## Season filtering
+    #     if self.season not in [None, '']:
+    #         # matches_query.add_join(LeagueSeason)
+    #         if is_valid_uuid(self.season):
+    #             filters.append(LeagueSeason.league_season_id == UUID(self.season))
+    #         else:
+    #             filters.append(LeagueSeason.data_source_season_name == self.season)
+    #     if self.opposition not in [None, '']:
+    #         filters.append(Match.opposition_team_name == self.opposition)
+    #     return filters
 
     def _get_matches(self):
         return self.get_matches(
@@ -146,10 +129,10 @@ class MatchesDataHandler(DataHandler):
                 )
             )
         
-        oppo_filter_exists = self.opposition not in [None, '']
+        oppo_filter_exists = self.opposition_filter not in [None, '']
         is_table_ranked = True
         double_oppo = (self.split_by == SplitByType.OPPOSITION) & oppo_filter_exists
-        double_season = (self.split_by == SplitByType.SEASON) & (self.season not in [None, ''])
+        double_season = (self.split_by == SplitByType.SEASON) & (self.season_filter not in [None, ''])
         if double_oppo | double_season:
             is_table_ranked = False
         return_me = [

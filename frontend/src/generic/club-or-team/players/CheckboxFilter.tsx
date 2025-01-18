@@ -16,6 +16,7 @@ export const CheckboxFilter = (props:OwnProps) => {
                 checked={props.isTicked}
                 onChange={() => props.setIsTicked(!props.isTicked)}
                 className="filter-select"
+                disableRipple
             />
         </div>
     );

@@ -33,8 +33,8 @@ export const MatchesFilter = (props:OwnProps) => {
 
     useEffect(
         () => {
-            if (searchParams.get("matchesSplitBy")) {
-                setMatchesSplitBy(searchParams.get("matchesSplitBy")!);
+            if (searchParams.get("splitBy")) {
+                setMatchesSplitBy(searchParams.get("splitBy")!);
                 retrieveData(searchParams.toString());
             }
         },
@@ -117,6 +117,7 @@ export const MatchesFilter = (props:OwnProps) => {
             // selectedSeason={selectedSeason}
             // setSelectedSeason={}
             retrieveData={retrieveData}
+            matches
         />
     )
 }

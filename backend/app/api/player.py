@@ -18,9 +18,11 @@ def get_leaderboard_data():
             team_id=request.args.get("teamId"),
             metric=request.args.get("metric"),
             split_by=request.args.get("splitBy"),
-            team_id_filter=request.args.get("selectedTeamId"),
-            season=request.args.get("selectedSeason"),
-            opposition=request.args.get("selectedOpposition"),     
+            team_id_filter=request.args.get("teamIdFilter"),
+            season_filter=request.args.get("seasonFilter"),
+            opposition_filter=request.args.get("oppositionFilter"),
+            per_game=request.args.get("perGame"),
+            min_apps=request.args.get("minApps"),
         )
         result = matches_data_handler.get_result()
         return jsonify(result)
