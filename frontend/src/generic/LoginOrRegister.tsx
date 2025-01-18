@@ -5,6 +5,7 @@ import { userSelector } from "../store/slices/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import './LoginOrRegster.css';
 import { getUserLS } from "../authentication/auth";
+import { getBigTitle } from "../helpers/other";
 
 interface LoginOrRegisterProps {
     pageType:PAGE_TYPE
@@ -76,9 +77,10 @@ export const LoginOrRegister = (props:LoginOrRegisterProps) => {
 
     return (
         <div id="lor-parent-div">
-            <h1 className="big-h1-title">
+            {/* <h1 className="big-h1-title">
                 {props.pageType}
-            </h1>
+            </h1> */}
+            {getBigTitle(props.pageType)}
             <div id="lor-input-parent-div">
                 <div id="lor-input-grid">
                     <h5

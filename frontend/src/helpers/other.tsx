@@ -97,3 +97,25 @@ export const getClubId = (user:User, teamId:string) => {
 export const generateId = () => {
     return Math.floor(Math.random() * 10000)
 }
+
+export const getBigTitle = (title:string|undefined) => {
+    if (title == undefined) {
+        return;
+    }
+    var val = 2;
+    const max_chars = 16
+    if (title.length > max_chars) {
+        val -= (title.length - max_chars) * 0.0455
+    }
+    return (
+        <h1
+            style={{
+                marginLeft: "5vw",
+                fontSize: `${val}rem`,
+                marginBottom: "3vh",
+            }}
+        >
+            {title}
+        </h1>
+    )
+}

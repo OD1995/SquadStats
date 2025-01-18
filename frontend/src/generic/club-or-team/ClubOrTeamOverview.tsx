@@ -5,7 +5,7 @@ import { Loading } from "../Loading";
 import { ClubLinkBar } from "../../pages/club/generic/ClubLinkBar";
 import { TeamLinkBar } from "../../pages/team/generic/TeamLinkBar";
 import { isWiderThanHigher } from "../../helpers/windowDimensions";
-import { generateId } from "../../helpers/other";
+import { generateId, getBigTitle } from "../../helpers/other";
 import { BetterTable } from "../BetterTable";
 import { GenericTableData } from "../../types/GenericTableTypes";
 
@@ -80,9 +80,10 @@ export const ClubOrTeamOverview = (props:OwnProps) => {
 
     return (
         <div id='cot-overview-parent'>
-            <h1 className="big-h1-title">
+            {/* <h1 className="big-h1-title">
                 {props.team?.team_name ?? props.club?.club_name}
-            </h1>
+            </h1> */}
+            {getBigTitle(props.team?.team_name ?? props.club?.club_name)}
             <div id='cot-overview-content'>
                 {
                     props.club ? (

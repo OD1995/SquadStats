@@ -7,7 +7,7 @@ import { GenericTableData } from "../../types/GenericTableTypes";
 import { useState } from "react";
 import { BetterTable } from "../BetterTable";
 import { Loading } from "../Loading";
-import { generateId } from "../../helpers/other";
+import { generateId, getBigTitle } from "../../helpers/other";
 import { MatchesFilter } from "./matches/MatchesFilter";
 import { PlayersFilter } from "./players/PlayersFilter";
 
@@ -27,9 +27,10 @@ export const ClubOrTeamMatchesOrPlayers = (props:OwnProps) => {
 
     return (
         <div id='cot-mop-parent' className="parent-div">
-            <h1 className="big-h1-title">
+            {/* <h1 className="big-h1-title">
                 {props.team?.team_name ?? props.club?.club_name}
-            </h1>
+            </h1> */}
+            {getBigTitle(props.team?.team_name ?? props.club?.club_name)}
             <div id='cot-mop-content'>
                 {
                     props.club ? (

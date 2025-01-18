@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getTeam } from "../../../helpers/other";
+import { getBigTitle, getTeam } from "../../../helpers/other";
 import { useSelector } from "react-redux";
 import { userSelector } from "../../../store/slices/userSlice";
 import { Team } from "../../../types/Team";
@@ -87,9 +87,10 @@ export const TeamNames = () => {
 
     return (
         <div id='club-overview-parent-div'>
-            <h1 className="big-h1-title">
+            {/* <h1 className="big-h1-title">
                 {team?.team_name}
-            </h1>
+            </h1> */}
+            {getBigTitle(team?.team_name)}
             <div id='club-overview-content'>
                 <div className="error-message">
                     {errorMessage}

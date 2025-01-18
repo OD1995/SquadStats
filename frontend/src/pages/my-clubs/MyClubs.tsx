@@ -6,6 +6,7 @@ import "./MyClubs.css"
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { getUserLS } from "../../authentication/auth";
+import { getBigTitle } from "../../helpers/other";
 
 export const MyClubs = () => {
 
@@ -23,9 +24,10 @@ export const MyClubs = () => {
 
     return (
         <div id='my-clubs-parent-div'>
-            <h1 className="big-h1-title">
+            {/* <h1 className="big-h1-title">
                 My Clubs
-            </h1>
+            </h1> */}
+            {getBigTitle("My Clubs")}
             <div id='my-clubs-content'>
                 <TableContainer id='my-clubs-table-container'>
                     <Table>

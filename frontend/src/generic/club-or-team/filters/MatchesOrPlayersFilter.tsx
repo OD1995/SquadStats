@@ -123,6 +123,9 @@ export const MatchesOrPlayersFilter = (props:OwnProps) => {
         }
         if (props.metric) {
             params['metric'] = props.metric;
+        } else if (props.players) {
+            setFiltersErrorMessage("You must select a value for 'Metric'");
+            return;
         }
         if (selectedTeamId) {
             // params['selectedTeamId'] = selectedTeamId;

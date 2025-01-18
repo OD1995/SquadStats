@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 import { userSelector } from "../../store/slices/userSlice";
 import { Link } from "react-router-dom";
 import { getUserLS } from "../../authentication/auth";
+import { getBigTitle } from "../../helpers/other";
 
 interface AddClubProps {
     includeHeirachy:boolean
@@ -25,9 +26,10 @@ export const AddClub = (props:AddClubProps) => {
     if (user) {
         return (
             <div id='add-club-parent'>
-                <h1 className="big-h1-title">
+                {/* <h1 className="big-h1-title">
                     Add Club
-                </h1>
+                </h1> */}
+                {getBigTitle("Add Club")}
                 {
                     props.includeHeirachy && (
                         <HeirachyDescription/>
