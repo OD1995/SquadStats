@@ -1,10 +1,17 @@
 import traceback
 from uuid import UUID
 from flask import Blueprint, jsonify, request
+from flask.config import T
 from app import db
 from app.data_handlers.LeaderboardDataHandler import LeaderboardDataHandler
 from app.data_handlers.PlayerDataHandler import PlayerDataHandler
+from app.helpers.misc import get_unappearance_metrics
+from app.models.Match import Match
+from app.models.Metric import Metric
 from app.models.Player import Player
+from app.models.PlayerMatchPerformance import PlayerMatchPerformance
+from app.models.Team import Team
+from app.models.TeamSeason import TeamSeason
 
 
 player_bp = Blueprint(
@@ -58,6 +65,37 @@ def update_better_player_name():
         player.better_player_name = better_player_name
         db.session.commit()
         return jsonify(player.to_dict(include_both_names=True))
+    except Exception as e:
+        return {
+            'message' : traceback.format_exc()
+        }, 400
+
+@player_bp.route("/get-player-teams/<player_id>", methods=['GET'])
+def get_player_teams(player_id):
+    try:
+        player = db.session.query(Player) \
+            .filter(Player.player_id == UUID(player_id)) \
+            .first()
+        teams = db.session.query(Team) \
+            .join(TeamSeason) \
+            .join(Match) \
+            .join(PlayerMatchPerformance) \
+            .join(Metric) \
+            .filter(
+                PlayerMatchPerformance.player_id == UUID(player_id),
+                Metric.metric_name.not_in(get_unappearance_metrics())
+            ) \
+            .all()
+        return jsonify(
+            {
+                'player_name' : player.get_best_name(),
+                'teams' : [
+                    t.get_team_info()
+                    for t in teams
+                ],
+                'club_id' : player.club_id
+            }
+        )
     except Exception as e:
         return {
             'message' : traceback.format_exc()

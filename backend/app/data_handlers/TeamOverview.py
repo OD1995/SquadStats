@@ -18,7 +18,7 @@ class TeamOverview(Overview, DataHandler):
 
     def get_data(self):
         return {
-            'teams' : [
+            'matches' : [
                 self.get_biggest_wins(),
                 self.get_biggest_losses(),
             ],
@@ -58,7 +58,10 @@ class TeamOverview(Overview, DataHandler):
     
     def get_biggest_wins(self):        
         biggest_wins = self.get_matches(
-            filters=[TeamSeason.team_id==self.team_id],
+            filters=[
+                TeamSeason.team_id==self.team_id,
+                Match.goal_difference.isnot(None)
+            ],
             order_bys=[
                 Match.goal_difference.desc(),
                 Match.opposition_team_name
@@ -72,7 +75,10 @@ class TeamOverview(Overview, DataHandler):
         
     def get_biggest_losses(self):        
         biggest_losses = self.get_matches(
-            filters=[TeamSeason.team_id==self.team_id],
+            filters=[
+                TeamSeason.team_id==self.team_id,
+                Match.goal_difference.isnot(None)
+            ],
             order_bys=[
                 Match.goal_difference.asc(),
                 Match.opposition_team_name

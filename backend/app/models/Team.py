@@ -66,13 +66,13 @@ class Team(Base):
         ]
 
     def get_team_info(self):
-        team_league_info = []
-        leagues = {}
-        for tl in self.team_leagues:
-            if tl.league_id in leagues:
-                pass
-            else:
-                league = db.session
+        # team_league_info = []
+        # leagues = {}
+        # for tl in self.team_leagues:
+        #     if tl.league_id in leagues:
+        #         pass
+        #     else:
+        #         league = db.session
         return {
             'team_name' : self.get_default_team_name(),
             'sport' : self.sport.sport_name,

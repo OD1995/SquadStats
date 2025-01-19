@@ -51,7 +51,8 @@ class MatchesDataHandler(DataHandler):
 
     def _get_matches(self):
         return self.get_matches(
-            filters=self.get_filters()
+            filters=self.get_filters(),
+            include_pmp_join=self.player_id_filter not in [None, '']
         )
     
     def get_all_matches_result(self):

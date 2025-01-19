@@ -139,20 +139,37 @@ class DataHandler:
         filters=[],
         limit:int=None,
         return_query:bool=False,
-        order_bys=[Match.date.desc()]
+        order_bys=[Match.date.desc()],
+        include_pmp_join=False
     ) -> List[Match]:
         matches_query = QueryBuilder(
             db.session.query(Match) \
                 .join(TeamSeason) \
                 .join(Team) \
-                .join(LeagueSeason) \
-                .join(PlayerMatchPerformance)
+                .join(LeagueSeason)
         )
+        if include_pmp_join:
+            matches_query.add_join(PlayerMatchPerformance)
         for filter in filters:
             if filter is not None:
                 matches_query.add_filter(filter)
         matches_query.order_by(order_bys)
         matches_query.limit(limit)
+        # matches_query = db.session.query(Match) \
+        #     .join(TeamSeason) \
+        #     .join(Team) \
+        #     .join(LeagueSeason) \
+        #     .filter(*filters) \
+        #     .order_by(*order_bys) \
+        #     .limit(limit)
+        # if return_query:
+        #     return matches_query
+        # return matches_query.all()
+        # for filter in filters:
+        #     if filter is not None:
+        #         matches_query.add_filter(filter)
+        # matches_query.order_by(order_bys)
+        # matches_query.limit(limit)
         if return_query:
             return matches_query.query
         return matches_query.all()

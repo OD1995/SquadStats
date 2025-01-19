@@ -1,3 +1,4 @@
+import { RestaurantMenu } from "@mui/icons-material";
 import { CLUB_TYPE, DATA_SOURCE } from "../types/enums.ts";
 import { makeGetRequest, makePostRequest } from "./api.ts";
 
@@ -37,6 +38,15 @@ class ClubService {
             this.base_url + `/get-club-overview-stats/${clubId}`
         )
     }
+    
+    getClubPlayerInformation(
+        clubId:string
+    ) {
+        return makeGetRequest(
+            this.base_url + `/get-player-information/${clubId}`
+        )
+    }
+
 }
 
 export default new ClubService();

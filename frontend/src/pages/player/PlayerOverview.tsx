@@ -9,9 +9,9 @@ import { PlayerLinkBar } from "./PlayerLinkBar";
 import { GenericTableData } from "../../types/GenericTableTypes";
 import { Loading } from "../../generic/Loading";
 import { BetterTable } from "../../generic/BetterTable";
-import "./PlayerView.css";
+import "./PlayerOverview.css";
 
-export const PlayerView = () => {
+export const PlayerOverview = () => {
 
     const [playerName, setPlayerName] = useState<string>();
     const [errorMessage, setErrorMessage] = useState<string>("");

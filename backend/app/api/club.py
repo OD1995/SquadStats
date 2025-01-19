@@ -8,6 +8,7 @@ from app.helpers.validators import get_club_id_from_shared_club_id
 from app.models.Club import Club
 from app.models.ClubAdmin import ClubAdmin
 from app.models.DataSource import DataSource
+from app.models.Player import Player
 from app.scrapers.clubs.FootballAssociationClubScraper import FootballAssociationClubScraper
 from app.types.enums import ClubType, DataSource as DataSourceEnum
 
@@ -119,3 +120,28 @@ def get_club_overview_stats(club_id):
         return {
             'message' : traceback.format_exc()
         }, 400
+    
+@club_bp.route("/get-player-information/<club_id>", methods=['GET'])
+def get_player_information(club_id):
+    try:
+        players = db.session.query(Player) \
+            .filter(Player.club_id == UUID(club_id)) \
+            .all()
+        club = db.session.query(Club) \
+            .filter(Club.club_id == UUID(club_id)) \
+            .first()
+        return jsonify(
+            {
+                'club_name' : club.club_name,
+                'players' : [
+                    p.to_dict()
+                    for p in sorted(players, key=lambda x: x.get_best_name())
+                ]
+            }
+        )
+    except Exception as e:
+        return {
+            'message' : traceback.format_exc()
+        }, 400
+    
+    

@@ -17,10 +17,13 @@ import { MatchView } from './pages/match/MatchView';
 import { ClubMatches } from './pages/club/ClubMatches';
 import { ClubOverview } from './pages/club/ClubOverview';
 import { TeamMatches } from './pages/team/TeamMatches';
-import { ClubPlayers } from './pages/club/ClubPlayers';
+import { ClubPlayerLeaderboards } from './pages/club/ClubPlayerLeaderboards';
 import { TeamPlayers } from './pages/team/TeamPlayers';
-import { PlayerView } from './pages/player/PlayerView';
+import { PlayerOverview } from './pages/player/PlayerOverview';
 import { EditPlayerName } from './pages/player/EditPlayerName';
+import { ClubTeamsOverviewSelector } from './pages/club/ClubTeamsOverviewSelector';
+import { ClubPlayersOverviewSelector } from './pages/club/ClubPlayersOverviewSelector';
+import { PlayerTeamsOverviewSelector } from './pages/player/PlayerTeamsOverviewSelector';
 
 
 const App = () => {
@@ -46,14 +49,17 @@ const App = () => {
 						<Route path='/my-clubs' element={<MyClubs/>}/>
 						<Route path='/club/:clubId/overview' element={<ClubOverview/>}/>
 						<Route path='/club/:clubId/matches' element={<ClubMatches/>}/>
-						<Route path='/club/:clubId/players' element={<ClubPlayers/>}/>
+						<Route path='/club/:clubId/player-leaderboards' element={<ClubPlayerLeaderboards/>}/>
+						<Route path='/club/:clubId/teams' element={<ClubTeamsOverviewSelector/>}/>
+						<Route path='/club/:clubId/players' element={<ClubPlayersOverviewSelector/>}/>
 						<Route path='/team/:teamId/overview' element={<TeamOverview/>}/>
 						<Route path='/team/:teamId/update-data' element={<TeamScrape/>}/>
 						<Route path='/team/:teamId/matches' element={<TeamMatches/>}/>
-						<Route path='/team/:teamId/players' element={<TeamPlayers/>}/>
+						<Route path='/team/:teamId/players-leaderboards' element={<TeamPlayers/>}/>
 						<Route path='/team/:teamId/team-names' element={<TeamNames/>}/>
 						<Route path='/match/:matchId' element={<MatchView/>}/>
-						<Route path='/player/:playerId' element={<PlayerView/>}/>
+						<Route path='/player/:playerId/overview' element={<PlayerOverview/>}/>
+						<Route path='/player/:playerId/teams' element={<PlayerTeamsOverviewSelector/>}/>
 						<Route path='/player/:playerId/edit-name' element={<EditPlayerName/>}/>
 						<Route path="*" element={<Navigate to="/about" replace/>}/>
 					</Routes>

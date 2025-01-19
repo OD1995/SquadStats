@@ -15,11 +15,15 @@ export const PlayerLinkBar = (props:OwnProps) => {
         var links = [
             {
                 label: 'Player Overview',
-                to: `/player/${props.playerId}`
+                to: `/player/${props.playerId}/overview`
             },
             {
                 label: 'Club Overview',
                 to: `/club/${props.clubId}/overview`
+            },
+            {
+                label: 'Teams',
+                to: `/player/${props.playerId}/teams`
             },
             {
                 label: 'Player Matches',

@@ -12,7 +12,7 @@ export const ClubOverview = () => {
 
     const [club, setClub] = useState<Club>();
     const [errorMessage, setErrorMessage] = useState("");
-    const [teamTableDataArray, setTeamTableDataArray] = useState<GenericTableData[]>([]);
+    const [matchTableDataArray, setMatchTableDataArray] = useState<GenericTableData[]>([]);
     const [playerTableDataArray, setPlayerTableDataArray] = useState<GenericTableData[]>([]);
 
     let { clubId } = useParams();
@@ -41,7 +41,7 @@ export const ClubOverview = () => {
             ).then(
                 (res:BackendResponse) => {
                     if (res.success) {
-                        setTeamTableDataArray(res.data.teams);
+                        setMatchTableDataArray(res.data.matches);
                         setPlayerTableDataArray(res.data.players);
                     } else {
                         setErrorMessage(res.data.message);
@@ -56,7 +56,7 @@ export const ClubOverview = () => {
         <ClubOrTeamOverview
             club={club}
             errorMessage={errorMessage}
-            teamTableDataArray={teamTableDataArray}
+            matchTableDataArray={matchTableDataArray}
             playerTableDataArray={playerTableDataArray}
             isClubAdmin={getIsClubAdmin(user,club?.club_id!)}
         />

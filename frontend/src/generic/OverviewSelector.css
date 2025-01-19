@@ -1,0 +1,22 @@
+.overview-selector-top-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.overview-selector-bottom-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+    margin-right: 10vw;
+}
+
+.overview-selector-row {
+    margin-top: 3vh;
+    margin-bottom: 3vh;
+}
+
+.overview-selector {
+    margin-top: 10vh;
+}

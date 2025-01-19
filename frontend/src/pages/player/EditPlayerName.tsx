@@ -37,7 +37,7 @@ export const EditPlayerName = () => {
             ).then(
                 (res:BackendResponse) => {
                     if (res.success) {
-                        const data = res.data as Player;
+                        const data = res.data.player as Player;
                         updateStates(data);
                     } else {
                         setErrorMessage(res.data.message);
@@ -100,7 +100,7 @@ export const EditPlayerName = () => {
                         Better Name
                     </b>
                     <input
-                        value={betterPlayerName}
+                        defaultValue={betterPlayerName}
                         onChange={handleInputChange}
                     />
                 </div>

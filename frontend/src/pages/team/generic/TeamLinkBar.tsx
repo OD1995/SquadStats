@@ -22,19 +22,31 @@ export const TeamLinkBar = (props:OwnProps) => {
                 to: `/team/${teamId}/overview`
             },
             {
-                label: 'Update Data',
-                to: `/team/${teamId}/update-data`,
-                adminRequired: true
-            },
-            {
-                label: 'Matches',
-                to: `/team/${teamId}/matches`
-            },
-            {
-                label: 'Player Leaderboards',
+                label: 'Players',
                 to: `/team/${teamId}/players`
             }
         ] as LinkBarInfo[];
+        if (props.isClubAdmin) {
+            links.push(
+                {
+                    label: 'Update Data',
+                    to: `/team/${teamId}/update-data`,
+                    adminRequired: true
+                }
+            )
+        }
+        links = links.concat(
+            [
+                {
+                    label: 'Matches',
+                    to: `/team/${teamId}/matches`
+                },
+                {
+                    label: 'Player Leaderboards',
+                    to: `/team/${teamId}/player-leaderboards`
+                }
+            ]
+        )
         return links;
     }
     

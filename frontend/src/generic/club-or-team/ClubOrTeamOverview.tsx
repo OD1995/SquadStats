@@ -13,7 +13,7 @@ interface OwnProps {
     team?:Team
     club?:Club
     errorMessage:string
-    teamTableDataArray:GenericTableData[]
+    matchTableDataArray:GenericTableData[]
     playerTableDataArray:GenericTableData[]
     isClubAdmin:boolean
 }
@@ -49,7 +49,7 @@ export const ClubOrTeamOverview = (props:OwnProps) => {
     }
 
     const generateTeamTableRow = () => {
-        return props.teamTableDataArray.map(
+        return props.matchTableDataArray.map(
             (teamTableData:GenericTableData) => {
                 return (
                     <td key={generateId()} className="team-overview-cell">
@@ -73,7 +73,7 @@ export const ClubOrTeamOverview = (props:OwnProps) => {
     }
 
     const generateTableColumn = () => {
-        return props.teamTableDataArray.concat(props.playerTableDataArray).map(
+        return props.matchTableDataArray.concat(props.playerTableDataArray).map(
             (data:GenericTableData) => generateTable(data)
         );
     }
@@ -96,7 +96,7 @@ export const ClubOrTeamOverview = (props:OwnProps) => {
                 }
                 {
                     ((props.errorMessage == "") && (
-                        (props.teamTableDataArray.length == 0) || (
+                        (props.matchTableDataArray.length == 0) || (
                             (props.team == null) && (props.club == null)
                         )
                     )) && <Loading/>

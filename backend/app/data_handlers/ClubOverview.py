@@ -18,7 +18,7 @@ class ClubOverview(Overview, DataHandler):
 
     def get_data(self):
         return {
-            'teams' : [
+            'matches' : [
                 self.get_biggest_wins(),
                 self.get_biggest_losses(),
             ],
