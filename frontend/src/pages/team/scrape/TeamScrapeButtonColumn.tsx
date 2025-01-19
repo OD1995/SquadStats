@@ -1,4 +1,5 @@
 import { TooltipButton, TooltipButtonProps } from "../../../generic/TooltipButton"
+import { generateId } from "../../../helpers/other"
 
 interface OwnProps {
     title:string
@@ -15,7 +16,13 @@ export const TeamScrapeButtonColumn = (props:OwnProps) => {
                 {
                     props.buttonProps.map(
                         (buttonProps:TooltipButtonProps) => {
-                            return <TooltipButton {...buttonProps} className='team-scrape-button-column-button'/>
+                            return (
+                                <TooltipButton
+                                    key={generateId()}
+                                    {...buttonProps}
+                                    className='team-scrape-button-column-button'
+                                />
+                            )
                         }
                     )
                 }

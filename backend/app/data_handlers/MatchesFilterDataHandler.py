@@ -18,7 +18,7 @@ class MatchesFilterDataHandler:
         self,
         club_id:str|None,
         team_id:str|None,
-        is_players:str
+        is_players:str=False
     ):
         self.club_id = club_id if club_id != 'undefined' else None
         self.team_id = team_id if team_id != 'undefined' else None

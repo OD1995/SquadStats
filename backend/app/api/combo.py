@@ -9,7 +9,7 @@ combo_bp = Blueprint(
 )
 
 @combo_bp.route("/get-matches-or-players-filter-data", methods=['GET'])
-def get_matches_filter_data():
+def get_mop_filter_data():
     try:
         matches_filter_data_handler = MatchesFilterDataHandler(
             club_id=request.args.get("clubId"),
