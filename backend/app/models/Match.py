@@ -5,7 +5,7 @@ from typing import List
 from uuid import UUID, uuid4
 from datetime import date as dateDT, time as timeDT
 from sqlalchemy import Enum, ForeignKey, String, null
-from app.helpers.misc import is_other_result_type
+from app.helpers.misc import get_unappearance_metrics, is_other_result_type, none_of_list1_in_list2
 from app.models import Base
 from app.models.Competition import Competition
 from app.models.MatchError import MatchError
@@ -14,7 +14,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.models.PlayerMatchPerformance import PlayerMatchPerformance
 from app.models.TeamSeason import TeamSeason
 from app.types.GenericTableRow import GenericTableRow
-from app.types.enums import HomeAwayNeutral, Result, SplitByType
+from app.types.enums import HomeAwayNeutral, MiscStrings, Result, SplitByType
 
 @dataclass
 class Match(Base):
@@ -163,14 +163,16 @@ class Match(Base):
     def get_active_player_dict(self):
         active_player_dict = {}
         pmps_by_player_id, player_by_player_id = self.get_pmps_by_player_id()
+        unappearance_metrics = get_unappearance_metrics()
         for player_id, player_dict in pmps_by_player_id.items():
-            if "Bench Unused" not in player_dict:
+            if none_of_list1_in_list2(unappearance_metrics, player_dict):
                 active_player_dict[player_id] = player_by_player_id[player_id]
         return active_player_dict
     
     def get_agg_data_key(
         self,
-        split_by:SplitByType
+        split_by:SplitByType,
+        player_id:str|None=None
     ):
         match split_by:
             case SplitByType.OPPOSITION:
@@ -179,8 +181,20 @@ class Match(Base):
                 return self.get_player_count()
             case SplitByType.SEASON:
                 return self.team_season.league_season.data_source_season_name
+            case SplitByType.WITH_OR_WITHOUT:
+                return self.get_with_or_without(player_id)
+            case None:
+                return ""
             case _:
                 raise Exception(f"Unexpected split by type: {split_by}")
+
+    def get_with_or_without(
+        self,
+        player_id:str
+    ):
+        if player_id in self.get_active_player_dict():
+            return MiscStrings.WITH
+        return MiscStrings.WITHOUT
 
     def to_dict(
         self,

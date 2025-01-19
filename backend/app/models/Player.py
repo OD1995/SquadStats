@@ -30,8 +30,16 @@ class Player(Base):
     def get_best_name(self):
         return self.better_player_name or self.data_source_player_name
     
-    def to_dict(self):
-        return {
+    def to_dict(
+        self,
+        include_both_names=False
+    ):
+        D = {
             'player_id' : self.player_id,
-            'player_name' : self.get_best_name()
+            'player_name' : self.get_best_name(),
+            'club_id' : self.club_id,
         }
+        if include_both_names:
+            D['data_source_player_name'] = self.data_source_player_name
+            D['better_player_name'] = self.better_player_name
+        return D

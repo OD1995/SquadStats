@@ -1,5 +1,6 @@
 from typing import List
 from uuid import UUID
+from xmlrpc.client import boolean
 
 from sqlalchemy import func
 from app.helpers.QueryBuilder import QueryBuilder
@@ -34,10 +35,23 @@ class DataHandler:
         self.PLAYER_COUNT = 'Player Count'
         self.SEASON = 'Season'  
 
+        self.GENERIC_COLUMNS = [
+            self.PLAYED,
+            self.WINS,
+            self.DRAWS,
+            self.LOSSES,
+            self.GOALS_FOR,
+            self.GOALS_AGAINST,
+            self.GOAL_DIFFERENCE,
+            self.PPG
+        ]
+
         self.split_column_dict = {
             SplitByType.OPPOSITION : self.OPPO,
             SplitByType.PLAYER_COUNT : self.PLAYER_COUNT,
-            SplitByType.SEASON : self.SEASON
+            SplitByType.SEASON : self.SEASON,
+            SplitByType.WITH_OR_WITHOUT : "",
+            None : ""
         }
         # print(q.statement.compile(compile_kwargs={"literal_binds": True}))
 
@@ -131,7 +145,8 @@ class DataHandler:
             db.session.query(Match) \
                 .join(TeamSeason) \
                 .join(Team) \
-                .join(LeagueSeason)
+                .join(LeagueSeason) \
+                .join(PlayerMatchPerformance)
         )
         for filter in filters:
             if filter is not None:
@@ -150,7 +165,14 @@ class DataHandler:
         filters.append(self.get_season_filter())
         ## Opposition filtering
         filters.append(self.get_opposition_filter())
+        ## Player filtering
+        filters.append(self.get_player_filter())
         return filters
+    
+    def get_player_filter(self):
+        if self.player_id_filter not in [None, '']:
+            return PlayerMatchPerformance.player_id == UUID(self.player_id_filter)
+        return None
     
     def get_opposition_filter(self):
         if self.opposition_filter not in [None, '']:
@@ -176,3 +198,112 @@ class DataHandler:
             else:
                 return LeagueSeason.data_source_season_name == self.season_filter
         return None
+    
+    
+    
+    def get_split_by_table(
+        self,
+        matches:List[Match],
+        split_by:str,
+        is_table_ranked:bool,
+        title:str|None=None,
+        player_id:str|None=None
+    ):
+        aggregate_data = {}
+        for match in matches:
+            if match.goals_for is None:
+                continue
+            aggregate_data_key = match.get_agg_data_key(split_by, player_id)
+            agg_row = aggregate_data.get(
+                aggregate_data_key,
+                self.create_aggregate_row(aggregate_data_key, split_by)
+            )
+            agg_row = self.increment_match_values(
+                match=match,
+                agg_row=agg_row
+            )
+            aggregate_data[aggregate_data_key] = agg_row
+        for key in aggregate_data.keys():
+            agg_row = aggregate_data[key]
+            res = self.calculate_aggregate_info(agg_row)
+            for c in [self.PPG, self.PLAYED]:
+                agg_row.set_cell_value(c, res[c])
+            aggregate_data[key] = agg_row
+            agg_row.add_to_cell_styles(
+                column_name=self.PPG,
+                property='backgroundColor',
+                value=get_colour(
+                    red_to_green=agg_row.get_cell_value(self.PPG) / 3.0
+                )
+            )
+        title = title or f'SPLIT BY {split_by.upper()}'
+        
+        return GenericTableData(
+            column_headers=self.get_split_by_cols(split_by),
+            rows=sorted(
+                list(aggregate_data.values()),
+                key=lambda x: (x.get_cell_value(self.PPG), x.get_cell_value(self.GOAL_DIFFERENCE)),
+                reverse=True
+            ),
+            title=title,
+            is_ranked=is_table_ranked,
+            sort_by=self.PPG,
+            sort_direction='desc'
+        )
+
+    def get_split_by_cols(
+        self,
+        split_by:str
+    ):
+        split_column = self.split_column_dict[split_by]
+        return [split_column] + self.GENERIC_COLUMNS
+    
+    def calculate_aggregate_info(
+        self,
+        agg_row:GenericTableRow
+    ):
+        result = {}
+        wins = agg_row.get_cell_value(self.WINS)
+        draws = agg_row.get_cell_value(self.DRAWS)
+        losses = agg_row.get_cell_value(self.LOSSES)
+        points = (wins * 3) + draws
+        played = wins + draws + losses
+        result[self.PLAYED] = played
+        ppg = round(points / played, 2)
+        result[self.PPG] = ppg
+        return result
+    
+    def increment_match_values(
+        self,
+        match:Match,
+        agg_row:GenericTableRow
+    ):
+        increments = [
+            (self.GOALS_FOR, match.goals_for),
+            (self.GOALS_AGAINST, match.goals_against),
+            (self.GOAL_DIFFERENCE, match.goal_difference)
+        ]
+        if match.goal_difference > 0:
+            increments.append((self.WINS, 1))
+        elif match.goal_difference == 0:
+            increments.append((self.DRAWS, 1))
+        else:
+            increments.append((self.LOSSES, 1))
+        for cn, inc in increments:
+            agg_row.increment_cell_value(
+                column_name=cn,
+                increment=inc
+            )
+        return agg_row
+    
+    def create_aggregate_row(
+        self,
+        aggregate_data_key:str,
+        split_by:str
+    ):
+        dicto = {
+            cn : 0
+            for cn in self.get_split_by_cols(split_by)
+        }
+        dicto[self.split_column_dict[split_by]] = aggregate_data_key
+        return deepcopy(GenericTableRow(init=dicto))

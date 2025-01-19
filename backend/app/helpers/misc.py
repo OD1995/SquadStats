@@ -1,5 +1,7 @@
 import colorsys
 
+from app.types.enums import Metric
+
 
 def build_url_using_params(
     url:str,
@@ -34,3 +36,22 @@ def get_colour(red_to_green):
     r, g, b = colorsys.hsv_to_rgb(hue, 1, 1)
     args = map(lambda x: str(int(255 * x)), (r, g, b))
     return f"rgb({','.join(args)})"
+
+def get_unappearance_metrics():
+    mets = [
+        Metric.BENCH_UNUSED
+    ]
+    return [m.value for m in mets]
+
+def get_goal_metrics():
+    mets = [
+        Metric.OVERALL_GOALS,
+        Metric.GOALS
+    ]
+    return [m.value for m in mets]
+
+def none_of_list1_in_list2(list1,list2):
+    for el in list1:
+        if el in list2:
+            return False
+    return True

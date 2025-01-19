@@ -1,4 +1,4 @@
-import { makeGetRequest } from "./api.ts";
+import { makeGetRequest, makePostRequest } from "./api.ts";
 
 class PlayerService {
 
@@ -17,6 +17,27 @@ class PlayerService {
             url += `&teamId=${teamId}`;
         }
         return makeGetRequest(url);
+    }
+
+    getPlayerInfo(
+        playerId:string
+    ) {
+        const url = this.base_url + `/get-player-info/${playerId}`
+        return makeGetRequest(url)
+    }
+
+    updateBetterPlayerName(
+        playerId:string,
+        betterPlayerName:string
+    ) {
+        const url = this.base_url + "/update-better-player-name"
+        return makePostRequest(
+            url,
+            {
+                playerId,
+                betterPlayerName
+            }
+        )
     }
 }
 

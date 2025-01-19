@@ -26,7 +26,7 @@ export const ClubOrTeamMatchesOrPlayers = (props:OwnProps) => {
     const [errorMessage, setErrorMessage] = useState<string>("");
 
     return (
-        <div id='cot-mop-parent' className="parent-div">
+        <div id='cot-mop-parent' className="page-parent">
             {/* <h1 className="big-h1-title">
                 {props.team?.team_name ?? props.club?.club_name}
             </h1> */}

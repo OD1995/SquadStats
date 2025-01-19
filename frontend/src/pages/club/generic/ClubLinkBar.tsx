@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom"
 import { LinkBarInfo } from "../../../types/LinkBarInfo";
-import { ClubOrTeamLinkBar } from "../../../generic/club-or-team/ClubOrTeamLinkBar";
+import { LinkBar } from "../../../generic/LinkBar";
 
 interface OwnProps {
     isClubAdmin:boolean
@@ -29,7 +29,7 @@ export const ClubLinkBar = (props:OwnProps) => {
     }
 
     return (
-        <ClubOrTeamLinkBar
+        <LinkBar
             links={getLinks()}
             isClubAdmin={props.isClubAdmin}
         />

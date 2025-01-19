@@ -76,7 +76,7 @@ export const LoginOrRegister = (props:LoginOrRegisterProps) => {
     }
 
     return (
-        <div id="lor-parent-div">
+        <div className="page-parent">
             {/* <h1 className="big-h1-title">
                 {props.pageType}
             </h1> */}

@@ -1,7 +1,3 @@
-#my-clubs-parent-div {
-    width: 100%;
-}
-
 #my-clubs-content {
     display: flex;
     flex-direction: column;

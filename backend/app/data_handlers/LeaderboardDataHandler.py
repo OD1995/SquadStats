@@ -5,6 +5,7 @@ from sqlalchemy import column, func
 from app.data_handlers.DataHandler import DataHandler
 from app.helpers.QueryBuilder import QueryBuilder
 from app import db
+from app.helpers.misc import get_goal_metrics
 from app.helpers.validators import is_valid_uuid
 from app.models.LeagueSeason import LeagueSeason
 from app.models.Match import Match
@@ -80,7 +81,7 @@ class LeaderboardDataHandler(DataHandler):
         self.PER_GAME = 'Per Game'
 
         self.metric_lookup = {
-            MetricEnum.GOALS : MetricEnum.OVERALL_GOALS
+            MetricEnum.GOALS : get_goal_metrics()
         }
 
     def get_result(self):
@@ -118,7 +119,7 @@ class LeaderboardDataHandler(DataHandler):
             player_performances = self.get_complicated_player_performances(
                 query_selectors=query_selectors + [perf_col],
                 filters=[
-                    Metric.metric_name == self.metric_lookup.get(self.metric, self.metric)
+                    Metric.metric_name.in_(self.metric_lookup.get(self.metric, [self.metric]))
                 ] + self.get_filters(),
                 order_by_list=[],
                 group_by_list=group_by_list,
@@ -164,7 +165,7 @@ class LeaderboardDataHandler(DataHandler):
         else:
             player_performances = self.get_player_performances(
                 filters=[
-                    Metric.metric_name == self.metric_lookup.get(self.metric, self.metric)
+                    Metric.metric_name.in_(self.metric_lookup.get(self.metric, [self.metric]))
                 ] + self.get_filters(),
                 split_by=self.query_split_by,
                 sort_value_desc=True

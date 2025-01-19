@@ -255,7 +255,7 @@ export const TeamScrape = () => {
     } as TooltipButtonProps;
 
     return (
-        <div id='team-scrape-parent'>
+        <div className='page-parent'>
             {/* <h1 className="big-h1-title">
                 {team?.team_name}
             </h1> */}

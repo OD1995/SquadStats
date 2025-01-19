@@ -14,6 +14,7 @@ def get_matches_filter_data():
         matches_filter_data_handler = MatchesFilterDataHandler(
             club_id=request.args.get("clubId"),
             team_id=request.args.get("teamId"),
+            is_players=request.args.get("isPlayers")
         )
         return jsonify(matches_filter_data_handler.get_data())
     except Exception as e:

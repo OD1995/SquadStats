@@ -1,0 +1,28 @@
+#player-name-entry {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    /* border: 1px solid green; */
+    margin-top: 16vh;
+}
+
+.player-name-entry-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin-top: 3vh;
+    margin-bottom: 3vh;
+}
+
+.player-name-entry-label {
+    width: 150px;
+    /* border: 1px solid red; */
+}
+
+#player-name-button-row {
+    justify-content: right;
+}
+
+#player-name-button {
+    margin-right: 10vw;
+}

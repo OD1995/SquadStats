@@ -1,0 +1,14 @@
+#basic-player-stats-div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.basic-player-stat {
+    /* border: 1px solid #646cff; */
+    /* border: 1px solid grey; */
+    border-radius: 3vw;
+    width: 40vw;
+    max-width: 200px;
+    text-align: center;
+}

@@ -1,15 +1,15 @@
 import { Link, useLocation } from "react-router-dom"
-import { LinkBarInfo } from "../../types/LinkBarInfo"
-import "./ClubOrTeamLinkBar.css"
-import { isWiderThanHigher } from "../../helpers/windowDimensions"
-import { generateId } from "../../helpers/other"
+import { LinkBarInfo } from "../types/LinkBarInfo"
+import "./LinkBar.css"
+import { isWiderThanHigher } from "../helpers/windowDimensions"
+import { generateId } from "../helpers/other"
 
 interface OwnProps {
     links:LinkBarInfo[]
     isClubAdmin:boolean
 }
 
-export const ClubOrTeamLinkBar = (props:OwnProps) => {
+export const LinkBar = (props:OwnProps) => {
 
     const isDesktop = isWiderThanHigher();
     const location = useLocation();

@@ -1,20 +1,9 @@
 from typing import List
-from uuid import UUID
 
-from sqlalchemy import ClauseList
 from app.data_handlers.DataHandler import DataHandler
-from app.helpers.QueryBuilder import QueryBuilder
-from app.helpers.misc import get_colour
-from app.helpers.validators import is_valid_uuid
-from app.models.LeagueSeason import LeagueSeason
 from app.models.Match import Match
-from app.models.Team import Team
-from app.models.TeamSeason import TeamSeason
 from app.types.GenericTableData import GenericTableData
-from app.types.GenericTableRow import GenericTableRow
 from app.types.enums import SplitByType
-from app import db
-from copy import deepcopy
 
 class MatchesDataHandler(DataHandler):
 
@@ -25,7 +14,8 @@ class MatchesDataHandler(DataHandler):
         team_id:str|None,
         season_filter:str|None,
         opposition_filter:str|None,
-        team_id_filter:str|None
+        team_id_filter:str|None,
+        player_id_filter:str|None
     ):
         """
         split_by - should be one of SplitByType options
@@ -34,6 +24,7 @@ class MatchesDataHandler(DataHandler):
         season_filter - '' or uuid (league_season_id) or str (data_source_season_name, if focus is on all club matches)
         opposition_filter - None or str (opposition_team_name)
         team_id_filter - '' or uuid
+        player_id_filter - '' or uuid
         """
         DataHandler.__init__(self)
         self.split_by = split_by
@@ -42,17 +33,7 @@ class MatchesDataHandler(DataHandler):
         self.season_filter = season_filter
         self.opposition_filter = opposition_filter
         self.team_id_filter = team_id_filter
-
-        self.GENERIC_COLUMNS = [
-            self.PLAYED,
-            self.WINS,
-            self.DRAWS,
-            self.LOSSES,
-            self.GOALS_FOR,
-            self.GOALS_AGAINST,
-            self.GOAL_DIFFERENCE,
-            self.PPG
-        ]
+        self.player_id_filter = player_id_filter
 
 
     def get_result(self):
@@ -63,118 +44,46 @@ class MatchesDataHandler(DataHandler):
             SplitByType.PLAYER_COUNT,
             SplitByType.SEASON
         ]:
-            return self.get_split_by_result()
+            return self.get_split_by_result(
+                matches=self._get_matches()
+            )
         raise Exception('Unexpected split by type')
-    
-    # def get_filters(self):
-    #     filters = []
-    #     ## Team/Club filtering
-    #     if self.team_id in [None, '']:
-    #         filters.append(Team.club_id == UUID(self.club_id))
-    #     else:
-    #         filters.append(Team.team_id == UUID(self.team_id))
-    #     if self.team_id_filter is not None:
-    #         filters.append(Team.team_id == UUID(self.team_id_filter))
-    #     ## Season filtering
-    #     if self.season not in [None, '']:
-    #         # matches_query.add_join(LeagueSeason)
-    #         if is_valid_uuid(self.season):
-    #             filters.append(LeagueSeason.league_season_id == UUID(self.season))
-    #         else:
-    #             filters.append(LeagueSeason.data_source_season_name == self.season)
-    #     if self.opposition not in [None, '']:
-    #         filters.append(Match.opposition_team_name == self.opposition)
-    #     return filters
 
     def _get_matches(self):
         return self.get_matches(
             filters=self.get_filters()
         )
     
-
     def get_all_matches_result(self):
         matches = self._get_matches()
         return [
             self.get_matches_table(matches).to_dict()
         ]
-    
 
-    def get_split_by_result(self):
-        matches = self._get_matches()
-        aggregate_data = {}
-        for match in matches:
-            if match.goals_for is None:
-                continue
-            aggregate_data_key = match.get_agg_data_key(self.split_by)
-            agg_row = aggregate_data.get(
-                aggregate_data_key,
-                self.create_aggregate_row(aggregate_data_key)
-            )
-            agg_row = self.increment_match_values(
-                match=match,
-                agg_row=agg_row
-            )
-            aggregate_data[aggregate_data_key] = agg_row
-        for key in aggregate_data.keys():
-            agg_row = aggregate_data[key]
-            res = self.calculate_aggregate_info(agg_row)
-            for c in [self.PPG, self.PLAYED]:
-                agg_row.set_cell_value(c, res[c])
-            aggregate_data[key] = agg_row
-            agg_row.add_to_cell_styles(
-                column_name=self.PPG,
-                property='backgroundColor',
-                value=get_colour(
-                    red_to_green=agg_row.get_cell_value(self.PPG) / 3.0
-                )
-            )
-        
+    def get_split_by_result(
+        self,
+        matches:List[Match]
+    ):
         oppo_filter_exists = self.opposition_filter not in [None, '']
         is_table_ranked = True
         double_oppo = (self.split_by == SplitByType.OPPOSITION) & oppo_filter_exists
         double_season = (self.split_by == SplitByType.SEASON) & (self.season_filter not in [None, ''])
         if double_oppo | double_season:
             is_table_ranked = False
-        return_me = [
-            GenericTableData(
-                column_headers=self.get_split_by_cols(),
-                rows=sorted(
-                    list(aggregate_data.values()),
-                    key=lambda x: (x.get_cell_value(self.PPG), x.get_cell_value(self.GOAL_DIFFERENCE)),
-                    reverse=True
-                ),
-                title=f'SPLIT BY {self.split_by.upper()}',
-                is_ranked=is_table_ranked,
-                sort_by=self.PPG,
-                sort_direction='desc'
+        return_me = []
+        return_me.append(
+            self.get_split_by_table(
+                matches=matches,
+                split_by=self.split_by,
+                is_table_ranked=is_table_ranked
             )
-        ]
-
+        )
         if oppo_filter_exists:
             return_me.append(self.get_matches_table(matches))
-
         return [
             r.to_dict()
             for r in return_me
-        ]
-    
-
-    def get_split_by_cols(self):
-        split_column = self.split_column_dict[self.split_by]
-        return [split_column] + self.GENERIC_COLUMNS
-
-
-    def create_aggregate_row(
-        self,
-        aggregate_data_key:str
-    ):
-        dicto = {
-            cn : 0
-            for cn in self.get_split_by_cols()
-        }
-        dicto[self.split_column_dict[self.split_by]] = aggregate_data_key
-        return deepcopy(GenericTableRow(init=dicto))
-        
+        ]        
 
     def get_matches_table(
         self,
@@ -193,43 +102,3 @@ class MatchesDataHandler(DataHandler):
             ],
             title='MATCHES'
         )
-
-    
-    def increment_match_values(
-        self,
-        match:Match,
-        agg_row:GenericTableRow
-    ):
-        increments = [
-            (self.GOALS_FOR, match.goals_for),
-            (self.GOALS_AGAINST, match.goals_against),
-            (self.GOAL_DIFFERENCE, match.goal_difference)
-        ]
-        if match.goal_difference > 0:
-            increments.append((self.WINS, 1))
-        elif match.goal_difference == 0:
-            increments.append((self.DRAWS, 1))
-        else:
-            increments.append((self.LOSSES, 1))
-        for cn, inc in increments:
-            agg_row.increment_cell_value(
-                column_name=cn,
-                increment=inc
-            )
-        return agg_row
-    
-    
-    def calculate_aggregate_info(
-        self,
-        agg_row:GenericTableRow
-    ):
-        result = {}
-        wins = agg_row.get_cell_value(self.WINS)
-        draws = agg_row.get_cell_value(self.DRAWS)
-        losses = agg_row.get_cell_value(self.LOSSES)
-        points = (wins * 3) + draws
-        played = wins + draws + losses
-        result[self.PLAYED] = played
-        ppg = round(points / played, 2)
-        result[self.PPG] = ppg
-        return result

@@ -1,8 +1,10 @@
 import { Club } from "../../../types/Club";
 import { SPLIT_BY_TYPE } from "../../../types/enums";
+import { Player } from "../../../types/Player";
 import { Season } from "../../../types/Season";
 import { Team } from "../../../types/Team";
 import { OppositionFilter } from "../matches/OppositionFilter";
+import { PlayerFilter } from "../matches/PlayerFilter";
 import { SeasonFilter } from "../matches/SeasonFilter";
 import { TeamFilter } from "../matches/TeamFilter";
 import { MinAppsFilter } from "../players/MinAppsFilter";
@@ -10,6 +12,8 @@ import { MinAppsFilter } from "../players/MinAppsFilter";
 interface OwnProps {
     club?:Club
     team?:Team
+    players?:boolean
+    matches?:boolean
     clubSeasons:Record<string,Season[]>
     selectedTeamId:string
     setSelectedTeamId:Function
@@ -24,6 +28,9 @@ interface OwnProps {
     perGame?:boolean
     minApps:number
     setMinApps:Function
+    playerIdFilter:string
+    setPlayerIdFilter:Function
+    playerFilterOptions:Player[]
 }
 
 export const MatchesOrPlayersFilterOptional = (props:OwnProps) => {
@@ -59,6 +66,15 @@ export const MatchesOrPlayersFilterOptional = (props:OwnProps) => {
                 setSelectedSeason={props.setSelectedSeason}
                 seasonOptions={getSeasons()}
             />
+            {
+                props.matches && (
+                    <PlayerFilter
+                        playerIdFilter={props.playerIdFilter}
+                        setPlayerIdFilter={props.setPlayerIdFilter}
+                        playerFilterOptions={props.playerFilterOptions}
+                    />
+                )
+            }
             {
                 (props.selectedSplitBy == SPLIT_BY_TYPE.OPPOSITION) && (
                     <OppositionFilter

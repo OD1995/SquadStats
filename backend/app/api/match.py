@@ -299,7 +299,8 @@ def get_matches_data():
             split_by=request.args.get("splitBy"),
             team_id_filter=request.args.get("teamIdFilter"),
             season_filter=request.args.get("seasonFilter"),
-            opposition_filter=request.args.get("oppositionFilter"),     
+            opposition_filter=request.args.get("oppositionFilter"),    
+            player_id_filter=request.args.get("playerIdFilter"), 
         )
         result = matches_data_handler.get_result()
         return jsonify(result)

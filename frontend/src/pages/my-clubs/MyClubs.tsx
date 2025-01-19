@@ -23,7 +23,7 @@ export const MyClubs = () => {
     )
 
     return (
-        <div id='my-clubs-parent-div'>
+        <div className='page-parent'>
             {/* <h1 className="big-h1-title">
                 My Clubs
             </h1> */}

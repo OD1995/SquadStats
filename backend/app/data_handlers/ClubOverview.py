@@ -2,6 +2,7 @@ from uuid import UUID
 
 from app.data_handlers.DataHandler import DataHandler
 from app.data_handlers.Overview import Overview
+from app.helpers.misc import get_goal_metrics
 from app.models.Match import Match
 from app.models.Metric import Metric
 from app.models.Team import Team
@@ -45,7 +46,7 @@ class ClubOverview(Overview, DataHandler):
         top_goals = self.get_player_performances(
             filters=[
                 Team.club_id == self.club_id,
-                Metric.metric_name == MetricEnum.OVERALL_GOALS
+                Metric.metric_name.in_(get_goal_metrics())
             ],
             limit=5
         )

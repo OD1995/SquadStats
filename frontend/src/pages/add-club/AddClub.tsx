@@ -25,7 +25,7 @@ export const AddClub = (props:AddClubProps) => {
 
     if (user) {
         return (
-            <div id='add-club-parent'>
+            <div className='page-parent'>
                 {/* <h1 className="big-h1-title">
                     Add Club
                 </h1> */}

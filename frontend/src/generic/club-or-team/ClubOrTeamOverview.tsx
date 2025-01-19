@@ -79,10 +79,7 @@ export const ClubOrTeamOverview = (props:OwnProps) => {
     }
 
     return (
-        <div id='cot-overview-parent'>
-            {/* <h1 className="big-h1-title">
-                {props.team?.team_name ?? props.club?.club_name}
-            </h1> */}
+        <div className='page-parent'>
             {getBigTitle(props.team?.team_name ?? props.club?.club_name)}
             <div id='cot-overview-content'>
                 {

@@ -49,6 +49,10 @@
 	color: red;
 }
 
+.success-message {
+	color: green;
+}
+
 .ss-black-button {
 	background-color: black;
 	color: white;
@@ -106,10 +110,6 @@
 
 .ss-table-head th {
 	font-weight: bold !important;
-}
-
-.parent-div {
-	width: 100%;
 }
 
 .page-parent {

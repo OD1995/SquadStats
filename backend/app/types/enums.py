@@ -28,6 +28,7 @@ class Metric(str, Enum):
     GOALS: str = 'Goals'
     ASSISTS: str = 'Assists'
     PLAYER_OF_MATCH: str = 'Player Of Match'
+    BENCH_UNUSED: str = 'Bench Unused'
 
 class SplitByType(str, Enum):
     NA: str = 'N/A'
@@ -35,6 +36,7 @@ class SplitByType(str, Enum):
     PLAYER_COUNT: str = 'Player Count'
     SEASON: str = 'Season'
     YEAR: str = 'Year'
+    WITH_OR_WITHOUT: str = ''
 
 class LeaderboardType(str, Enum):    
     APPEARANCES: str = 'Appearances'
@@ -42,3 +44,7 @@ class LeaderboardType(str, Enum):
     APPEARANCES_BY_YEAR: str = 'Appearances By Year'
     GOALS: str = 'Goals'
     GOALS_PER_GAME: str = 'Goals Per Game'
+
+class MiscStrings(str, Enum):
+    WITH: str = 'With'
+    WITHOUT: str = 'Without'

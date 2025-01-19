@@ -9,6 +9,7 @@ import ComboService from "../../../services/ComboService";
 import { BackendResponse } from "../../../types/BackendResponse";
 import { MatchesOrPlayersFilterOptional } from "./MatchesOrPlayersFilterOptional";
 import { SPLIT_BY_TYPE } from "../../../types/enums";
+import { Player } from "../../../types/Player";
 
 
 interface OwnProps {
@@ -45,16 +46,18 @@ export const MatchesOrPlayersFilter = (props:OwnProps) => {
    
     const isDesktop = isWiderThanHigher();   
     const [isExpanded, setIsExpanded] = useState<boolean>(false); 
-            
-    const [clubSeasons, setClubSeasons] = useState<Record<string,Season[]>>();
-    const [teamSeasons, setTeamSeasons] = useState<Season[]>([]);
-    const [oppositionOptions, setOppositionOptions] = useState<string[]>([]);
-
+    
     const [filtersErrorMessage, setFiltersErrorMessage] = useState<string>("");
     const [selectedTeamId, setSelectedTeamId] = useState<string>("");
     const [seasonFilter, setSeasonFilter] = useState("");
     const [selectedOpposition, setSelectedOpposition] = useState<string>("");
-
+    const [playerIdFilter, setPlayerIdFilter] = useState<string>("");
+    
+    const [clubSeasons, setClubSeasons] = useState<Record<string,Season[]>>();
+    const [teamSeasons, setTeamSeasons] = useState<Season[]>([]);
+    const [oppositionOptions, setOppositionOptions] = useState<string[]>([]);
+    const [playerFilterOptions, setPlayerFilterOptions] = useState<Player[]>([]);
+    
     const [searchParams, setSearchParams] = useSearchParams();
     const navigate = useNavigate();
 
@@ -65,7 +68,8 @@ export const MatchesOrPlayersFilter = (props:OwnProps) => {
                 clubId: props.club?.club_id
             } as Record<string,string>;
             ComboService.getMatchesOrPlayersFilterData(
-                createSearchParams(params).toString()
+                createSearchParams(params).toString(),
+                props.players ? "True" : "False"
             ).then(
                 (res:BackendResponse) => {
                     if (res.success) {
@@ -78,6 +82,7 @@ export const MatchesOrPlayersFilter = (props:OwnProps) => {
                         }
                         setTeamSeasons(tmSsns);
                         setOppositionOptions(res.data.oppositions);
+                        setPlayerFilterOptions(res.data.players);
                     } else {
                         props.setErrorMessage(res.data.message);
                     }
@@ -91,6 +96,9 @@ export const MatchesOrPlayersFilter = (props:OwnProps) => {
             }
             if (searchParams.get("teamIdFilter")) {
                 setSelectedTeamId(searchParams.get("teamIdFilter")!);
+            }
+            if (searchParams.get("playerIdFilter")) {
+                setPlayerIdFilter(searchParams.get("playerIdFilter")!);
             }
         },
         []
@@ -131,6 +139,9 @@ export const MatchesOrPlayersFilter = (props:OwnProps) => {
             // params['selectedTeamId'] = selectedTeamId;
             params['teamIdFilter'] = selectedTeamId;
         }
+        if (playerIdFilter) {
+            params['playerIdFilter'] = playerIdFilter;
+        }
         if (seasonFilter) {
             // params['selectedSeason'] = selectedSeason;
             params['seasonFilter'] = seasonFilter;
@@ -147,26 +158,6 @@ export const MatchesOrPlayersFilter = (props:OwnProps) => {
         props.setTableData([]);
         props.retrieveData(newSearchParams.toString())
     }
-
-    // const retrieveData = (searchParams:string) => {
-    //     props.setIsLoading(true);
-    //     props.setErrorMessage("");
-    //     props.getData(
-    //         searchParams,
-    //         props.club?.club_id,
-    //         props.team?.team_id
-    //     ).then(
-    //         (res:BackendResponse) => {
-    //             if (res.success) {
-    //                 props.setTableData(res.data);
-    //             } else {
-    //                 props.setErrorMessage(res.data.message);
-    //             }
-    //             props.setIsLoading(false);
-    //         }
-    //     )
-    // }
-
     
     const content = (
         <>
@@ -174,6 +165,8 @@ export const MatchesOrPlayersFilter = (props:OwnProps) => {
             <MatchesOrPlayersFilterOptional
                 club={props.club}
                 team={props.team}
+                matches={props.matches}
+                players={props.players}
                 selectedTeamId={selectedTeamId}
                 setSelectedTeamId={setSelectedTeamId}
                 clubSeasons={clubSeasons!}
@@ -188,6 +181,9 @@ export const MatchesOrPlayersFilter = (props:OwnProps) => {
                 perGame={props.perGame}
                 minApps={props.minApps!}
                 setMinApps={props.setMinApps!}
+                playerIdFilter={playerIdFilter}
+                setPlayerIdFilter={setPlayerIdFilter}
+                playerFilterOptions={playerFilterOptions}
             />
             <div id='mop-filter-button-div'>
                 <button
