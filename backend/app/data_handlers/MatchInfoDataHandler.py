@@ -63,7 +63,7 @@ class MatchInfoDataHandler:
                 if metric_name == Metric.FEATURED_PLAYER:
                     new_cell = GenericTableCell(
                         value=player_dict['player_name'],
-                        link=f"/player/{player_id}"
+                        link=f"/player/{player_id}/overview"
                     )
                 else:
                     new_cell = GenericTableCell(value=player_dict.get(metric_name, ""))

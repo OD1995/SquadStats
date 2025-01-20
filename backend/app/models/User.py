@@ -50,6 +50,7 @@ class User(Base):
             .query(Club) \
             .join(ClubAdmin) \
             .filter(ClubAdmin.user_id == self.user_id) \
+            .order_by(Club.club_name) \
             .all()
         return [
             club.get_club_info()

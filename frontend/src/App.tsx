@@ -24,6 +24,7 @@ import { EditPlayerName } from './pages/player/EditPlayerName';
 import { ClubTeamsOverviewSelector } from './pages/club/ClubTeamsOverviewSelector';
 import { ClubPlayersOverviewSelector } from './pages/club/ClubPlayersOverviewSelector';
 import { PlayerTeamsOverviewSelector } from './pages/player/PlayerTeamsOverviewSelector';
+import { TeamPlayersOverviewSelector } from './pages/team/TeamPlayersOverviewSelector';
 
 
 const App = () => {
@@ -56,6 +57,7 @@ const App = () => {
 						<Route path='/team/:teamId/update-data' element={<TeamScrape/>}/>
 						<Route path='/team/:teamId/matches' element={<TeamMatches/>}/>
 						<Route path='/team/:teamId/players-leaderboards' element={<TeamPlayers/>}/>
+						<Route path='/team/:teamId/players' element={<TeamPlayersOverviewSelector/>}/>
 						<Route path='/team/:teamId/team-names' element={<TeamNames/>}/>
 						<Route path='/match/:matchId' element={<MatchView/>}/>
 						<Route path='/player/:playerId/overview' element={<PlayerOverview/>}/>

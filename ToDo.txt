@@ -8,11 +8,10 @@ Make sure same club not added twice, once testing finished
 
 get_team_matches for manual entry team
 
-Deal with walkovers, e.g. https://fulltime.thefa.com/displayFixture.html?id=27206908
-
-Add ability to add 'better player name'
-
 Maybe combine backend calls for team and club overview pages
+
+alembic revision --autogenerate -m "comment"
+alembic upgrade head
 
 182317005
 

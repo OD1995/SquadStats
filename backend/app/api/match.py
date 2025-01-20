@@ -182,7 +182,7 @@ def scrape_matches():
             'message' : traceback.format_exc()
         }, 400
 
-@match_bp.route("/get-current-matches/<team_id>/<league_season_id>", methods=['GET'])
+@match_bp.route("/get-current-matches/<team_id>/<league_season_id>", methods=['GET']) #
 def get_current_matches(team_id, league_season_id):
     try:
         current_matches = db.session.query(Match) \

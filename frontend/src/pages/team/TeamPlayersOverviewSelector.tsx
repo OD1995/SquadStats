@@ -2,42 +2,38 @@ import { useParams } from "react-router-dom";
 import { getUserLS } from "../../authentication/auth";
 import { useEffect, useState } from "react";
 import { Loading } from "../../generic/Loading";
-import { getBigTitle, getClub, getIsClubAdmin } from "../../helpers/other";
-import { ClubLinkBar } from "./generic/ClubLinkBar";
+import { getBigTitle, getClub, getClubId, getIsClubAdmin } from "../../helpers/other";
 import { OverviewOption, OverviewSelector } from "../../generic/OverviewSelector";
 import ClubService from "../../services/ClubService";
 import { BackendResponse } from "../../types/BackendResponse";
 import { Club } from "../../types/Club";
 import { Team } from "../../types/Team";
 import { Player } from "../../types/Player";
+import { TeamLinkBar } from "./generic/TeamLinkBar";
+import TeamService from "../../services/TeamService";
 
-export const ClubPlayersOverviewSelector = () => {
+export const TeamPlayersOverviewSelector = () => {
     
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [playerId, setPlayerId] = useState<string>("");
     const [errorMessage, setErrorMessage] = useState("");
     const [playerOptions, setPlayerOptions] = useState<OverviewOption[]>([]);
-    // const [club, setClub] = useState<Club>();
-    const [clubName, setClubName] = useState<string>();
+    const [clubId, setClubId] = useState<string>();
+    const [teamName, setTeamName] = useState<string>();
     const [link, setLink] = useState<string>("");
 
-    let { clubId } = useParams();
+    let { teamId } = useParams();
     const user = getUserLS();
 
     useEffect(
         () => {
-            // var _club_ = getClub(user, clubId);
-            // if (_club_) {
-            //     setClub(_club_);
-            //     setTeamOptions(getTeamOptions(_club_));
-            // } else {
-                // setIsLoading(true);
-            ClubService.getClubPlayerInformation(
-                clubId!
+            TeamService.getTeamPlayerInformation(
+                teamId!
             ).then(
                 (res:BackendResponse) => {
                     if (res.success) {
-                        setClubName(res.data.club_name);
+                        setClubId(res.data.club_id);
+                        setTeamName(res.data.team_name);
                         setPlayerOptions(getOptions(res.data.players));
                     } else {
                         setErrorMessage(res.data.message);
@@ -45,7 +41,6 @@ export const ClubPlayersOverviewSelector = () => {
                     setIsLoading(false);
                 }
             )
-            // }
         },
         []
     )
@@ -74,8 +69,9 @@ export const ClubPlayersOverviewSelector = () => {
     
     return (
         <div className="page-parent">
-            {getBigTitle(clubName)}
-            <ClubLinkBar
+            {getBigTitle(teamName)}
+            <TeamLinkBar
+                clubId={clubId!}
                 isClubAdmin={getIsClubAdmin(user, clubId!)}
             />
             <div className="error-message">

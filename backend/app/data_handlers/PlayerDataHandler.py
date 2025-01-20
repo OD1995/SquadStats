@@ -21,7 +21,7 @@ class PlayerDataHandler(DataHandler):
         self.player_id = UUID(player_id)
 
     def get_result(self):
-        player_matches = db.session.query(Match) \
+        player_matches1 = db.session.query(Match) \
             .join(PlayerMatchPerformance) \
             .join(Metric) \
             .filter(
@@ -29,6 +29,11 @@ class PlayerDataHandler(DataHandler):
                 Metric.metric_name.not_in(get_unappearance_metrics())
             ) \
             .all()
+        ## Logic to deal with where player is 'Bench Unused' but also has another value (e.g. Captain)
+        player_matches = []
+        for match in player_matches1:
+            if str(self.player_id) in match.get_active_player_dict():
+                player_matches.append(match)
         return {
             'player' : self.get_player(),
             'tables' : self.get_tables(player_matches),

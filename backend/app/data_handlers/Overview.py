@@ -59,7 +59,7 @@ class Overview:
             cells = {
                 'Player' : GenericTableCell(
                     value=player.get_best_name(),
-                    link=f"/player/{player.player_id}"
+                    link=f"/player/{player.player_id}/overview"
                 ),
                 stat_name : GenericTableCell(
                     value=stat

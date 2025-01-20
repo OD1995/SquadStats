@@ -1,98 +1,90 @@
-import { Table, TableBody, TableCell, TableHead, TableContainer, TableRow } from "@mui/material";
-import { useSelector } from "react-redux";
-import { userSelector } from "../../store/slices/userSlice";
-import { Club } from "../../types/Club";
-import "./MyClubs.css"
-import { Link, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { getUserLS } from "../../authentication/auth";
-import { getBigTitle } from "../../helpers/other";
+import { useEffect, useState } from "react";
+import { OverviewOption, OverviewSelector } from "../../generic/OverviewSelector";
+import { Club } from "../../types/Club";
+import { User } from "../../types/User";
 
 export const MyClubs = () => {
+    
+    const [clubId, setClubId] = useState<string>("");
+    const [clubOptions, setClubOptions] = useState<OverviewOption[]>([]);
+    const [clubLink, setClubLink] = useState<string>("");
+    const [teamId, setTeamId] = useState<string>("");
+    const [teamOptions, setTeamOptions] = useState<OverviewOption[]>([]);
+    const [teamLink, setTeamLink] = useState<string>("");
 
-    const navigate = useNavigate();
-    // const user = useSelector(userSelector);
     const user = getUserLS();
+    const navigate = useNavigate();
 
     useEffect(
         () => {
             if (!user) {
-                navigate("/about")
+                navigate("/about");
+            } else {
+                setClubOptions(getClubOptions(user));
+                setTeamOptions(getTeamOptions(user));
             }
-        }
+        },
+        []
     )
 
+    useEffect(
+        () => {
+            setTeamLink(`/team/${teamId}/overview`)
+        },
+        [teamId]
+    )
+
+    useEffect(
+        () => {
+            setClubLink(`/club/${clubId}/overview`)
+        },
+        [clubId]
+    )
+
+    const getClubOptions = (user:User) => {
+        return user.clubs.map(
+            (club:Club) => (
+                {
+                    label: club.club_name,
+                    value: club.club_id
+                }
+            )
+        )
+    }
+
+    const getTeamOptions = (user:User) => {
+        var options = [] as OverviewOption[];
+        for (const club of user.clubs) {
+            for (const team of club.teams) {
+                options.push(
+                    {
+                        label: team.team_name,
+                        value: team.team_id
+                    }
+                )
+            }
+        }
+        return options;
+    }
+
     return (
-        <div className='page-parent'>
-            {/* <h1 className="big-h1-title">
-                My Clubs
-            </h1> */}
-            {getBigTitle("My Clubs")}
-            <div id='my-clubs-content'>
-                <TableContainer id='my-clubs-table-container'>
-                    <Table>
-                        <TableHead>
-                            <TableRow className="ss-table-head">
-                                <TableCell
-                                    className="my-clubs-cell"
-                                >
-                                    Club
-                                </TableCell>
-                                <TableCell
-                                    className="my-clubs-cell"
-                                >
-                                    Team
-                                </TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {
-                                user?.clubs.map(
-                                    (club:Club) => {
-                                        const rows = [];
-                                        var isFirstRow = true;
-                                        var ix = 0;
-                                        for (const team of club.teams) {
-                                            var clubVal = null;
-                                            if (isFirstRow) {
-                                                clubVal = (
-                                                    <Link to={`/club/${club.club_id}/overview`}>
-                                                        {club.club_name}
-                                                    </Link>
-                                                );
-                                                isFirstRow = false;
-                                            }
-                                            const teamVal = (
-                                                <Link to={`/team/${team.team_id}/overview`}>
-                                                    {team.team_name}
-                                                </Link>
-                                            );
-                                            rows.push(
-                                                <TableRow
-                                                    key={team.team_name + "-" + ix}
-                                                >
-                                                    <TableCell
-                                                        className="my-clubs-cell"
-                                                    >
-                                                        {clubVal}
-                                                    </TableCell>
-                                                    <TableCell
-                                                        className="my-clubs-cell"
-                                                    >
-                                                        {teamVal}
-                                                    </TableCell>
-                                                </TableRow>
-                                            )
-                                            ix += 1;
-                                        }
-                                        return rows;
-                                    }
-                                )
-                            }
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-            </div>
+        <div className="page-parent">
+            <OverviewSelector
+                label="Club"
+                overviewId={clubId}
+                setOverviewId={setClubId}
+                overviewOptions={clubOptions}
+                link={clubLink}
+            />
+            <OverviewSelector
+                label="Team"
+                overviewId={teamId}
+                setOverviewId={setTeamId}
+                overviewOptions={teamOptions}
+                link={teamLink}
+            />
         </div>
     );
 }

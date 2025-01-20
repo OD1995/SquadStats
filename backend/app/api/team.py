@@ -3,8 +3,13 @@ from uuid import UUID
 from flask import Blueprint, jsonify, request
 from app import db
 from app.data_handlers.TeamOverview import TeamOverview
+from app.models.Club import Club
+from app.models.Match import Match
+from app.models.Player import Player
+from app.models.PlayerMatchPerformance import PlayerMatchPerformance
 from app.models.Team import Team
 from app.models.TeamName import TeamName
+from app.models.TeamSeason import TeamSeason
 
 team_bp = Blueprint(
     name="team",
@@ -67,6 +72,33 @@ def get_team_overview_stats(team_id):
         team_overview = TeamOverview(team_id=team_id)
         team_overview_data = team_overview.get_data()
         return jsonify(team_overview_data)
+    except Exception as e:
+        return {
+            'message' : traceback.format_exc()
+        }, 400
+    
+@team_bp.route("/get-player-information/<team_id>", methods=['GET']) #
+def get_team_player_information(team_id):
+    try:
+        players = db.session.query(Player) \
+            .join(PlayerMatchPerformance) \
+            .join(Match) \
+            .join(TeamSeason) \
+            .filter(TeamSeason.team_id == UUID(team_id)) \
+            .all()
+        team = db.session.query(Team) \
+            .filter(Team.team_id == UUID(team_id)) \
+            .first()
+        return jsonify(
+            {
+                'team_name' : team.get_default_team_name(),
+                'club_id' : team.club_id,
+                'players' : [
+                    p.to_dict()
+                    for p in sorted(players, key=lambda x: x.get_best_name())
+                ]
+            }
+        )
     except Exception as e:
         return {
             'message' : traceback.format_exc()

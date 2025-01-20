@@ -17,7 +17,7 @@ season_bp = Blueprint(
     import_name=__name__
 )
 
-@season_bp.route("/get-team-seasons/<team_id>", methods=['GET'])
+@season_bp.route("/get-team-seasons/<team_id>", methods=['GET']) #
 def get_team_seasons(team_id):
     try:
         matches_filter_data_handler = MatchesFilterDataHandler(

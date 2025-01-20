@@ -41,6 +41,6 @@ class Club(Base):
             'club_id' : self.club_id,
             'teams' : [
                 team.get_team_info()
-                for team in self.teams
+                for team in sorted(self.teams, key=lambda x: x.get_default_team_name())
             ]
         }

@@ -37,6 +37,14 @@ class TeamService {
             this.base_url + `/get-team-overview-stats/${teamId}`
         )
     }
+
+    getTeamPlayerInformation(
+        teamId:string
+    ) {
+        return makeGetRequest(
+            this.base_url + `/get-player-information/${teamId}`
+        )
+    }
 }
 
 export default new TeamService();

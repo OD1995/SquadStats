@@ -146,7 +146,7 @@ class LeaderboardDataHandler(DataHandler):
                 row_data = {}
                 row_data[self.PLAYER] = GenericTableCell(
                     value=player_name,
-                    link=f"/player/{res.player_id}"
+                    link=f"/player/{res.player_id}/overview"
                 )
                 row_data[f"{self.metric} {self.PER_GAME}"] = GenericTableCell(
                     value=round(
@@ -194,7 +194,7 @@ class LeaderboardDataHandler(DataHandler):
                 if ch == self.PLAYER:
                     val = GenericTableCell(
                         value=pp[i].get_best_name(),
-                        link=f"/player/{pp[i].player_id}"
+                        link=f"/player/{pp[i].player_id}/overview"
                     )
                 else:
                     val = GenericTableCell(

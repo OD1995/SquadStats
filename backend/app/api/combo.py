@@ -8,7 +8,7 @@ combo_bp = Blueprint(
     import_name=__name__
 )
 
-@combo_bp.route("/get-matches-or-players-filter-data", methods=['GET'])
+@combo_bp.route("/get-matches-or-players-filter-data", methods=['GET']) #
 def get_mop_filter_data():
     try:
         matches_filter_data_handler = MatchesFilterDataHandler(

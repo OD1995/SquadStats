@@ -18,7 +18,7 @@ club_bp = Blueprint(
     import_name=__name__
 )
 
-@club_bp.route("/get/<club_id>", methods=['GET'])
+@club_bp.route("/get/<club_id>", methods=['GET']) #
 def get_club(club_id):
     try:
         club = db.session.query(Club).filter_by(club_id=UUID(club_id)).first()
@@ -110,7 +110,7 @@ def create_club():
             'message' : traceback.format_exc()
         }, 400
     
-@club_bp.route("/get-club-overview-stats/<club_id>", methods=['GET'])
+@club_bp.route("/get-club-overview-stats/<club_id>", methods=['GET']) #
 def get_club_overview_stats(club_id):
     try:
         club_overview = ClubOverview(club_id=club_id)
@@ -121,7 +121,7 @@ def get_club_overview_stats(club_id):
             'message' : traceback.format_exc()
         }, 400
     
-@club_bp.route("/get-player-information/<club_id>", methods=['GET'])
+@club_bp.route("/get-player-information/<club_id>", methods=['GET']) #
 def get_player_information(club_id):
     try:
         players = db.session.query(Player) \
