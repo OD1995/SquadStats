@@ -33,6 +33,7 @@ def get_club(club_id):
 @flask_praetorian.auth_required
 def create_club():
     try:
+        save_teams = False
         req = request.get_json(force=True)
         club_type = req.get("clubType")
         data_source = req.get("dataSource")
@@ -59,7 +60,6 @@ def create_club():
         elif data_source in [
             DataSourceEnum.FOOTBALL_ASSOCIATION.value
         ]:
-            save_teams = False
             base_url = db.session.query(DataSource).filter_by(
                 data_source_id=DataSourceEnum.FOOTBALL_ASSOCIATION
             ).first().url

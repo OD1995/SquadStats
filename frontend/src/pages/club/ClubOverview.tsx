@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Club } from "../../types/Club";
 import { getUserLS } from "../../authentication/auth";
-import { getClub, getIsClubAdmin } from "../../helpers/other";
+import { getClub, getIsClubAdmin, getOverviewRowCount } from "../../helpers/other";
 import ClubService from "../../services/ClubService";
 import { BackendResponse } from "../../types/BackendResponse";
 import { GenericTableData } from "../../types/GenericTableTypes";
@@ -14,6 +14,7 @@ export const ClubOverview = () => {
     const [errorMessage, setErrorMessage] = useState("");
     const [matchTableDataArray, setMatchTableDataArray] = useState<GenericTableData[]>([]);
     const [playerTableDataArray, setPlayerTableDataArray] = useState<GenericTableData[]>([]);
+    const [rowCount, setRowCount] = useState(1);
 
     let { clubId } = useParams();
     const user = getUserLS();
@@ -43,6 +44,7 @@ export const ClubOverview = () => {
                     if (res.success) {
                         setMatchTableDataArray(res.data.matches);
                         setPlayerTableDataArray(res.data.players);
+                        setRowCount(getOverviewRowCount(res.data.matches, res.data.players));
                     } else {
                         setErrorMessage(res.data.message);
                     }
@@ -59,6 +61,7 @@ export const ClubOverview = () => {
             matchTableDataArray={matchTableDataArray}
             playerTableDataArray={playerTableDataArray}
             isClubAdmin={getIsClubAdmin(user,club?.club_id!)}
+            rowCount={rowCount}
         />
     );
 }

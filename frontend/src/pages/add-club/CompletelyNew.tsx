@@ -31,7 +31,7 @@ export const CompletelyNew = () => {
                 (dataSource == DATA_SOURCE.MANUAL) && (
                     <NewClubSubmit
                         labelText="Enter the club's name"
-                        modalContent={<FootballAssociationClub/>}
+                        // modalContent={<FootballAssociationClub/>}
                         clubType={CLUB_TYPE.COMPLETELY_NEW}
                         dataSource={dataSource}
                     />

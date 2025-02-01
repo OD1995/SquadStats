@@ -8,6 +8,7 @@ import { isWiderThanHigher } from "../../helpers/windowDimensions";
 import { generateId, getBigTitle } from "../../helpers/other";
 import { BetterTable } from "../BetterTable";
 import { GenericTableData } from "../../types/GenericTableTypes";
+import { AdviceBar } from "../AdviceBar";
 
 interface OwnProps {
     team?:Team
@@ -16,6 +17,7 @@ interface OwnProps {
     matchTableDataArray:GenericTableData[]
     playerTableDataArray:GenericTableData[]
     isClubAdmin:boolean
+    rowCount:number
 }
 
 export const ClubOrTeamOverview = (props:OwnProps) => {
@@ -104,6 +106,13 @@ export const ClubOrTeamOverview = (props:OwnProps) => {
                 <div className="error-message">
                     {props.errorMessage}
                 </div>
+                {
+                    (props.isClubAdmin && (props.rowCount == 0)) && (
+                        <AdviceBar
+                            noLinkedTeams={props.club?.teams.length == 0}
+                        />
+                    )
+                }
                 {
                     isDesktop ? (
                         <div id='cot-overview-tables-desktop'>

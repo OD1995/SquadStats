@@ -5,7 +5,7 @@ import { Modal } from "./Modal";
 
 interface EntryLabelWithQuestionMarkProps {
     labelText:string
-    modalContent:ReactNode
+    modalContent?:ReactNode
 }
 
 export const EntryLabelWithQuestionMark = (props:EntryLabelWithQuestionMarkProps) => {
@@ -17,10 +17,14 @@ export const EntryLabelWithQuestionMark = (props:EntryLabelWithQuestionMarkProps
             <FormLabel disabled={true}>
                 {props.labelText}
             </FormLabel>
-            <QuestionMark
-                className="ss-icon question-mark-icon"
-                onClick={() => setShowModal(true)}
-            />
+            {
+                (props.modalContent != null) && (
+                    <QuestionMark
+                        className="ss-icon question-mark-icon"
+                        onClick={() => setShowModal(true)}
+                    />
+                )
+            }
             {
                 showModal && (
                     <Modal

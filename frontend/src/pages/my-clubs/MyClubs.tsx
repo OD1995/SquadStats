@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { OverviewOption, OverviewSelector } from "../../generic/OverviewSelector";
 import { Club } from "../../types/Club";
 import { User } from "../../types/User";
+import { getBigTitle } from "../../helpers/other";
 
 export const MyClubs = () => {
     
@@ -71,6 +72,7 @@ export const MyClubs = () => {
 
     return (
         <div className="page-parent">
+            {getBigTitle("Overview Selector")}
             <OverviewSelector
                 label="Club"
                 overviewId={clubId}

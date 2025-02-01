@@ -3,7 +3,7 @@ import { Team } from "../../../types/Team";
 import { useParams } from "react-router-dom";
 import TeamService from "../../../services/TeamService";
 import { BackendResponse } from "../../../types/BackendResponse";
-import { getIsClubAdmin, getTeam } from "../../../helpers/other";
+import { getIsClubAdmin, getOverviewRowCount, getTeam } from "../../../helpers/other";
 import "./TeamOverview.css";
 import { getUserLS } from "../../../authentication/auth";
 import { GenericTableData } from "../../../types/GenericTableTypes";
@@ -16,6 +16,7 @@ export const TeamOverview = () => {
     const [matchTableDataArray, setMatchTableDataArray] = useState<GenericTableData[]>([]);
     const [playerTableDataArray, setPlayerTableDataArray] = useState<GenericTableData[]>([]);
     const [isClubAdmin, setIsClubAdmin] = useState<boolean>(false);
+    const [rowCount, setRowCount] = useState(1);
 
     let { teamId } = useParams();
     const user = getUserLS();
@@ -45,6 +46,7 @@ export const TeamOverview = () => {
                     if (res.success) {
                         setMatchTableDataArray(res.data.matches);
                         setPlayerTableDataArray(res.data.players);
+                        setRowCount(getOverviewRowCount(res.data.matches, res.data.players));
                     } else {
                         setErrorMessage(res.data.message);
                     }
@@ -68,6 +70,7 @@ export const TeamOverview = () => {
             matchTableDataArray={matchTableDataArray}
             playerTableDataArray={playerTableDataArray}
             isClubAdmin={isClubAdmin}
+            rowCount={rowCount}
         />
     )
 }

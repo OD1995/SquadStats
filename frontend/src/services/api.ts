@@ -2,8 +2,8 @@ import axios, { AxiosError } from "axios";
 import { BackendResponse } from "../types/BackendResponse";
 import store from "../store/store";
 import UserManagementService from "./UserManagementService";
-import { setUser, triggerRefresh } from "../store/slices/userSlice";
-import { setUserLS } from "../authentication/auth";
+import { triggerRefresh } from "../store/slices/userSlice";
+import { getUserLS, setUserLS } from "../authentication/auth";
 
 const instance = axios.create(
     {
@@ -20,7 +20,8 @@ instance.interceptors.response.use(
         if (err.response) {
             if ((err.response.status == 401) && err.response.data) {
                 if (err.response.data.error == 'ExpiredAccessError') {
-                    const user = store.getState().userSlice.user;
+                    // const user = store.getState().userSlice.user;
+                    const user = getUserLS();
                     UserManagementService.refreshAccessToken(
                         user?.access_token
                     ).then(
@@ -68,7 +69,7 @@ instance.interceptors.response.use(
 )
 
 const getAuthHeader = () => {
-    const user = store.getState().userSlice.user;
+    const user = getUserLS();
     if (user && user.access_token) {
         return {
             Authorization: 'Bearer ' + user.access_token,

@@ -3,6 +3,7 @@ import { Club } from "../types/Club";
 import { Team } from "../types/Team";
 import { User } from "../types/User";
 import { TableCellValue } from "../types/TableCellValue";
+import { GenericTableData } from "../types/GenericTableTypes";
 
 export const getTeam = (user:User|null, teamId:string|undefined) : Team|null => {
     if (user == null) {
@@ -118,4 +119,15 @@ export const getBigTitle = (title:string|undefined) => {
             {title}
         </h1>
     )
+}
+
+export const getOverviewRowCount = (
+    matchesData:GenericTableData[],
+    playersData:GenericTableData[]
+) => {
+    var rowCount = 0;
+    for (const tableData of matchesData.concat(playersData)) {
+        rowCount += tableData.rows.length;
+    }
+    return rowCount;
 }

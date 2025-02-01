@@ -1,11 +1,10 @@
 import { useDispatch, useSelector } from "react-redux"
-import { refreshSelector, setUser, triggerRefresh, userSelector } from "../store/slices/userSlice"
+import { refreshSelector, triggerRefresh } from "../store/slices/userSlice"
 import { MobileNavigationBar } from "./MobileNaviationBar"
 import "./NavigationBar.css"
 import { isWiderThanHigher } from "../helpers/windowDimensions"
 import { DesktopNavigationBar } from "./DesktopNavigationBar"
 import { getUserLS, setUserLS } from "../authentication/auth"
-import { useState } from "react"
 
 interface NavigationBarProps {
     // isDesktop:boolean

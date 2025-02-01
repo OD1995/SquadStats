@@ -1,7 +1,7 @@
 import { Dispatch } from "react";
 import { BackendResponse } from "../../types/BackendResponse";
 import UserManagementService from "../../services/UserManagementService";
-import { setUser, triggerRefresh } from "../../store/slices/userSlice";
+import { triggerRefresh } from "../../store/slices/userSlice";
 import { UnknownAction } from "@reduxjs/toolkit";
 import { LoginOrRegister } from "../../generic/LoginOrRegister";
 import { PAGE_TYPE } from "../../types/enums";
@@ -26,7 +26,6 @@ export const Login = () => {
         ).then(
             (res:BackendResponse) => {
                 if (res.success) {
-                    // dispatch(setUser(res.data.ss_user));
                     setUserLS(res.data.ss_user);
                     dispatch(triggerRefresh());
                     navigate("/my-clubs");

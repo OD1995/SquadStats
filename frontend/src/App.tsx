@@ -8,7 +8,6 @@ import { isWiderThanHigher } from './helpers/windowDimensions';
 import { Register } from './pages/register/Register';
 import { Login } from './pages/login/Login';
 import { GetStarted } from './pages/get-started/GetStarted';
-import { Home } from './pages/home/Home';
 import { MyClubs } from './pages/my-clubs/MyClubs';
 import { TeamOverview } from './pages/team/overview/TeamOverview';
 import { TeamScrape } from './pages/team/scrape/TeamScrape';
@@ -41,7 +40,6 @@ const App = () => {
 				<div id={(isDesktop ? 'desktop-' : 'mobile-') + 'page-content'} className='page-content'>
 					<Routes>
 						<Route index path='/about' element={<About/>}/>
-						<Route path='/home' element={<Home/>}/>
 						<Route path='/abrORDOB' element={<AbrORDOB/>}/>
 						<Route path='/register' element={<Register/>}/>
 						<Route path='/login' element={<Login/>}/>

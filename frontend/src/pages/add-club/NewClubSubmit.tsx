@@ -5,7 +5,7 @@ import ClubService from "../../services/ClubService";
 import { CLUB_TYPE, DATA_SOURCE } from "../../types/enums";
 import { BackendResponse } from "../../types/BackendResponse";
 import { useDispatch } from "react-redux";
-import { setUser, triggerRefresh } from "../../store/slices/userSlice";
+import { triggerRefresh } from "../../store/slices/userSlice";
 import { useNavigate } from "react-router-dom";
 import { setUserLS } from "../../authentication/auth";
 
@@ -13,7 +13,7 @@ interface NewClubSubmitProps {
     clubType:CLUB_TYPE
     dataSource:DATA_SOURCE|null
     labelText:string
-    modalContent:ReactNode
+    modalContent?:ReactNode
 }
 
 export const NewClubSubmit = (props:NewClubSubmitProps) => {

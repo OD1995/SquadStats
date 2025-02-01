@@ -1,25 +1,25 @@
-import { useSelector } from "react-redux";
 import { AddClub } from "../add-club/AddClub";
-import { userSelector } from "../../store/slices/userSlice";
-import { Link } from "react-router-dom";
 import { getUserLS } from "../../authentication/auth";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const GetStarted = () => {
 
-    // const user = useSelector(userSelector);
     const user = getUserLS();
+    const navigate = useNavigate();
 
-    if (user) {
-        return (
-            <AddClub
-                includeHeirachy={true}
-            />
-        );
-    } else {
-        return (
-            <Link
-                to='/about'
-            />
-        )
-    }
+    useEffect(
+        () => {
+            if (!user) {
+                navigate("/about");
+            }
+        },
+        []
+    )
+
+    return (
+        <AddClub
+            includeHeirachy={true}
+        />
+    );
 }

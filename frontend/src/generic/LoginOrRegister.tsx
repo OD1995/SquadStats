@@ -1,8 +1,7 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { PAGE_TYPE } from "../types/enums";
-import { userSelector } from "../store/slices/userSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import './LoginOrRegster.css';
 import { getUserLS } from "../authentication/auth";
 import { getBigTitle } from "../helpers/other";

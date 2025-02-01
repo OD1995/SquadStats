@@ -17,20 +17,20 @@ const userSlice = createSlice(
         name: 'app',
         initialState,
         reducers: {
-            setUser:(state:UserState, action:PayloadAction<User|null>) => {state.user = action.payload;},
+            // setUser:(state:UserState, action:PayloadAction<User|null>) => {state.user = action.payload;},
             triggerRefresh:(state:UserState) => {state.refreshCounter += 1}
         }
     }
 )
 
-export function userSelector(state:StoreState) {
-    return state.userSlice.user;
-}
+// export function userSelector(state:StoreState) {
+//     return state.userSlice.user;
+// }
 
 export function refreshSelector(state:StoreState) {
     return state.userSlice.refreshCounter;
 }
 
-export const { setUser, triggerRefresh } = userSlice.actions;
+export const { triggerRefresh } = userSlice.actions;
 
 export default userSlice.reducer;

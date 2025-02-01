@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getBigTitle, getTeam } from "../../../helpers/other";
-import { useSelector } from "react-redux";
-import { userSelector } from "../../../store/slices/userSlice";
 import { Team } from "../../../types/Team";
 import TeamService from "../../../services/TeamService";
 import { BackendResponse } from "../../../types/BackendResponse";
@@ -22,7 +20,6 @@ export const TeamNames = () => {
     const [dataLoaded, setDataLoaded] = useState<boolean>(false);
 
     let { teamId } = useParams();
-    // const user = useSelector(userSelector);
     const user = getUserLS();
 
     useEffect(
@@ -87,9 +84,6 @@ export const TeamNames = () => {
 
     return (
         <div id='club-overview-parent-div'>
-            {/* <h1 className="big-h1-title">
-                {team?.team_name}
-            </h1> */}
             {getBigTitle(team?.team_name)}
             <div id='club-overview-content'>
                 <div className="error-message">

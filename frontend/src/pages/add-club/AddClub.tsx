@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { NewClubType } from "./NewClubType"
 import "./AddClub.css";
 import { CLUB_TYPE } from "../../types/enums";
@@ -6,9 +6,7 @@ import { CompletelyNew } from "./CompletelyNew";
 import { NewClubSubmit } from "./NewClubSubmit";
 import { AlreadyExistsClub } from "../../how-to/AlreadExistsClub";
 import { HeirachyDescription } from "../../how-to/HeirachyDescription";
-import { useSelector } from "react-redux";
-import { userSelector } from "../../store/slices/userSlice";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { getUserLS } from "../../authentication/auth";
 import { getBigTitle } from "../../helpers/other";
 
@@ -20,49 +18,50 @@ export const AddClub = (props:AddClubProps) => {
 
     const [newClubType, setNewClubType] = useState<string>("");
 
-    // const user = useSelector(userSelector);
     const user = getUserLS();
+    const navigate = useNavigate();
 
-    if (user) {
-        return (
-            <div className='page-parent'>
-                {/* <h1 className="big-h1-title">
-                    Add Club
-                </h1> */}
-                {getBigTitle("Add Club")}
+    useEffect(
+        () => {
+            if (!user) {
+                navigate("/about");
+            }
+        },
+        []
+    )
+
+    return (
+        <div className='page-parent'>
+            {/* <h1 className="big-h1-title">
+                Add Club
+            </h1> */}
+            {getBigTitle("Add Club")}
+            {
+                props.includeHeirachy && (
+                    <HeirachyDescription/>
+                )
+            }
+            <div id='add-club-entry-parent'>
+                <NewClubType
+                    newClubType={newClubType}
+                    setNewClubType={setNewClubType}
+                />
                 {
-                    props.includeHeirachy && (
-                        <HeirachyDescription/>
+                    (newClubType == CLUB_TYPE.ALREADY_EXISTS) && (
+                        <NewClubSubmit
+                            labelText="Enter the clubs's unique ID"
+                            clubType={CLUB_TYPE.ALREADY_EXISTS}
+                            modalContent={<AlreadyExistsClub/>}
+                            dataSource={null}
+                        />
                     )
                 }
-                <div id='add-club-entry-parent'>
-                    <NewClubType
-                        newClubType={newClubType}
-                        setNewClubType={setNewClubType}
-                    />
-                    {
-                        (newClubType == CLUB_TYPE.ALREADY_EXISTS) && (
-                            <NewClubSubmit
-                                labelText="Enter the clubs's unique ID"
-                                clubType={CLUB_TYPE.ALREADY_EXISTS}
-                                modalContent={<AlreadyExistsClub/>}
-                                dataSource={null}
-                            />
-                        )
-                    }
-                    {
-                        (newClubType == CLUB_TYPE.COMPLETELY_NEW) && (
-                            <CompletelyNew/>
-                        )
-                    }
-                </div>
+                {
+                    (newClubType == CLUB_TYPE.COMPLETELY_NEW) && (
+                        <CompletelyNew/>
+                    )
+                }
             </div>
-        )
-    } else {
-        return (
-            <Link
-                to='/about'
-            />
-        )
-    }
+        </div>
+    )
 }
