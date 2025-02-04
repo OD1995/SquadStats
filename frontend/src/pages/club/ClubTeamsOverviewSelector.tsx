@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { getUserLS } from "../../authentication/auth";
 import { useEffect, useState } from "react";
 import { Loading } from "../../generic/Loading";
@@ -86,6 +86,11 @@ export const ClubTeamsOverviewSelector = () => {
                 overviewOptions={teamOptions}
                 link={link}
             />
+            <div id='add-new-team-div'>
+                <Link to={`/club/${clubId}/add-team`}>
+                    Add new team
+                </Link>
+            </div>
         </div>
     );
 }

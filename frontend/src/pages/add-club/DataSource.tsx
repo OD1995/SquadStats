@@ -32,7 +32,7 @@ export const DataSource = (props:DataSourceProps) => {
                     <FormControlLabel
                         value={DATA_SOURCE.MANUAL}
                         control={<Radio/>}
-                        label='Manual Entry'
+                        label='Manual entry'
                     />
                 </RadioGroup>
             </FormControl>

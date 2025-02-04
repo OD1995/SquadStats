@@ -24,6 +24,7 @@ import { ClubTeamsOverviewSelector } from './pages/club/ClubTeamsOverviewSelecto
 import { ClubPlayersOverviewSelector } from './pages/club/ClubPlayersOverviewSelector';
 import { PlayerTeamsOverviewSelector } from './pages/player/PlayerTeamsOverviewSelector';
 import { TeamPlayersOverviewSelector } from './pages/team/TeamPlayersOverviewSelector';
+import { ClubAddTeam } from './pages/club/ClubAddTeam';
 
 
 const App = () => {
@@ -50,6 +51,7 @@ const App = () => {
 						<Route path='/club/:clubId/matches' element={<ClubMatches/>}/>
 						<Route path='/club/:clubId/player-leaderboards' element={<ClubPlayerLeaderboards/>}/>
 						<Route path='/club/:clubId/teams' element={<ClubTeamsOverviewSelector/>}/>
+						<Route path='/club/:clubId/add-team' element={<ClubAddTeam/>}/>
 						<Route path='/club/:clubId/players' element={<ClubPlayersOverviewSelector/>}/>
 						<Route path='/team/:teamId/overview' element={<TeamOverview/>}/>
 						<Route path='/team/:teamId/update-data' element={<TeamScrape/>}/>

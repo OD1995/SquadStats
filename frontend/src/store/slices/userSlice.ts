@@ -23,10 +23,6 @@ const userSlice = createSlice(
     }
 )
 
-// export function userSelector(state:StoreState) {
-//     return state.userSlice.user;
-// }
-
 export function refreshSelector(state:StoreState) {
     return state.userSlice.refreshCounter;
 }

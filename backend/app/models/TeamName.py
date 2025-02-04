@@ -19,10 +19,10 @@ class TeamName(Base):
 
     def __init__(
         self,
-        team_name_id:UUID|None,
         team_id:UUID,
         team_name:str,
-        is_default_name:bool
+        is_default_name:bool,
+        team_name_id:UUID|None=None
     ):
         
         self.team_name_id = team_name_id or uuid4()

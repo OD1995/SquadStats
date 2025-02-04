@@ -3,7 +3,7 @@ import { NewClubType } from "./NewClubType"
 import "./AddClub.css";
 import { CLUB_TYPE } from "../../types/enums";
 import { CompletelyNew } from "./CompletelyNew";
-import { NewClubSubmit } from "./NewClubSubmit";
+import { NewClubOrTeamSubmit } from "../../generic/club-or-team/NewClubOrTeamSubmit";
 import { AlreadyExistsClub } from "../../how-to/AlreadExistsClub";
 import { HeirachyDescription } from "../../how-to/HeirachyDescription";
 import { useNavigate } from "react-router-dom";
@@ -48,7 +48,7 @@ export const AddClub = (props:AddClubProps) => {
                 />
                 {
                     (newClubType == CLUB_TYPE.ALREADY_EXISTS) && (
-                        <NewClubSubmit
+                        <NewClubOrTeamSubmit
                             labelText="Enter the clubs's unique ID"
                             clubType={CLUB_TYPE.ALREADY_EXISTS}
                             modalContent={<AlreadyExistsClub/>}

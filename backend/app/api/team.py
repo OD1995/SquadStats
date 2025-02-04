@@ -1,6 +1,7 @@
 import traceback
 from uuid import UUID
 from flask import Blueprint, jsonify, request
+import flask_praetorian
 from app import db
 from app.data_handlers.TeamOverview import TeamOverview
 from app.models.Club import Club
@@ -10,6 +11,7 @@ from app.models.PlayerMatchPerformance import PlayerMatchPerformance
 from app.models.Team import Team
 from app.models.TeamName import TeamName
 from app.models.TeamSeason import TeamSeason
+from app.types.enums import DataSource, Sport
 
 team_bp = Blueprint(
     name="team",
@@ -24,6 +26,37 @@ def get_team(team_id):
             .filter_by(team_id=UUID(team_id)) \
             .first()
         return team.get_team_info(), 200
+    except Exception as e:
+        return {
+            'message' : traceback.format_exc()
+        }, 400
+    
+@team_bp.route("/create-manual", methods=['POST'])
+@flask_praetorian.auth_required
+def create_team():
+    try:
+        req = request.get_json(force=True)
+        club_id = UUID(req.get('clubId'))
+        team_name_str = req.get('teamName')
+        new_team = Team(
+            club_id=club_id,
+            sport_id=Sport.FOOTBALL,
+            data_source_id=DataSource.MANUAL,
+            data_source_team_id=None
+        )
+        new_team_name = TeamName(
+            team_id=new_team.team_id,
+            team_name=team_name_str,
+            is_default_name=True
+        )
+        db.session.add(new_team)
+        db.session.add(new_team_name)
+        db.session.commit()
+        current_user = flask_praetorian.current_user()
+        return {
+            **current_user.get_ss_user_data(),
+            **{"new_team_id" : new_team.team_id}
+        }, 200
     except Exception as e:
         return {
             'message' : traceback.format_exc()
@@ -96,7 +129,8 @@ def get_team_player_information(team_id):
                 'players' : [
                     p.to_dict()
                     for p in sorted(players, key=lambda x: x.get_best_name())
-                ]
+                ],
+                'team' : team
             }
         )
     except Exception as e:

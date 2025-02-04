@@ -80,6 +80,24 @@ export const ClubOrTeamOverview = (props:OwnProps) => {
         );
     }
 
+    const getShowAdviceBar = () => {
+        if (
+            (props.club?.teams.length == 0) ||
+            (props.rowCount == 0)
+        ) {
+            return true;
+        }
+        return false;
+    }
+
+    const getIsLoading = () => {
+        return (props.errorMessage == "") && (
+            (props.matchTableDataArray.length == 0) || (
+                (props.team == null) && (props.club == null)
+            )
+        )
+    }
+
     return (
         <div className='page-parent'>
             {getBigTitle(props.team?.team_name ?? props.club?.club_name)}
@@ -93,23 +111,23 @@ export const ClubOrTeamOverview = (props:OwnProps) => {
                         <TeamLinkBar
                             isClubAdmin={props.isClubAdmin}
                             clubId={props.team?.club_id!}
+                            team={props.team!}
                         />
                     )
                 }
                 {
-                    ((props.errorMessage == "") && (
-                        (props.matchTableDataArray.length == 0) || (
-                            (props.team == null) && (props.club == null)
-                        )
-                    )) && <Loading/>
+                    getIsLoading() && <Loading/>
                 }
                 <div className="error-message">
                     {props.errorMessage}
                 </div>
                 {
-                    (props.isClubAdmin && (props.rowCount == 0)) && (
+                    (props.isClubAdmin && getShowAdviceBar() && !getIsLoading()) && (
                         <AdviceBar
                             noLinkedTeams={props.club?.teams.length == 0}
+                            noRows={props.rowCount == 0}
+                            club={props.club}
+                            team={props.team}
                         />
                     )
                 }

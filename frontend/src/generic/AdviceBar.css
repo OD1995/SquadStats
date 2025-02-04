@@ -10,7 +10,6 @@
     font-style: italic;
     background-color: #f6f6f6;
     max-width: 90vw;
-    /* padding-left: 2vw; */
-    /* padding-right: 2vw; */
     padding: 2vw;
+    font-size: small;
 }

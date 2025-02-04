@@ -1,8 +1,8 @@
 import { useState } from "react"
 import { CLUB_TYPE, DATA_SOURCE } from "../../types/enums"
 import { DataSource } from "./DataSource"
-import { NewClubSubmit } from "./NewClubSubmit";
 import { FootballAssociationClub } from "../../how-to/FootballAssociationClub";
+import { NewClubOrTeamSubmit } from "../../generic/club-or-team/NewClubOrTeamSubmit";
 
 export const CompletelyNew = () => {
 
@@ -19,21 +19,22 @@ export const CompletelyNew = () => {
             />
             {
                 (dataSource == DATA_SOURCE.FOOTBALL_ASSOCIATION) && (
-                    <NewClubSubmit
+                    <NewClubOrTeamSubmit
                         labelText="Enter the club ID"
                         modalContent={<FootballAssociationClub/>}
                         clubType={CLUB_TYPE.COMPLETELY_NEW}
                         dataSource={dataSource}
+                        club
                     />
                 )
             }
             {
                 (dataSource == DATA_SOURCE.MANUAL) && (
-                    <NewClubSubmit
+                    <NewClubOrTeamSubmit
                         labelText="Enter the club's name"
-                        // modalContent={<FootballAssociationClub/>}
                         clubType={CLUB_TYPE.COMPLETELY_NEW}
                         dataSource={dataSource}
+                        club
                     />
                 )
             }

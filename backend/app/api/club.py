@@ -33,11 +33,11 @@ def get_club(club_id):
 @flask_praetorian.auth_required
 def create_club():
     try:
-        save_teams = False
         req = request.get_json(force=True)
         club_type = req.get("clubType")
         data_source = req.get("dataSource")
         club_id = req.get("clubId")
+        save_teams = False
         if club_type == ClubType.ALREADY_EXISTS:
             try:
                 actual_club_id = get_club_id_from_shared_club_id(club_id)

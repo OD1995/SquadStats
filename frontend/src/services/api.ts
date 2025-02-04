@@ -3,7 +3,7 @@ import { BackendResponse } from "../types/BackendResponse";
 import store from "../store/store";
 import UserManagementService from "./UserManagementService";
 import { triggerRefresh } from "../store/slices/userSlice";
-import { getUserLS, setUserLS } from "../authentication/auth";
+import { getUserLS, setNewAccessToken, setUserLS } from "../authentication/auth";
 
 const instance = axios.create(
     {
@@ -27,7 +27,7 @@ instance.interceptors.response.use(
                     ).then(
                         (res:BackendResponse) => {
                             // store.dispatch(setUser(res.data.ss_user))
-                            setUserLS(res.data.ss_user);
+                            setNewAccessToken(res.data.new_token);
                             store.dispatch(triggerRefresh());
                         }
                     )

@@ -8,7 +8,6 @@ import { Loading } from "../../generic/Loading";
 
 export const About = () => {
 
-    // const user = useSelector(userSelector);
     // const user = getUserLS();
     const [data, setData] = useState<GenericTableData>();
     const [errorMessage, setErrorMessage] = useState<string>();

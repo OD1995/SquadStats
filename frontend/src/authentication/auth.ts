@@ -15,3 +15,11 @@ export const getUserLS = () : User|null => {
     }
     return null;
 }
+
+export const setNewAccessToken = (newAccessToken:string) => {
+    var user = getUserLS();
+    if (user) {
+        user.access_token = newAccessToken;
+        setUserLS(user);
+    }
+}

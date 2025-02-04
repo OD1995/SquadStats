@@ -41,7 +41,6 @@ export const TeamScrape = () => {
     const [dataLoaded, setDataLoaded] = useState<boolean>(false);
 
     let { teamId } = useParams();
-    // const user = useSelector(userSelector);
     const user = getUserLS();
     const navigate = useNavigate();
 
@@ -264,6 +263,7 @@ export const TeamScrape = () => {
                 <TeamLinkBar
                     isClubAdmin={getIsClubAdmin(user, team?.club_id!)}
                     clubId={team?.club_id!}
+                    team={team!}
                 />
                 <div id='team-scrape-2'>
                     <div id='team-scrape-input-parent'>

@@ -41,6 +41,7 @@ export const ClubOrTeamMatchesOrPlayers = (props:OwnProps) => {
                         <TeamLinkBar
                             isClubAdmin={props.isClubAdmin}
                             clubId={props.team?.club_id!}
+                            team={props.team!}
                         />
                     )
                 }

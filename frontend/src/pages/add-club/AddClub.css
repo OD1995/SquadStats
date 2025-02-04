@@ -4,19 +4,19 @@
     align-items: center;
 }
 
-#new-club-submit-form {
+#new-cot-submit-form {
     width: 100%;
     padding-top: 5vh;
     padding-bottom: 5vh;
 }
 
-.add-club-section {
+.add-cot-section {
     /* width: 50vw; */
     width: 80%;
     padding-bottom: 5vh;
 }
 
-.new-club-entry-parent {
+.new-cot-entry-parent {
     display: flex;
     flex-direction: column;
     align-items: center;

@@ -1,0 +1,24 @@
+#club-add-team-content {
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#add-new-team-div {
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    margin-top: 0;
+}
+
+#add-new-team-text {
+    margin-left: 5vw;
+}
+
+#add-new-team-subtitle-div {
+    width: 100vw;
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 0;   
+}

@@ -1,10 +1,12 @@
 import { useParams } from "react-router-dom"
 import { LinkBarInfo } from "../../../types/LinkBarInfo";
 import { LinkBar } from "../../../generic/LinkBar";
+import { Team } from "../../../types/Team";
 
 interface OwnProps {
     isClubAdmin:boolean
     clubId:string
+    team:Team
 }
 
 export const TeamLinkBar = (props:OwnProps) => {

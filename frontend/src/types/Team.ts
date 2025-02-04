@@ -3,4 +3,5 @@ export interface Team {
     team_id: string
     sport: string
     club_id: string
+    data_source_id: string
 }

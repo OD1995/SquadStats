@@ -45,6 +45,19 @@ class TeamService {
             this.base_url + `/get-player-information/${teamId}`
         )
     }
+
+    createNewTeam(
+        clubId:string,
+        teamName:string
+    ) {
+        return makePostRequest(
+            this.base_url + `/create-manual`,
+            {
+                clubId,
+                teamName
+            }
+        )
+    }
 }
 
 export default new TeamService();

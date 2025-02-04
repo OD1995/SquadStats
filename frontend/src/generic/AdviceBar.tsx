@@ -1,30 +1,51 @@
 import { ReactNode, useEffect, useState } from "react"
 import { Link } from "react-router-dom";
 import "./AdviceBar.css"
+import { Club } from "../types/Club";
+import { Team } from "../types/Team";
 
 interface OwnProps {
     noLinkedTeams?:boolean
     noRows?:boolean
+    club?:Club
+    team?:Team
 }
 
 export const AdviceBar = (props:OwnProps) => {
 
     const [content, setContent] = useState<ReactNode>(null);
-
     
     useEffect(
         () => {
+            var _content_;
             if (props.noLinkedTeams) {
-                const clubId = window.location.pathname.split("/")[2];
-                const linkUrl = `/club/${clubId}/teams`;
-                const addTeams = (
+                const linkUrl = `/club/${props.club?.club_id}/teams`
+                _content_ = (
                     <>
-                        Looks like you have no teams linked to your club, you can
+                        You have no teams linked to your club, you can
                         change that on the <Link to={linkUrl}>Teams</Link> page
                     </>
                 )
-                setContent(addTeams);
+            } else if (props.noRows) {
+                if (props.team) {
+                    const linkUrl = `/team/${props.team.team_id}/update-data`;
+                    _content_ = (
+                        <>
+                            Your team has no match data, you can change
+                            that on the <Link to={linkUrl}>Update Data</Link> page
+                        </>
+                    )
+                } else if (props.club) {
+                    _content_ = (
+                        <>
+                            None of the teams linked to your club have any match data,
+                            you can change that in the Update Data page of each team
+                        </>
+                    )
+                }
+                setContent(_content_);
             }
+            setContent(_content_);
         },
         []
     )

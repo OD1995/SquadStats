@@ -2,11 +2,9 @@ import { useParams } from "react-router-dom";
 import { getUserLS } from "../../authentication/auth";
 import { useEffect, useState } from "react";
 import { Loading } from "../../generic/Loading";
-import { getBigTitle, getClub, getClubId, getIsClubAdmin } from "../../helpers/other";
+import { getBigTitle, getIsClubAdmin } from "../../helpers/other";
 import { OverviewOption, OverviewSelector } from "../../generic/OverviewSelector";
-import ClubService from "../../services/ClubService";
 import { BackendResponse } from "../../types/BackendResponse";
-import { Club } from "../../types/Club";
 import { Team } from "../../types/Team";
 import { Player } from "../../types/Player";
 import { TeamLinkBar } from "./generic/TeamLinkBar";
@@ -21,6 +19,7 @@ export const TeamPlayersOverviewSelector = () => {
     const [clubId, setClubId] = useState<string>();
     const [teamName, setTeamName] = useState<string>();
     const [link, setLink] = useState<string>("");
+    const [team, setTeam] = useState<Team>();
 
     let { teamId } = useParams();
     const user = getUserLS();
@@ -35,6 +34,7 @@ export const TeamPlayersOverviewSelector = () => {
                         setClubId(res.data.club_id);
                         setTeamName(res.data.team_name);
                         setPlayerOptions(getOptions(res.data.players));
+                        setTeam(res.data.team);
                     } else {
                         setErrorMessage(res.data.message);
                     }
@@ -73,6 +73,7 @@ export const TeamPlayersOverviewSelector = () => {
             <TeamLinkBar
                 clubId={clubId!}
                 isClubAdmin={getIsClubAdmin(user, clubId!)}
+                team={team!}
             />
             <div className="error-message">
                 {errorMessage}

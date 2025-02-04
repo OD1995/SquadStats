@@ -24,7 +24,6 @@ export const LoginOrRegister = (props:LoginOrRegisterProps) => {
     const [searchParams, setSearchParams] = useSearchParams();   
     const navigate = useNavigate(); 
     const dispatch = useDispatch();
-    // const user = useSelector(userSelector);
     const user = getUserLS();
     
     useEffect(

@@ -31,9 +31,10 @@ class Team(Base):
     data_source_id: Mapped[DataSourceEnum] = mapped_column(
         Enum(DataSourceEnum),
         ForeignKey("data_sources.data_source_id", name='fk_data_sources_data_source_id'),
-        index=True
+        index=True,
+        nullable=True
     )
-    data_source_team_id: Mapped[str] = mapped_column(String(100))
+    data_source_team_id: Mapped[str] = mapped_column(String(100), nullable=True)
     team_names: Mapped[List["TeamName"]] = relationship(lazy='joined')
     sport: Mapped[Sport] = relationship(lazy='joined')
     club: Mapped[Club] = relationship(back_populates='teams')
@@ -66,20 +67,10 @@ class Team(Base):
         ]
 
     def get_team_info(self):
-        # team_league_info = []
-        # leagues = {}
-        # for tl in self.team_leagues:
-        #     if tl.league_id in leagues:
-        #         pass
-        #     else:
-        #         league = db.session
         return {
             'team_name' : self.get_default_team_name(),
             'sport' : self.sport.sport_name,
             'team_id' : self.team_id,
-            'club_id' : self.club_id
-            # 'leagues' : [
-            #     x
-            #     for x in self.team_leagues
-            # ]
+            'club_id' : self.club_id,
+            'data_source_id' : self.data_source_id
         }

@@ -14,7 +14,6 @@ export const NavigationBar = (props:NavigationBarProps) => {
 
     // const [refresh, setRefresh] = useState<number>(0);
     const dispatch = useDispatch();
-    // const user = useSelector(userSelector);
     const user = getUserLS();
     const refreshCounter = useSelector(refreshSelector);
 

@@ -20,3 +20,10 @@
 .overview-selector {
     margin-top: 10vh;
 }
+
+#add-new-team-div {
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    margin-top: 5vh;
+}

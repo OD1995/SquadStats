@@ -44,9 +44,9 @@ def login():
 def refresh():
     old_token = request.get_json(force=True)['access_token']
     new_token = guard.refresh_jwt_token(old_token)
-    user = guard.get_user_from_registration_token(new_token)
+    # user = guard.get_user_from_registration_token(new_token)
     return {
-        'ss_user' : user.get_ss_user_data()
+        'new_token' : new_token
     }, 200
 
 @user_management_bp.route("/reset-password")
