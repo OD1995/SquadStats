@@ -1,9 +1,8 @@
 import { FormControl, MenuItem, Select, SelectChangeEvent } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Team } from "../../../types/Team";
-import { getBigTitle, getIsClubAdmin, getTeam } from "../../../helpers/other";
-import TeamService from "../../../services/TeamService";
+import { getBigTitle, getIsClubAdmin } from "../../../helpers/other";
 import { BackendResponse } from "../../../types/BackendResponse";
 import { Season } from "../../../types/Season";
 import "./TeamScrape.css";
@@ -17,8 +16,19 @@ import { Loading } from "../../../generic/Loading";
 import SeasonService from "../../../services/SeasonService";
 import { TeamLinkBar } from "../generic/TeamLinkBar";
 import { getUserLS } from "../../../authentication/auth";
+import { SeasonSelection } from "../../../generic/SeasonSelection";
 
-export const TeamScrape = () => {
+interface OwnProps {
+    team:Team
+    errorMessage:string
+    setErrorMessage:Function
+    seasons:any
+    setSeasons:Function
+    selectedSeason:string
+    setSelectedSeason:Function
+}
+
+export const TeamScrape = (props:OwnProps) => {
 
     const [viewCurrentMatchesDisabled, setViewCurrentMatchesDisabled] = useState(false);
     const [updateMatchInfoFromDataSourceDisabled, setUpdateMatchInfoFromDataSourceDisabled] = useState(true);
@@ -26,12 +36,12 @@ export const TeamScrape = () => {
     const [startUpdateDisabled, setStartUpdateDisabled] = useState(true);
     const [updateListDisabled, setUpdateListDisabled] = useState(false);
     
-    const [team, setTeam] = useState<Team>();
-    const [errorMessage, setErrorMessage] = useState("");
+    // const [team, setTeam] = useState<Team>();
+    // const [errorMessage, setErrorMessage] = useState("");
     const [isLoading, setIsLoading] = useState(false);    
     
-    const [selectedSeason, setSelectedSeason] = useState("");
-    const [seasons, setSeasons] = useState([]);
+    // const [selectedSeason, setSelectedSeason] = useState("");
+    // const [seasons, setSeasons] = useState([]);
 
     const [isPlayerInfoView, setIsPlayerInfoView] = useState<boolean>(false);
     const [allMatches, setAllMatches] = useState<Match[]>([]);
@@ -42,55 +52,55 @@ export const TeamScrape = () => {
 
     let { teamId } = useParams();
     const user = getUserLS();
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
-    useEffect(
-        () => {
-            if (!user) {
-                navigate("/about");
-            } else {
-                var _team_ = getTeam(user, teamId);
-                if (_team_) {
-                    setTeam(_team_);
-                } else {
-                    TeamService.getTeamInformation(
-                        teamId!
-                    ).then(
-                        (res:BackendResponse) => {
-                            if (res.success) {
-                                setTeam(res.data);
-                            } else {
-                                setErrorMessage(res.data.message);
-                            }
-                        }
-                    )
-                }
-                SeasonService.getTeamSeasons(
-                    teamId!
-                ).then(
-                    (res:BackendResponse) => {
-                        if (res.success) {
-                            setSeasons(res.data);
-                            setSelectedSeason(res.data[0].season_id);
-                        } else {
-                            setErrorMessage(res.data.message);
-                        }
-                    }
-                )
-            }
-        },
-        []
-    )
+    // useEffect(
+    //     () => {
+    //         if (!user) {
+    //             navigate("/about");
+    //         } else {
+    //             var _team_ = getTeam(user, teamId);
+    //             if (_team_) {
+    //                 setTeam(_team_);
+    //             } else {
+    //                 TeamService.getTeamInformation(
+    //                     teamId!
+    //                 ).then(
+    //                     (res:BackendResponse) => {
+    //                         if (res.success) {
+    //                             setTeam(res.data);
+    //                         } else {
+    //                             setErrorMessage(res.data.message);
+    //                         }
+    //                     }
+    //                 )
+    //             }
+    //             SeasonService.getTeamSeasons(
+    //                 teamId!
+    //             ).then(
+    //                 (res:BackendResponse) => {
+    //                     if (res.success) {
+    //                         setSeasons(res.data);
+    //                         setSelectedSeason(res.data[0].season_id);
+    //                     } else {
+    //                         setErrorMessage(res.data.message);
+    //                     }
+    //                 }
+    //             )
+    //         }
+    //     },
+    //     []
+    // )
 
     const handleUpdateMatchInfoFromDataSourceButtonPress = () => {
         setUpdateMatchInfoFromDataSourceDisabled(true);
-        setErrorMessage("");
+        props.setErrorMessage("");
         setIsLoading(true);
         setSuccessMatches([]);
         setErrorMatches([]);
         MatchService.updateTeamMatches(
             teamId!,
-            selectedSeason
+            props.selectedSeason
         ).then(
             (res:BackendResponse) => {
                 if (res.success) {
@@ -98,7 +108,7 @@ export const TeamScrape = () => {
                     handleMatchesResponse(matches);
                     // setUpdatePlayerPerformanceDataDisabled(false);
                 } else {
-                    setErrorMessage(res.data.message);
+                    props.setErrorMessage(res.data.message);
                 }
                 setUpdateMatchInfoFromDataSourceDisabled(false);
                 setIsLoading(false);
@@ -127,13 +137,9 @@ export const TeamScrape = () => {
         setStartUpdateDisabled(false);
     }
 
-    const handleSeasonSelect = (event:SelectChangeEvent) => {
-        setSelectedSeason(event.target.value as string);
-    }
-
     const handleStartUpdateButtonPress = () => {
         setStartUpdateDisabled(true);
-        setErrorMessage("");
+        props.setErrorMessage("");
         setIsLoading(true);
         var matchIds = [];
         for (const [idx, match] of allMatches.entries()) {
@@ -150,7 +156,7 @@ export const TeamScrape = () => {
                     handleMatchesResponse(matches);
                     setIsPlayerInfoView(false);
                 } else {
-                    setErrorMessage(response.data.message);
+                    props.setErrorMessage(response.data.message);
                 }
                 setStartUpdateDisabled(false);
                 setIsLoading(false);
@@ -161,17 +167,17 @@ export const TeamScrape = () => {
     const handleViewCurrentMatchesClick = () => {
         setViewCurrentMatchesDisabled(true);
         setIsLoading(true);
-        setErrorMessage("");
+        props.setErrorMessage("");
         MatchService.getCurrentMatches(
             teamId!,
-            selectedSeason
+            props.selectedSeason
         ).then(
             (response:BackendResponse) => {
                 if (response.success) {
                     const matches:Match[] = response.data;
                     handleMatchesResponse(matches);
                 } else {
-                    setErrorMessage(response.data.message)
+                    props.setErrorMessage(response.data.message)
                 }
                 setIsLoading(false);
                 setViewCurrentMatchesDisabled(false);
@@ -185,16 +191,16 @@ export const TeamScrape = () => {
     const handleUpdateListButtonPress = () => {
         setUpdateListDisabled(true);
         setIsLoading(true);
-        setErrorMessage("");
+        props.setErrorMessage("");
         SeasonService.updateSeasons(
             teamId!
         ).then(
             (response:BackendResponse) => {
                 if (response.success) {
-                    setSeasons(response.data);
-                    setSelectedSeason(response.data[0].season_id);
+                    props.setSeasons(response.data);
+                    props.setSelectedSeason(response.data[0].season_id);
                 } else {
-                    setErrorMessage(response.data.message)
+                    props.setErrorMessage(response.data.message)
                 }
                 setIsLoading(false);
                 setUpdateListDisabled(false);
@@ -255,44 +261,21 @@ export const TeamScrape = () => {
 
     return (
         <div className='page-parent'>
-            {/* <h1 className="big-h1-title">
-                {team?.team_name}
-            </h1> */}
-            {getBigTitle(team?.team_name)}
+            {getBigTitle(props.team.team_name)}
             <div id='team-scrape-content'>
                 <TeamLinkBar
-                    isClubAdmin={getIsClubAdmin(user, team?.club_id!)}
-                    clubId={team?.club_id!}
-                    team={team!}
+                    isClubAdmin={getIsClubAdmin(user, props.team.club_id!)}
+                    clubId={props.team.club_id!}
+                    team={props.team}
                 />
                 <div id='team-scrape-2'>
                     <div id='team-scrape-input-parent'>
-                        <div id='team-scrape-season-div'>
-                            <strong id='team-scrape-season-label'>
-                                Season
-                            </strong>
-                            <FormControl>
-                                <Select
-                                    value={selectedSeason}
-                                    onChange={handleSeasonSelect}
-                                >
-                                    {
-                                        seasons.map(
-                                            (season:Season) => {
-                                                return (
-                                                    <MenuItem
-                                                        key={season.season_id}
-                                                        value={season.season_id}
-                                                    >
-                                                        {season.season_name}
-                                                    </MenuItem>
-                                                )
-                                            }
-                                        )
-                                    }
-                                </Select>
-                            </FormControl>
-                        </div>
+                        <SeasonSelection
+                            seasons={props.seasons}
+                            selectedSeason={props.selectedSeason}
+                            setSelectedSeason={props.setSelectedSeason}
+                            flexDirection='column'
+                        />
                         <div id='team-scrape-buttons-div'>
                             <TeamScrapeButtonColumn
                                 title="MATCH INFO"
@@ -320,7 +303,7 @@ export const TeamScrape = () => {
                         isLoading ? <Loading/> : (
                             <>
                                 <p className="error-message">
-                                    {errorMessage}
+                                    {props.errorMessage}
                                 </p>
                                 {
                                     isPlayerInfoView ? (

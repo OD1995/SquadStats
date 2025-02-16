@@ -33,3 +33,9 @@ export enum METRIC {
     APPEARANCES = 'Appearances',
     GOALS = 'Goals'
 }
+
+export enum MANUAL_DATA_ENTRY_ACTION_TYPE {
+    ADD_NEW_SEASON = 'Add New Season',
+    ADD_NEW_MATCH = 'Add New Match',
+    EDIT_MATCH = 'Edit Match'
+}

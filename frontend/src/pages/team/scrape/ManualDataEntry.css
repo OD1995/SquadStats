@@ -1,0 +1,14 @@
+#manual-data-entry-type-option {
+    margin-left: 5vw;
+}
+
+#new-season-name-input {
+    margin-left: 5vw;
+    margin-top: 3vh;
+    width: 250px;
+}
+
+#new-season-input {
+    display: flex;
+    flex-direction: column;
+}

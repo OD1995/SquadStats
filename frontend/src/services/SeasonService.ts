@@ -30,6 +30,19 @@ class SeasonService {
             }
         )
     }
+
+    createNewSeason(
+        teamId:string,
+        seasonName:string
+    ) {
+        return makePostRequest(
+            this.base_url + "/create-new-season",
+            {
+                teamId,
+                seasonName
+            }
+        )
+    }
 }
 
 export default new SeasonService();

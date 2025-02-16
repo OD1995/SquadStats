@@ -1,8 +1,7 @@
-import { ChangeEvent, MouseEventHandler, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { getBigTitle } from "../../helpers/other";
-import UserManagementService from "../../services/UserManagementService";
 import "./ForgottenOrResetPassword.css";
-import { BackendResponse } from "../../types/BackendResponse";
+import { ButtonDiv } from "../../generic/ButtonDiv";
 
 interface OwnProps {
     pageTitle:string
@@ -31,7 +30,19 @@ export const ForgottenOrResetPassword = (props:OwnProps) => {
                     value={text}
                     onChange={onChangeText}
                 />
-                <div id='for-password-button-div'>
+                <ButtonDiv
+                    buttonDisabled={buttonDisabled}
+                    buttonText="Submit"
+                    onClickFunction={
+                        () => props.handleClick(
+                            text,
+                            setButtonDisabled,
+                            setBackendResponse,
+                            setBackendResponseColour
+                        )
+                    }
+                />
+                {/* <div id='for-password-button-div'>
                     <button
                         id='for-password-button'
                         className={"ss-green-button" + (buttonDisabled ? " disabled-button" : "")}
@@ -47,7 +58,7 @@ export const ForgottenOrResetPassword = (props:OwnProps) => {
                     >
                         Submit
                     </button>
-                </div>
+                </div> */}
                 <div style={{color:backendResponseColour, maxWidth: "100%"}}>
                     {backendResponse}
                 </div>
