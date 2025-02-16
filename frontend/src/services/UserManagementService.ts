@@ -32,6 +32,28 @@ class UserManagementService {
             }
         )
     }
+
+    sendResetPasswordEmail(email:string) {
+        return makePostRequest(
+            this.base_url + "/forgotten-password",
+            {
+                email
+            }
+        )
+    }
+
+    setNewPassword(
+        newPassword:string,
+        resetToken:string
+    ) {
+        return makePostRequest(
+            this.base_url + "/reset-password",
+            {
+                newPassword,
+                resetToken
+            }
+        )
+    }
 }
 
 export default new UserManagementService();

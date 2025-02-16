@@ -25,6 +25,8 @@ import { ClubPlayersOverviewSelector } from './pages/club/ClubPlayersOverviewSel
 import { PlayerTeamsOverviewSelector } from './pages/player/PlayerTeamsOverviewSelector';
 import { TeamPlayersOverviewSelector } from './pages/team/TeamPlayersOverviewSelector';
 import { ClubAddTeam } from './pages/club/ClubAddTeam';
+import { ForgottenPassword } from './pages/login/ForgottenPassword';
+import { ResetPassword } from './pages/login/ResetPassword';
 
 
 const App = () => {
@@ -44,6 +46,8 @@ const App = () => {
 						<Route path='/abrORDOB' element={<AbrORDOB/>}/>
 						<Route path='/register' element={<Register/>}/>
 						<Route path='/login' element={<Login/>}/>
+						<Route path='/forgotten-password' element={<ForgottenPassword/>}/>
+						<Route path='/reset-password' element={<ResetPassword/>}/>
 						<Route path='/get-started' element={<GetStarted/>}/>
 						<Route path='/add-club' element={<AddClub includeHeirachy={false}/>}/>
 						<Route path='/my-clubs' element={<MyClubs/>}/>

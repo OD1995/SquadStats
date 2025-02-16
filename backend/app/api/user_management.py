@@ -1,5 +1,12 @@
-from flask import Blueprint, request, session
-import flask_praetorian
+import traceback
+from flask import Blueprint, jsonify, request#, session
+# from flask_mailman import EmailMessage
+from flask_praetorian.exceptions import (
+    InvalidTokenHeader,
+    InvalidResetToken,
+    MissingToken,
+    MisusedRegistrationToken
+)
 from app import guard, db
 from app.models.User import User
 
@@ -49,15 +56,55 @@ def refresh():
         'new_token' : new_token
     }, 200
 
-@user_management_bp.route("/reset-password")
-@flask_praetorian.auth_required
-def reset_password():    
-    req = request.get_json(force=True)
-    email = req.get('email', None)
-    new_password = req.get('password', None)    
-    user = db.session.query(User).get(email=email)
-    user.password = guard.hash_password(new_password)
-    db.session.commit()
-    return {
-        "message" : "Password reset"
-    }, 200
+@user_management_bp.route("/forgotten-password", methods=['POST'])
+def forgotten_password():
+    try:
+        req = request.get_json(force=True)
+        email = req.get('email', None)
+        user = db.session.query(User) \
+            .filter_by(email=email) \
+            .first()
+        guard.send_reset_email(
+            email=email,
+            user=user
+        )
+        return jsonify(
+            {
+                "message" : "Password reset email sent"
+            }
+        )
+    except Exception as e:
+        return {
+            'message' : traceback.format_exc()
+        }, 400
+    
+@user_management_bp.route("/reset-password", methods=['POST'])
+def reset_password():
+    try:
+        req = request.get_json(force=True)
+        new_password = req.get('newPassword', None)
+        reset_token = req.get('resetToken', None)
+        token_user = guard.validate_reset_token(reset_token)
+        if token_user is None:
+            return jsonify(
+                {
+                    "message" : "Invalid request. No user found matching supplied token."
+                }
+            ), 400
+        token_user.password = guard.hash_password(new_password)
+        db.session.commit()
+        return jsonify(
+            {
+                "message" : "Your password has been reset, please go to the Login page"
+            }
+        )
+    except (InvalidTokenHeader, InvalidResetToken, MissingToken, MisusedRegistrationToken):
+        return jsonify(
+                {
+                    "message" : "Invalid token in reset URL. Please renew your password reset request."
+                }
+            ), 400
+    except Exception as e:
+        return {
+            'message' : traceback.format_exc()
+        }, 400

@@ -1,5 +1,5 @@
 import { ChangeEvent, useEffect, useState } from "react";
-import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { PAGE_TYPE } from "../types/enums";
 import { useDispatch } from "react-redux";
 import './LoginOrRegster.css';
@@ -21,7 +21,7 @@ export const LoginOrRegister = (props:LoginOrRegisterProps) => {
     const [submitErrorColour, setSubmitErrorColour] = useState("black");
     const [buttonDisabled, setButtonDisabled] = useState(false);
 
-    const [searchParams, setSearchParams] = useSearchParams();   
+    const [searchParams, setSearchParams] = useSearchParams();
     const navigate = useNavigate(); 
     const dispatch = useDispatch();
     const user = getUserLS();
@@ -136,8 +136,8 @@ export const LoginOrRegister = (props:LoginOrRegisterProps) => {
                     </p>
                     {
                         (props.pageType == PAGE_TYPE.LOGIN) && (
-                            <a
-                                href="/forgotten-password/email-entry"
+                            <Link
+                                to="/forgotten-password"
                                 style={{
                                     gridRow: 5,
                                     gridColumnStart: 1,
@@ -145,7 +145,7 @@ export const LoginOrRegister = (props:LoginOrRegisterProps) => {
                                 }}
                             >
                                 Forgotten Password?
-                            </a>
+                            </Link>
                         )
                     }
                 </div>

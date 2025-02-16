@@ -131,3 +131,14 @@ export const getOverviewRowCount = (
     }
     return rowCount;
 }
+
+// export const wait = (seconds:number) => {
+//     return new Promise(res => setTimeout(res, seconds));
+// }
+
+// function msleep(secs:number) {
+//     Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, secs);
+// }
+// export const sleep = (secs:number) => {
+//     msleep(secs*1000);
+// }
