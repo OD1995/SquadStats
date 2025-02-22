@@ -7,6 +7,7 @@ import { LoginOrRegister } from "../../generic/LoginOrRegister";
 import { PAGE_TYPE } from "../../types/enums";
 import { UnknownAction } from "@reduxjs/toolkit";
 import { setUserLS } from "../../authentication/auth";
+import { User } from "../../types/User";
 
 
 export const Register = () => {
@@ -52,7 +53,8 @@ export const Register = () => {
                 (res:BackendResponse) => {
                     if (res.success) {
                         setRegisterResultColour("green");
-                        setUserLS(res.data.ss_user);
+                        const user = res.data.ss_user as User;
+                        setUserLS(user);
                         dispatch(triggerRefresh());
                         navigate("/get-started");
                     } else {

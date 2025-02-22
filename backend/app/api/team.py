@@ -54,8 +54,8 @@ def create_team():
         db.session.commit()
         current_user = flask_praetorian.current_user()
         return {
-            **current_user.get_ss_user_data(),
-            **{"new_team_id" : new_team.team_id}
+            "ss_user" : current_user.get_ss_user_data(),
+            "new_team_id" : new_team.team_id
         }, 200
     except Exception as e:
         return {

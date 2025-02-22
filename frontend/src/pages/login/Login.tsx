@@ -6,6 +6,7 @@ import { UnknownAction } from "@reduxjs/toolkit";
 import { LoginOrRegister } from "../../generic/LoginOrRegister";
 import { PAGE_TYPE } from "../../types/enums";
 import { setUserLS } from "../../authentication/auth";
+import { User } from "../../types/User";
 
 
 
@@ -26,9 +27,14 @@ export const Login = () => {
         ).then(
             (res:BackendResponse) => {
                 if (res.success) {
-                    setUserLS(res.data.ss_user);
+                    const user = res.data.ss_user as User;
+                    setUserLS(user);
                     dispatch(triggerRefresh());
-                    navigate("/my-clubs");
+                    if (user.clubs.length > 0) {
+                        navigate("/my-clubs");
+                    } else {
+                        navigate("/get-started");
+                    }
                 } else {
                     setLoginErrorColour("red");
                     setLoginError(res.data.message);

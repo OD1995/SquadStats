@@ -11,7 +11,7 @@ export const CompletelyNew = () => {
     return (
         <div
             id='completely-new-parent'
-            className="add-club-section"
+            className="add-cot-section"
         >
             <DataSource
                 dataSource={dataSource}

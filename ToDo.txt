@@ -10,9 +10,12 @@ get_team_matches for manual entry team
 
 Maybe combine backend calls for team and club overview pages
 
+Better description of how to use the Update Data page
+
 NEXT when creating new manual entry club
 decide on logic for club's share(?) id
 
+alembic init alembic
 alembic revision --autogenerate -m "comment"
 alembic upgrade head
 

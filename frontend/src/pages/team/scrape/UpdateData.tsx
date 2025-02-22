@@ -9,12 +9,15 @@ import { DATA_SOURCE } from "../../../types/enums";
 import { TeamScrape } from "./TeamScrape";
 import { ManualDataEntry } from "./ManualDataEntry";
 import { Season } from "../../../types/Season";
+import { League } from "../../../types/League";
 
 export const UpdateData = () => {
 
     const [team, setTeam] = useState<Team>();
-    const [selectedSeason, setSelectedSeason] = useState("");
     const [seasons, setSeasons] = useState<Season[]>([]);
+    const [selectedSeason, setSelectedSeason] = useState("");
+    const [leagues, setLeagues] = useState<League[]>([]);
+    const [selectedLeague, setSelectedLeague] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
 
     let { teamId } = useParams();
@@ -28,14 +31,20 @@ export const UpdateData = () => {
             } else {
                 const _team_ = getTeam(user, teamId);
                 setTeam(_team_!);
-                SeasonService.getTeamSeasons(
+                SeasonService.getTeamLeaguesAndSeasons(
                     teamId!
                 ).then(
                     (res:BackendResponse) => {
                         if (res.success) {
-                            setSeasons(res.data);
-                            if (res.data.length > 0) {
-                                setSelectedSeason(res.data[0].season_id);
+                            const ssns = res.data.seasons as Season[]
+                            setSeasons(ssns);
+                            const lgs = res.data.leagues as League[]
+                            setLeagues(lgs);
+                            if (ssns.length > 0) {
+                                setSelectedSeason(ssns[0].season_id);
+                            }
+                            if (lgs.length > 0) {
+                                setSelectedSeason(lgs[0].league_id);
                             }
                         } else {
                             setErrorMessage(res.data.message);
@@ -55,6 +64,9 @@ export const UpdateData = () => {
                     seasons={seasons}
                     selectedSeason={selectedSeason}
                     setSelectedSeason={setSelectedSeason}
+                    leagues={leagues}
+                    selectedLeague={selectedLeague}
+                    setSelectedLeague={setSelectedLeague}
                 />
             )
         } else {

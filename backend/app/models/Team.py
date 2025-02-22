@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List
+from typing import TYPE_CHECKING, List
 from uuid import UUID, uuid4
 from sqlalchemy import Enum, ForeignKey, String
 from app import db
@@ -12,6 +12,10 @@ from app.models.TeamName import TeamName
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.types.enums import Sport as SportEnum, DataSource as DataSourceEnum
 
+if TYPE_CHECKING:
+    from app.models.TeamSeason import TeamSeason
+else:
+    TeamSeason = 'TeamSeason'
 
 @dataclass
 class Team(Base):
@@ -40,6 +44,7 @@ class Team(Base):
     club: Mapped[Club] = relationship(back_populates='teams')
     team_leagues: Mapped[List["TeamLeague"]] = relationship(lazy='joined')
     data_source: Mapped[DataSource] = relationship(lazy='joined')
+    team_seasons:Mapped[List["TeamSeason"]] = relationship(back_populates='team')
 
     def __init__(
         self,

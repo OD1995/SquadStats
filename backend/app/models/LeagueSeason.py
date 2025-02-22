@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from uuid import UUID, uuid4
-from sqlalchemy import String, ForeignKey
+from sqlalchemy import String, ForeignKey, null
 from app.models import Base
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.models.League import League
@@ -13,12 +13,14 @@ class LeagueSeason(Base):
     league_season_id: Mapped[UUID] = mapped_column(primary_key=True)
     league_id: Mapped[UUID] = mapped_column(
         ForeignKey("leagues.league_id", name="fk_leagues_league_id"),
-        index=True,
-        primary_key=True
+        index=True
     )
-    data_source_league_season_id: Mapped[str] = mapped_column(String(50), primary_key=True)
+    data_source_league_season_id: Mapped[str] = mapped_column(
+        String(50),
+        nullable=True
+    )
     data_source_season_name: Mapped[str] = mapped_column(String(100))
-    league: Mapped[League] = relationship(lazy='joined')
+    league: Mapped[League] = relationship(back_populates='league_seasons')
 
     def __init__(
         self,

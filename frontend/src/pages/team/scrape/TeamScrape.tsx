@@ -52,45 +52,6 @@ export const TeamScrape = (props:OwnProps) => {
 
     let { teamId } = useParams();
     const user = getUserLS();
-    // const navigate = useNavigate();
-
-    // useEffect(
-    //     () => {
-    //         if (!user) {
-    //             navigate("/about");
-    //         } else {
-    //             var _team_ = getTeam(user, teamId);
-    //             if (_team_) {
-    //                 setTeam(_team_);
-    //             } else {
-    //                 TeamService.getTeamInformation(
-    //                     teamId!
-    //                 ).then(
-    //                     (res:BackendResponse) => {
-    //                         if (res.success) {
-    //                             setTeam(res.data);
-    //                         } else {
-    //                             setErrorMessage(res.data.message);
-    //                         }
-    //                     }
-    //                 )
-    //             }
-    //             SeasonService.getTeamSeasons(
-    //                 teamId!
-    //             ).then(
-    //                 (res:BackendResponse) => {
-    //                     if (res.success) {
-    //                         setSeasons(res.data);
-    //                         setSelectedSeason(res.data[0].season_id);
-    //                     } else {
-    //                         setErrorMessage(res.data.message);
-    //                     }
-    //                 }
-    //             )
-    //         }
-    //     },
-    //     []
-    // )
 
     const handleUpdateMatchInfoFromDataSourceButtonPress = () => {
         setUpdateMatchInfoFromDataSourceDisabled(true);

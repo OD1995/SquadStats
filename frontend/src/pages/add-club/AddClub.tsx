@@ -32,12 +32,9 @@ export const AddClub = (props:AddClubProps) => {
 
     return (
         <div className='page-parent'>
-            {/* <h1 className="big-h1-title">
-                Add Club
-            </h1> */}
             {getBigTitle("Add Club")}
             {
-                props.includeHeirachy && (
+                (props.includeHeirachy || (user?.clubs.length == 0)) && (
                     <HeirachyDescription/>
                 )
             }

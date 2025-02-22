@@ -9,6 +9,7 @@ import { triggerRefresh } from "../../store/slices/userSlice";
 import { useNavigate } from "react-router-dom";
 import { setUserLS } from "../../authentication/auth";
 import TeamService from "../../services/TeamService";
+import { User } from "../../types/User";
 
 interface OwnProps {
     clubType?:CLUB_TYPE
@@ -39,7 +40,8 @@ export const NewClubOrTeamSubmit = (props:OwnProps) => {
             ).then(
                 (res:BackendResponse) => {
                     if (res.success) {
-                        setUserLS(res.data.ss_user);
+                        const user = res.data.ss_user as User;
+                        setUserLS(user);
                         dispatch(triggerRefresh());
                         navigate(`/club/${res.data.new_club_id}/overview`);
                     } else {
@@ -57,7 +59,8 @@ export const NewClubOrTeamSubmit = (props:OwnProps) => {
             ).then(
                 (res:BackendResponse) => {
                     if (res.success) {
-                        setUserLS(res.data.ss_user);
+                        const user = res.data.ss_user as User;
+                        setUserLS(user);
                         dispatch(triggerRefresh());
                         navigate(`/team/${res.data.new_team_id}/overview`);
                     } else {

@@ -1,8 +1,8 @@
 """initial migration
 
-Revision ID: de9d4426c8e9
+Revision ID: eb9edaeda121
 Revises: 
-Create Date: 2024-11-28 14:50:46.749312
+Create Date: 2025-02-22 21:54:07.255992
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'de9d4426c8e9'
+revision: str = 'eb9edaeda121'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -73,8 +73,8 @@ def upgrade() -> None:
     op.create_table('leagues',
     sa.Column('league_id', sa.Uuid(), nullable=False),
     sa.Column('league_name', sa.String(length=100), nullable=False),
-    sa.Column('data_source_league_id', sa.String(length=50), nullable=False),
-    sa.Column('data_source_id', sa.Enum('FOOTBALL_ASSOCIATION', 'MANUAL', name='datasource'), nullable=False),
+    sa.Column('data_source_league_id', sa.String(length=50), nullable=True),
+    sa.Column('data_source_id', sa.Enum('FOOTBALL_ASSOCIATION', 'MANUAL', name='datasource'), nullable=True),
     sa.ForeignKeyConstraint(['data_source_id'], ['data_sources.data_source_id'], name='fk_data_sources_data_source_id'),
     sa.PrimaryKeyConstraint('league_id'),
     mysql_engine='InnoDB'
@@ -84,6 +84,7 @@ def upgrade() -> None:
     sa.Column('metric_id', sa.Uuid(), nullable=False),
     sa.Column('data_source_id', sa.Enum('FOOTBALL_ASSOCIATION', 'MANUAL', name='datasource'), nullable=False),
     sa.Column('metric_name', sa.String(length=50), nullable=False),
+    sa.Column('better_metric_name', sa.String(length=50), nullable=True),
     sa.ForeignKeyConstraint(['data_source_id'], ['data_sources.data_source_id'], name='fk_data_sources_data_source_id'),
     sa.PrimaryKeyConstraint('metric_id'),
     mysql_engine='InnoDB'
@@ -93,7 +94,7 @@ def upgrade() -> None:
     sa.Column('player_id', sa.Uuid(), nullable=False),
     sa.Column('club_id', sa.Uuid(), nullable=False),
     sa.Column('data_source_player_name', sa.String(length=100), nullable=False),
-    sa.Column('better_player_name', sa.String(length=100), nullable=False),
+    sa.Column('better_player_name', sa.String(length=100), nullable=True),
     sa.ForeignKeyConstraint(['club_id'], ['clubs.club_id'], name='fk_clubs_club_id'),
     sa.PrimaryKeyConstraint('player_id'),
     mysql_engine='InnoDB'
@@ -103,8 +104,8 @@ def upgrade() -> None:
     sa.Column('team_id', sa.Uuid(), nullable=False),
     sa.Column('club_id', sa.Uuid(), nullable=False),
     sa.Column('sport_id', sa.Enum('FOOTBALL', name='sport'), nullable=False),
-    sa.Column('data_source_id', sa.Enum('FOOTBALL_ASSOCIATION', 'MANUAL', name='datasource'), nullable=False),
-    sa.Column('data_source_team_id', sa.String(length=100), nullable=False),
+    sa.Column('data_source_id', sa.Enum('FOOTBALL_ASSOCIATION', 'MANUAL', name='datasource'), nullable=True),
+    sa.Column('data_source_team_id', sa.String(length=100), nullable=True),
     sa.ForeignKeyConstraint(['club_id'], ['clubs.club_id'], name='fk_clubs_club_id'),
     sa.ForeignKeyConstraint(['data_source_id'], ['data_sources.data_source_id'], name='fk_data_sources_data_source_id'),
     sa.ForeignKeyConstraint(['sport_id'], ['sports.sport_id'], name='fk_sports_sport_id'),
@@ -117,10 +118,10 @@ def upgrade() -> None:
     op.create_table('league_seasons',
     sa.Column('league_season_id', sa.Uuid(), nullable=False),
     sa.Column('league_id', sa.Uuid(), nullable=False),
-    sa.Column('data_source_league_season_id', sa.String(length=50), nullable=False),
+    sa.Column('data_source_league_season_id', sa.String(length=50), nullable=True),
     sa.Column('data_source_season_name', sa.String(length=100), nullable=False),
     sa.ForeignKeyConstraint(['league_id'], ['leagues.league_id'], name='fk_leagues_league_id'),
-    sa.PrimaryKeyConstraint('league_season_id', 'league_id', 'data_source_league_season_id'),
+    sa.PrimaryKeyConstraint('league_season_id'),
     mysql_engine='InnoDB'
     )
     op.create_index(op.f('ix_league_seasons_league_id'), 'league_seasons', ['league_id'], unique=False)
@@ -157,7 +158,7 @@ def upgrade() -> None:
     op.create_index(op.f('ix_team_seasons_team_id'), 'team_seasons', ['team_id'], unique=False)
     op.create_table('competitions',
     sa.Column('competition_id', sa.Uuid(), nullable=False),
-    sa.Column('data_source_competition_id', sa.String(length=100), nullable=False),
+    sa.Column('data_source_competition_id', sa.String(length=100), nullable=True),
     sa.Column('competition_name', sa.String(length=100), nullable=False),
     sa.Column('team_season_id', sa.Uuid(), nullable=False),
     sa.ForeignKeyConstraint(['team_season_id'], ['team_seasons.team_season_id'], name='fk_team_seasons_team_season_id'),
@@ -182,6 +183,7 @@ def upgrade() -> None:
     sa.Column('time', sa.Time(), nullable=True),
     sa.Column('location', sa.String(length=100), nullable=True),
     sa.Column('home_away_neutral', sa.Enum('HOME', 'AWAY', 'NEUTRAL', name='homeawayneutral'), nullable=True),
+    sa.Column('notes', sa.String(length=100), nullable=True),
     sa.ForeignKeyConstraint(['competition_id'], ['competitions.competition_id'], name='fk_competitions_competition_id'),
     sa.ForeignKeyConstraint(['team_season_id'], ['team_seasons.team_season_id'], name='team_seasons_team_season_id'),
     sa.PrimaryKeyConstraint('match_id'),

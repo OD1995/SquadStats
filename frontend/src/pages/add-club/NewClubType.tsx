@@ -16,7 +16,7 @@ export const NewClubType = (props:NewClubTypeProps) => {
     return (
         <div
             id='new-club-type-parent'
-            className="add-club-section"
+            className="add-cot-section"
         >
             <FormControl>
                 <FormLabel disabled={true}>

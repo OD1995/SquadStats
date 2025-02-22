@@ -3,11 +3,13 @@ import traceback
 from uuid import UUID
 from flask import Blueprint, jsonify, request
 from app import db
+from app.api import team
 from app.data_handlers.MatchesFilterDataHandler import MatchesFilterDataHandler
 from app.models.League import League
 from app.models.LeagueSeason import LeagueSeason
 from app.models.Team import Team
 from app.models.TeamLeague import TeamLeague
+from app.models.TeamSeason import TeamSeason
 from app.scrapers.clubs.FootballAssociationClubScraper import FootballAssociationClubScraper
 from app.types.enums import DataSource as DataSourceEnum
 
@@ -17,14 +19,14 @@ season_bp = Blueprint(
     import_name=__name__
 )
 
-@season_bp.route("/get-team-seasons/<team_id>", methods=['GET']) #
+@season_bp.route("/get-team-leagues-and-seasons/<team_id>", methods=['GET']) #
 def get_team_seasons(team_id):
     try:
         matches_filter_data_handler = MatchesFilterDataHandler(
             club_id=None,
             team_id=team_id
         )
-        return jsonify(matches_filter_data_handler.get_team_seasons()), 200
+        return jsonify(matches_filter_data_handler.get_team_leagues_and_seasons()), 200
     except Exception as e:
         return {
             'message' : traceback.format_exc()
@@ -111,6 +113,55 @@ def update_seasons():
             for x in league_seasons
         ]
         return jsonify(league_season_info_list)
+    except Exception as e:
+        return {
+            'message' : traceback.format_exc()
+        }, 400
+    
+@season_bp.route("/create-new-league-and-season", methods=['POST'])
+def create_new_league_and_season():
+    try:
+        req = request.get_json(force=True)
+        league_name = req.get('leagueName')
+        season_name = req.get('seasonName')
+        team_id = UUID(req.get('teamId'))
+        new_league = League(
+            league_name=league_name,
+            data_source_league_id=None,
+            data_source_id=None
+        )
+        new_team_league = TeamLeague(
+            team_id=team_id,
+            league_id=new_league.league_id
+        )
+        new_league_season = LeagueSeason(
+            league_id=new_league.league_id,
+            data_source_season_name=season_name,
+            data_source_league_season_id=None
+        )
+        new_team_season = TeamSeason(
+            team_id=team_id,
+            league_season_id=new_league_season.league_season_id
+        )
+        db.session.add(new_league)
+        db.session.add(new_team_league)
+        db.session.add(new_league_season)
+        db.session.add(new_team_season)
+        db.session.commit()
+        return jsonify({
+            "message" : "This is a temporary message"
+        }), 200
+    except Exception as e:
+        return {
+            'message' : traceback.format_exc()
+        }, 400
+
+@season_bp.route("/create-new-season", methods=['POST'])
+def create_new_season():
+    try:
+        req = request.get_json(force=True)
+        new_season = S
+        return jsonify(matches_filter_data_handler.get_club_seasons()), 200
     except Exception as e:
         return {
             'message' : traceback.format_exc()

@@ -20,13 +20,11 @@ instance.interceptors.response.use(
         if (err.response) {
             if ((err.response.status == 401) && err.response.data) {
                 if (err.response.data.error == 'ExpiredAccessError') {
-                    // const user = store.getState().userSlice.user;
                     const user = getUserLS();
                     UserManagementService.refreshAccessToken(
                         user?.access_token
                     ).then(
                         (res:BackendResponse) => {
-                            // store.dispatch(setUser(res.data.ss_user))
                             setNewAccessToken(res.data.new_token);
                             store.dispatch(triggerRefresh());
                         }

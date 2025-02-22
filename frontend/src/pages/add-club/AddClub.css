@@ -27,3 +27,14 @@
     flex-direction: row;
     padding-bottom: 2vh;
 }
+
+#heirachy-text {
+    font-size: x-small;
+    width: 80vw;
+    text-align: center;
+}
+
+#heirachy-text-div {
+    display: flex;
+    justify-content: center;
+}

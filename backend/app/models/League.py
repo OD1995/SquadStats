@@ -8,9 +8,10 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 if TYPE_CHECKING:
     from app.models.TeamLeague import TeamLeague
+    from app.models.LeagueSeason import LeagueSeason    
 else:
     TeamLeague = 'TeamLeague'
-
+    LeagueSeason = 'LeagueSeason'
 
 @dataclass
 class League(Base):
@@ -19,13 +20,15 @@ class League(Base):
 
     league_id: Mapped[UUID] = mapped_column(primary_key=True)
     league_name: Mapped[str] = mapped_column(String(100))
-    data_source_league_id: Mapped[str] = mapped_column(String(50))
+    data_source_league_id: Mapped[str] = mapped_column(String(50), nullable=True)
     data_source_id: Mapped[DataSourceEnum] = mapped_column(
         Enum(DataSourceEnum),
         ForeignKey("data_sources.data_source_id", name='fk_data_sources_data_source_id'),
-        index=True
+        index=True,
+        nullable=True
     )
     team_leagues: Mapped[List[TeamLeague]] = relationship(back_populates='league')
+    league_seasons: Mapped[List[LeagueSeason]] = relationship(back_populates='league')
 
     def __init__(
         self,
@@ -37,3 +40,10 @@ class League(Base):
         self.league_name = league_name
         self.data_source_league_id = data_source_league_id
         self.data_source_id = data_source_id
+
+    def get_league_info(self):
+        return {
+            'league_id' : self.league_id,
+            'league_name' : self.league_name,
+            'league_seasons' : [ls.get_league_season_info() for ls in self.league_seasons]
+        }

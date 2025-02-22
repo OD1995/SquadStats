@@ -26,7 +26,7 @@ class TeamSeason(Base):
         ForeignKey("league_seasons.league_season_id", name="fk_league_seasons_league_season_id"),
         index=True
     )
-    team: Mapped[Team] = relationship(lazy='joined')
+    team: Mapped[Team] = relationship(back_populates='team_seasons')
     league_season: Mapped[LeagueSeason] = relationship(lazy='joined')
     matches: Mapped[List["Match"]] = relationship(back_populates='team_season')
 

@@ -2,13 +2,13 @@
     margin-left: 5vw;
 }
 
-#new-season-name-input {
+.new-mde-name-input {
     margin-left: 5vw;
     margin-top: 3vh;
     width: 250px;
 }
 
-#new-season-input {
+.new-mde-input {
     display: flex;
     flex-direction: column;
 }

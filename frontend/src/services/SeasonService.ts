@@ -4,11 +4,11 @@ class SeasonService {
 
     base_url = "/season"
 
-    getTeamSeasons(
+    getTeamLeaguesAndSeasons(
         teamId:string
     ) {
         return makeGetRequest(
-            this.base_url + `/get-team-seasons/${teamId}`
+            this.base_url + `/get-team-leagues-and-seasons/${teamId}`
         )
     }
 
@@ -27,6 +27,21 @@ class SeasonService {
             this.base_url + `/update-seasons`,
             {
                 teamId
+            }
+        )
+    }
+
+    createNewLeagueAndSeason(
+        leagueName:string,
+        seasonName:string,
+        teamId:string,
+    ) {
+        return makePostRequest(
+            this.base_url + "/create-new-league-and-season",
+            {
+                leagueName,
+                seasonName,
+                teamId,
             }
         )
     }
