@@ -39,8 +39,11 @@ export const MatchesOrPlayersFilterOptional = (props:OwnProps) => {
         if (props.team) {
             return props.teamSeasons;
         }
-        if (props.clubSeasons && (props.selectedTeamId != "")) {
-            return props.clubSeasons[props.selectedTeamId]
+        // if (props.clubSeasons && (props.selectedTeamId != "")) {
+        //     return props.clubSeasons[props.selectedTeamId]
+        // }
+        if (props.club) {
+            return props.clubSeasons[props.selectedTeamId];
         }
         return []
     }

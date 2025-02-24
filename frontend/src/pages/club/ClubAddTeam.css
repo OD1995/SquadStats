@@ -5,13 +5,6 @@
     align-items: center;
 }
 
-#add-new-team-div {
-    width: 100vw;
-    display: flex;
-    justify-content: center;
-    margin-top: 0;
-}
-
 #add-new-team-text {
     margin-left: 5vw;
 }

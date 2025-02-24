@@ -125,3 +125,14 @@
 	font-size: 0.6em !important;
 	margin-left: 2vw;
 }
+
+.folded-mop-filter {
+    border: 1px solid black;
+    border-radius: 1vw;
+    background-color: #f6f6f6;
+    margin-left: 10vw;
+    margin-right: 10vw;
+    text-align: center;
+    font-weight: bold;
+    color: #646cff;
+}

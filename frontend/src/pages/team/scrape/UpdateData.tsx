@@ -19,6 +19,7 @@ export const UpdateData = () => {
     const [leagues, setLeagues] = useState<League[]>([]);
     const [selectedLeague, setSelectedLeague] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
+    const [allLoaded, setAllLoaded] = useState<boolean>(false);
 
     let { teamId } = useParams();
     const user = getUserLS();
@@ -44,11 +45,12 @@ export const UpdateData = () => {
                                 setSelectedSeason(ssns[0].season_id);
                             }
                             if (lgs.length > 0) {
-                                setSelectedSeason(lgs[0].league_id);
+                                setSelectedLeague(lgs[0].league_id);
                             }
                         } else {
                             setErrorMessage(res.data.message);
                         }
+                        setAllLoaded(true);
                     }
                 )
             }
@@ -67,6 +69,7 @@ export const UpdateData = () => {
                     leagues={leagues}
                     selectedLeague={selectedLeague}
                     setSelectedLeague={setSelectedLeague}
+                    allLoaded={allLoaded}
                 />
             )
         } else {

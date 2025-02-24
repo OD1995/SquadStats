@@ -6,6 +6,7 @@ interface OwnProps {
     selectedLeague:string
     setSelectedLeague:Function
     flexDirection:'row'|'column'
+    justifyContent?:string
 }
 
 export const LeagueSelection = (props:OwnProps) => {
@@ -18,7 +19,8 @@ export const LeagueSelection = (props:OwnProps) => {
         <div
             id='team-scrape-season-div'
             style={{
-                flexDirection: props.flexDirection
+                flexDirection: props.flexDirection,
+                justifyContent: props.justifyContent
             }}
         >
             <strong id='team-scrape-season-label'>

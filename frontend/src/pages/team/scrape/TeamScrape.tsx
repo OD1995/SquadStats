@@ -1,5 +1,5 @@
 import { FormControl, MenuItem, Select, SelectChangeEvent } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Team } from "../../../types/Team";
 import { getBigTitle, getIsClubAdmin } from "../../../helpers/other";
@@ -17,6 +17,7 @@ import SeasonService from "../../../services/SeasonService";
 import { TeamLinkBar } from "../generic/TeamLinkBar";
 import { getUserLS } from "../../../authentication/auth";
 import { SeasonSelection } from "../../../generic/SeasonSelection";
+import { Modal } from "../../../generic/Modal";
 
 interface OwnProps {
     team:Team
@@ -35,23 +36,28 @@ export const TeamScrape = (props:OwnProps) => {
     const [selectMatchesToUpdateDisabled, setSelectMatchesToUpdateDisabled] = useState(true);
     const [startUpdateDisabled, setStartUpdateDisabled] = useState(true);
     const [updateListDisabled, setUpdateListDisabled] = useState(false);
-    
-    // const [team, setTeam] = useState<Team>();
-    // const [errorMessage, setErrorMessage] = useState("");
     const [isLoading, setIsLoading] = useState(false);    
-    
-    // const [selectedSeason, setSelectedSeason] = useState("");
-    // const [seasons, setSeasons] = useState([]);
-
     const [isPlayerInfoView, setIsPlayerInfoView] = useState<boolean>(false);
     const [allMatches, setAllMatches] = useState<Match[]>([]);
     const [successMatches, setSuccessMatches] = useState<Match[]>([]);
     const [errorMatches, setErrorMatches] = useState<Match[]>([]);
     const [tickedBoxes, setTickedBoxes] = useState<boolean[]>([]);
     const [dataLoaded, setDataLoaded] = useState<boolean>(false);
+    const [showModal, setShowModal] = useState<boolean>(false);
 
     let { teamId } = useParams();
     const user = getUserLS();
+
+    useEffect(
+        () => {
+            if (props.selectedSeason == "") {
+                setViewCurrentMatchesDisabled(true);
+            } else {
+                setViewCurrentMatchesDisabled(false);
+            }
+        },
+        [props.selectedSeason]
+    )
 
     const handleUpdateMatchInfoFromDataSourceButtonPress = () => {
         setUpdateMatchInfoFromDataSourceDisabled(true);
@@ -93,7 +99,6 @@ export const TeamScrape = (props:OwnProps) => {
     }
 
     const handleSelectMatchesToUpdateButtonPress = () => {
-        // setIsLoading(true);
         setIsPlayerInfoView(true);
         setStartUpdateDisabled(false);
     }
@@ -220,15 +225,53 @@ export const TeamScrape = (props:OwnProps) => {
         placement: "bottom"
     } as TooltipButtonProps;
 
+    const modalContent = (
+        <div>
+            <h3>
+                Seasons
+            </h3>
+            <p>
+                Either select a season from the list or UPDATE LIST from the data source
+            </p>
+            <h3>
+                Match Info
+            </h3>
+            <p>
+                VIEW the matches for the season or UPDATE ALL from the data source
+            </p>
+            <h3>
+                Players
+            </h3>
+            <p>
+                SELECT MATCHES for their player performance data to be updated and then UPDATE
+            </p>
+        </div>
+    )
+
     return (
         <div className='page-parent'>
             {getBigTitle(props.team.team_name)}
+            {
+                showModal && (
+                    <Modal
+                        handleModalClose={() => setShowModal(false)}
+                        content={modalContent}
+                    />
+                )
+            }
             <div id='team-scrape-content'>
                 <TeamLinkBar
                     isClubAdmin={getIsClubAdmin(user, props.team.club_id!)}
                     clubId={props.team.club_id!}
                     team={props.team}
                 />
+                <button
+                    id='how-to-use-div'
+                    className="folded-mop-filter"
+                    onClick={() => setShowModal(true)}
+                >
+                    HOW TO USE
+                </button>
                 <div id='team-scrape-2'>
                     <div id='team-scrape-input-parent'>
                         <SeasonSelection
@@ -238,6 +281,12 @@ export const TeamScrape = (props:OwnProps) => {
                             flexDirection='column'
                         />
                         <div id='team-scrape-buttons-div'>
+                            <TeamScrapeButtonColumn
+                                title="SEASONS"
+                                buttonProps={[
+                                    seasonsUpdateList
+                                ]}
+                            />
                             <TeamScrapeButtonColumn
                                 title="MATCH INFO"
                                 buttonProps={[
@@ -250,12 +299,6 @@ export const TeamScrape = (props:OwnProps) => {
                                 buttonProps={[
                                     playersSelectMatches,
                                     playersUpdate
-                                ]}
-                            />
-                            <TeamScrapeButtonColumn
-                                title="SEASONS"
-                                buttonProps={[
-                                    seasonsUpdateList
                                 ]}
                             />
                         </div>

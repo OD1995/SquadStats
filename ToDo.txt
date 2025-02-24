@@ -15,6 +15,12 @@ Better description of how to use the Update Data page
 NEXT when creating new manual entry club
 decide on logic for club's share(?) id
 
+login navigation:
+ - if zero teams -> go to 'get started'
+ - if one team -> go to 'team overview'
+ - if one club -> go to 'club overview'
+ - otherwise, go to 'my clubs'
+
 alembic init alembic
 alembic revision --autogenerate -m "comment"
 alembic upgrade head

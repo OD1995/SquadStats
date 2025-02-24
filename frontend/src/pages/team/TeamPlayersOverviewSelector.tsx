@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { getUserLS } from "../../authentication/auth";
 import { useEffect, useState } from "react";
 import { Loading } from "../../generic/Loading";
-import { getBigTitle, getIsClubAdmin } from "../../helpers/other";
+import { getBigTitle, getIsClubAdmin, getTeam } from "../../helpers/other";
 import { OverviewOption, OverviewSelector } from "../../generic/OverviewSelector";
 import { BackendResponse } from "../../types/BackendResponse";
 import { Team } from "../../types/Team";
@@ -17,7 +17,6 @@ export const TeamPlayersOverviewSelector = () => {
     const [errorMessage, setErrorMessage] = useState("");
     const [playerOptions, setPlayerOptions] = useState<OverviewOption[]>([]);
     const [clubId, setClubId] = useState<string>();
-    const [teamName, setTeamName] = useState<string>();
     const [link, setLink] = useState<string>("");
     const [team, setTeam] = useState<Team>();
 
@@ -26,13 +25,17 @@ export const TeamPlayersOverviewSelector = () => {
 
     useEffect(
         () => {
+            var _team_ = getTeam(user, teamId);
+            if (_team_) {
+                setTeam(_team_);
+                setClubId(_team_.club_id);
+            }
             TeamService.getTeamPlayerInformation(
                 teamId!
             ).then(
                 (res:BackendResponse) => {
                     if (res.success) {
                         setClubId(res.data.club_id);
-                        setTeamName(res.data.team_name);
                         setPlayerOptions(getOptions(res.data.players));
                         setTeam(res.data.team);
                     } else {
@@ -62,29 +65,31 @@ export const TeamPlayersOverviewSelector = () => {
             )
         )
     }
-
-    if (isLoading) {
-        return <Loading/>
-    }
     
     return (
         <div className="page-parent">
-            {getBigTitle(teamName)}
+            {getBigTitle(team?.team_name)}
             <TeamLinkBar
                 clubId={clubId!}
                 isClubAdmin={getIsClubAdmin(user, clubId!)}
                 team={team!}
             />
-            <div className="error-message">
-                {errorMessage}
-            </div>
-            <OverviewSelector
-                label="Player"
-                overviewId={playerId}
-                setOverviewId={setPlayerId}
-                overviewOptions={playerOptions}
-                link={link}
-            />
+            {
+                isLoading ? (
+                    <>
+                        <div className="error-message">
+                            {errorMessage}
+                        </div>
+                        <OverviewSelector
+                            label="Player"
+                            overviewId={playerId}
+                            setOverviewId={setPlayerId}
+                            overviewOptions={playerOptions}
+                            link={link}
+                        />                    
+                    </>
+                ) : <Loading/>
+            }
         </div>
     );
 }

@@ -79,13 +79,17 @@ export const ClubTeamsOverviewSelector = () => {
             <div className="error-message">
                 {errorMessage}
             </div>
-            <OverviewSelector
-                label="Team"
-                overviewId={teamId}
-                setOverviewId={setTeamId}
-                overviewOptions={teamOptions}
-                link={link}
-            />
+            {
+                (teamOptions.length > 0) && (
+                    <OverviewSelector
+                        label="Team"
+                        overviewId={teamId}
+                        setOverviewId={setTeamId}
+                        overviewOptions={teamOptions}
+                        link={link}
+                    />
+                )
+            }
             <div id='add-new-team-div'>
                 <Link to={`/club/${clubId}/add-team`}>
                     Add new team

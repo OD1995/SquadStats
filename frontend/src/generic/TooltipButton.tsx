@@ -13,15 +13,17 @@ export interface TooltipButtonProps {
 export const TooltipButton = (props:TooltipButtonProps) => {
     return (
         <Tooltip title={props.tooltipText} placement={props.placement ?? "bottom"}>
-            <button
-                className={
-                    "ss-green-button ts-button" + (props.disabled ? " disabled-button " : " ") + (props.className)
-                }
-                onClick={props.handleClick}
-                disabled={props.disabled}
-            >
-                {props.buttonText}
-            </button>
+            <div style={{display:"flex", justifyContent:"center"}}>
+                <button
+                    className={
+                        "ss-green-button ts-button" + (props.disabled ? " disabled-button " : " ") + (props.className)
+                    }
+                    onClick={props.handleClick}
+                    disabled={props.disabled}
+                >
+                    {props.buttonText}
+                </button>
+            </div>
         </Tooltip>
     )
 }

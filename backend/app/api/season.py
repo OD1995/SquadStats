@@ -160,8 +160,27 @@ def create_new_league_and_season():
 def create_new_season():
     try:
         req = request.get_json(force=True)
-        new_season = S
-        return jsonify(matches_filter_data_handler.get_club_seasons()), 200
+        league_id = req.get('leagueId')
+        season_name = req.get('seasonName')
+        team_id = UUID(req.get('teamId'))
+        league = db.session.query(League) \
+            .filter_by(league_id=UUID(league_id)) \
+            .first()
+        new_league_season = LeagueSeason(
+            league_id=league.league_id,
+            data_source_season_name=season_name,
+            data_source_league_season_id=None
+        )
+        new_team_season = TeamSeason(
+            team_id=team_id,
+            league_season_id=new_league_season.league_season_id
+        )
+        db.session.add(new_league_season)
+        db.session.add(new_team_season)
+        db.session.commit()
+        return jsonify({
+            "message" : "This is a temporary message"
+        }), 200
     except Exception as e:
         return {
             'message' : traceback.format_exc()

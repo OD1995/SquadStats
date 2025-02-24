@@ -124,13 +124,12 @@ def get_team_player_information(team_id):
             .first()
         return jsonify(
             {
-                'team_name' : team.get_default_team_name(),
                 'club_id' : team.club_id,
                 'players' : [
                     p.to_dict()
                     for p in sorted(players, key=lambda x: x.get_best_name())
                 ],
-                'team' : team
+                'team' : team.get_team_info()
             }
         )
     except Exception as e:

@@ -22,12 +22,10 @@
     justify-content: space-around;
 }
 
-.team-scrape-input-row {
-    /* display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin-top: 1.5vh;
-    margin-bottom: 1.5vh; */
+#how-to-use-div {
+    margin-bottom: 2vh;
+    padding-top: 0.5vh;
+    padding-bottom: 0.5vh;
 }
 
 #team-scrape-buttons-div {

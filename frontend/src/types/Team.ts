@@ -1,7 +1,7 @@
 export interface Team {
     team_name: string
-    team_id: string
     sport: string
+    team_id: string
     club_id: string
     data_source_id: string
 }

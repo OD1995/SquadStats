@@ -54,6 +54,7 @@ class LeaderboardDataHandler(DataHandler):
         season_filter:str,
         opposition_filter:str|None,
         team_id_filter:str|None,
+        player_id_filter:str|None,
         per_game:bool|None,
         min_apps:int|None
     ):
@@ -73,6 +74,7 @@ class LeaderboardDataHandler(DataHandler):
         self.opposition_filter = opposition_filter
         self.team_id_filter = team_id_filter
         self.split_by = split_by
+        self.player_id_filter = player_id_filter
         self.query_split_by = self.get_query_split_by()
         self.per_game = False if ((per_game == "False") or (per_game is None)) else True
         self.min_apps = None if (min_apps is None) else int(min_apps)

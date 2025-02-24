@@ -14,6 +14,7 @@ import { BackendResponse } from "../../../types/BackendResponse";
 import { useParams } from "react-router-dom";
 import { League } from "../../../types/League";
 import { LeagueSelection } from "../../../generic/LeagueSelection";
+import { Loading } from "../../../generic/Loading";
 
 interface OwnProps {
     team:Team
@@ -23,6 +24,7 @@ interface OwnProps {
     leagues:League[]
     selectedLeague:string
     setSelectedLeague:Function
+    allLoaded:boolean
 }
 
 export const ManualDataEntry = (props:OwnProps) => {
@@ -42,6 +44,9 @@ export const ManualDataEntry = (props:OwnProps) => {
     }
 
     const getRadioButtonOptions = () => {
+        if (!props.allLoaded) {
+            return [];
+        }
         var options = [
             MANUAL_DATA_ENTRY_ACTION_TYPE.ADD_NEW_LEAGUE
         ];
@@ -133,6 +138,26 @@ export const ManualDataEntry = (props:OwnProps) => {
         />
     )
 
+    const leagueSelector = (
+        <LeagueSelection
+            leagues={props.leagues}
+            selectedLeague={props.selectedLeague}
+            setSelectedLeague={props.setSelectedLeague}
+            flexDirection="row"
+            justifyContent="space-around"
+        />
+    )
+
+    const seasonSelector = (
+        <SeasonSelection
+            seasons={props.seasons}
+            selectedSeason={props.selectedSeason}
+            setSelectedSeason={props.setSelectedSeason}
+            flexDirection="row"
+            justifyContent="space-around"
+        />
+    )
+
     return (
         <div className='page-parent'>
             {getBigTitle(props.team.team_name)}
@@ -141,20 +166,24 @@ export const ManualDataEntry = (props:OwnProps) => {
                 clubId={props.team.club_id}
                 isClubAdmin={getIsClubAdmin(user, props.team.club_id)}
             />
-            <div id='manual-data-entry-type-option'>
-                <FormControl>
-                    <FormLabel disabled={true}>
-                        What do you want to do?
-                    </FormLabel>
-                    <RadioGroup
-                        name="controlled-radio-buttons-group"
-                        value={manualDataEntryActionType}
-                        onChange={handleRadioButtonChange}
-                    >
-                        {getRadioButtonOptions()}
-                    </RadioGroup>
-                </FormControl>
-            </div>
+            {
+                (props.allLoaded) ? (
+                <div id='manual-data-entry-type-option'>
+                    <FormControl>
+                        <FormLabel disabled={true}>
+                            What do you want to do?
+                        </FormLabel>
+                        <RadioGroup
+                            name="controlled-radio-buttons-group"
+                            value={manualDataEntryActionType}
+                            onChange={handleRadioButtonChange}
+                        >
+                            {getRadioButtonOptions()}
+                        </RadioGroup>
+                    </FormControl>
+                </div>
+                ) : <Loading/>
+            }
             {
                 (manualDataEntryActionType == MANUAL_DATA_ENTRY_ACTION_TYPE.ADD_NEW_LEAGUE) && (
                     <div className='new-mde-input'>
@@ -171,7 +200,8 @@ export const ManualDataEntry = (props:OwnProps) => {
             {
                 (manualDataEntryActionType == MANUAL_DATA_ENTRY_ACTION_TYPE.ADD_NEW_SEASON) && (
                     <div className='new-mde-input'>
-
+                        {leagueSelector}
+                        {newSeasonNameInput}
                         <ButtonDiv
                             buttonText="Submit"
                             onClickFunction={handleNewSeasonButtonClick}
@@ -181,16 +211,29 @@ export const ManualDataEntry = (props:OwnProps) => {
                 )
             }
             {
-                (
-                    (manualDataEntryActionType == MANUAL_DATA_ENTRY_ACTION_TYPE.ADD_NEW_MATCH) ||
-                    (manualDataEntryActionType == MANUAL_DATA_ENTRY_ACTION_TYPE.EDIT_MATCH)
-                ) && (
-                    <SeasonSelection
-                        seasons={props.seasons}
-                        selectedSeason={props.selectedSeason}
-                        setSelectedSeason={props.setSelectedSeason}
-                        flexDirection="row"
-                    />
+                (manualDataEntryActionType == MANUAL_DATA_ENTRY_ACTION_TYPE.ADD_NEW_MATCH) && (
+                    <div className='new-mde-input'>
+                        {leagueSelector}
+                        {seasonSelector}
+                        <ButtonDiv
+                            buttonText="Submit"
+                            onClickFunction={handleNewSeasonButtonClick}
+                            buttonDisabled={buttonDisabled}
+                        />
+                    </div>
+                )
+            }
+            {
+                (manualDataEntryActionType == MANUAL_DATA_ENTRY_ACTION_TYPE.EDIT_MATCH) && (
+                    <div className='new-mde-input'>
+                        {leagueSelector}
+                        {seasonSelector}
+                        <ButtonDiv
+                            buttonText="Submit"
+                            onClickFunction={handleNewSeasonButtonClick}
+                            buttonDisabled={buttonDisabled}
+                        />
+                    </div>
                 )
             }
             <div style={{color:backendResponseColour}}>

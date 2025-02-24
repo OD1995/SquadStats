@@ -12,6 +12,7 @@ class Config:
     DATABASE_NAME = os.environ["DB_DATABASE"]
     SQLALCHEMY_DATABASE_URI = f"mysql+mysqldb://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DATABASE_NAME}?ssl_mode=VERIFY_IDENTITY"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_ENGINE_OPTIONS = {'pool_size' : 100, 'pool_recycle' : 280}
     # SQLALCHEMY_ECHO = True
     MAIL_SERVER = os.environ.get('MAIL_SERVER')
     MAIL_PORT = int(os.environ.get('MAIL_PORT') or 25)
