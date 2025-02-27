@@ -1,26 +1,26 @@
-import { SubtitleAndButtons } from "./SubtitleAndButtons";
-import "./UpdateMatch.css"
+import { Player } from "../../../../types/Player";
 
-export const PlayerSelection = () => {
+interface OwnProps {
+    availablePlayers?:Player[]
+    setAvailablePlayers:Function
+    activePlayers:Player[]
+    setActivePlayers:Function
+}
+
+export const PlayerSelection = (props:OwnProps) => {
     return (
-        <div>
-            <SubtitleAndButtons
-                subtitle='Player Selection'
-                forwardText="Goals + POTM"
-            />
-            <div id='selection-section'>
-                <div
-                    id='all-players-div'
-                    className="players-div"
-                >
+        <div id='player-selection-section'>
+            <div
+                id='all-players-div'
+                className="players-div"
+            >
 
-                </div>                
-                <div
-                    id='active-players-div'
-                    className="players-div"
-                >
+            </div>                
+            <div
+                id='active-players-div'
+                className="players-div"
+            >
 
-                </div>
             </div>
         </div>
     );

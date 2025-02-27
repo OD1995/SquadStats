@@ -10,10 +10,6 @@
     width: 45vw;
 }
 
-#all-players-div {
-
-}
-
 #subtitle-and-buttons-div {
     display: flex;
     flex-direction: row;
@@ -25,4 +21,36 @@
 
 .sab-text {
     font-size: small;
+}
+
+.sab-button-text {
+    font-size: x-small;
+    width: 110px;
+}
+
+.sab-subtitle-text {
+    width: 120px;
+    /* border: 1px solid red; */
+    text-align: center;
+}
+
+.match-info-input-div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#match-info-input-labels {
+    width: 40vw;
+}
+
+#match-info-input {
+    display: flex;
+    flex-direction: row;
+}
+
+.match-info-input-row {
+    height: 6vh;
+    display: flex;
+    align-items: center;
 }

@@ -81,6 +81,15 @@
 	cursor: pointer;
 }
 
+.empty-button {
+	color: white;
+	background-color: white;
+}
+
+.empty-button:hover {
+	border-color: white;
+}
+
 .disabled-button {
     cursor: not-allowed;
 	background-color: grey;

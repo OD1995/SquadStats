@@ -1,7 +1,8 @@
 interface OwnProps {
     subtitle:string
-    backText?:string
-    forwardText?:string
+    backText:string|null
+    forwardText:string|null
+    setSectionIndex:Function
 }
 
 export const SubtitleAndButtons = (props:OwnProps) => {
@@ -10,37 +11,39 @@ export const SubtitleAndButtons = (props:OwnProps) => {
             {
                 (props.backText) ? (
                     <button
-                        className="sab-text"
+                        className="sab-button-text ss-red-button"
+                        onClick={() => props.setSectionIndex((prevVal:number) => prevVal - 1)}
                     >
-                        {props.backText}
+                        {"<< " + props.backText}
                     </button>
                 ) : (
                     <button
-                        className="sab-text"
+                        className="sab-button-text empty-button"
                         disabled={true}
                     >
-                        Placeholder
+                        .
                     </button>
                 )
             }
             <b
-                className="sab-text"
+                className="sab-subtitle-text"
             >
                 {props.subtitle}
             </b>
             {
                 (props.forwardText) ? (
                     <button
-                        className="sab-text"
+                        className="sab-button-text ss-green-button"
+                        onClick={() => props.setSectionIndex((prevVal:number) => prevVal + 1)}
                     >
-                        {props.forwardText}
+                        {props.forwardText + " >>"}
                     </button>
                 ) : (
                     <button
-                        className="sab-text"
+                        className="sab-button-text ss-green-button"
                         disabled={true}
                     >
-                        Placeholder
+                        Save
                     </button>
                 )
             }
