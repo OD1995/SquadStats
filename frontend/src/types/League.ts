@@ -1,7 +1,7 @@
-import { Season } from "./Season"
+import { LeagueSeason } from "./Season"
 
 export interface League {
     league_id:string
     league_name:string
-    league_seasons:Season[]
+    league_seasons:LeagueSeason[]
 }

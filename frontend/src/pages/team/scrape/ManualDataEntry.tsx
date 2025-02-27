@@ -7,18 +7,19 @@ import { ChangeEvent, useState } from "react";
 import { MANUAL_DATA_ENTRY_ACTION_TYPE } from "../../../types/enums";
 import "./ManualDataEntry.css";
 import { SeasonSelection } from "../../../generic/SeasonSelection";
-import { Season } from "../../../types/Season";
+import { LeagueSeason } from "../../../types/Season";
 import { ButtonDiv } from "../../../generic/ButtonDiv";
 import SeasonService from "../../../services/SeasonService";
 import { BackendResponse } from "../../../types/BackendResponse";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { League } from "../../../types/League";
 import { LeagueSelection } from "../../../generic/LeagueSelection";
 import { Loading } from "../../../generic/Loading";
+import { v4 as uuidv4 } from "uuid";
 
 interface OwnProps {
     team:Team
-    seasons:Season[]
+    seasons:LeagueSeason[]
     selectedSeason:string
     setSelectedSeason:Function
     leagues:League[]
@@ -38,6 +39,7 @@ export const ManualDataEntry = (props:OwnProps) => {
 
     const user = getUserLS();
     let { teamId } = useParams();
+    const navigate = useNavigate();
 
     const handleRadioButtonChange = (event:ChangeEvent<HTMLInputElement>) => {
         setManualDataEntryActionType(event.target.value);
@@ -54,12 +56,10 @@ export const ManualDataEntry = (props:OwnProps) => {
             options.push(MANUAL_DATA_ENTRY_ACTION_TYPE.ADD_NEW_SEASON);
         }
         if (props.seasons.length > 0) {
-            options = options.concat(
-                [
-                    MANUAL_DATA_ENTRY_ACTION_TYPE.ADD_NEW_MATCH,
-                    MANUAL_DATA_ENTRY_ACTION_TYPE.EDIT_MATCH
-                ]
-            )
+            options.push(MANUAL_DATA_ENTRY_ACTION_TYPE.ADD_NEW_MATCH);
+        }
+        if (getMatchCount() > 0) {
+            options.push(MANUAL_DATA_ENTRY_ACTION_TYPE.EDIT_MATCH);
         }
         return options.map(
             (option:MANUAL_DATA_ENTRY_ACTION_TYPE) => (
@@ -71,6 +71,14 @@ export const ManualDataEntry = (props:OwnProps) => {
                 />
             )
         )
+    }
+
+    const getMatchCount = () => {
+        var matchCount = 0;
+        for (const season of props.seasons) {
+            matchCount += season.team_season.matches.length;
+        }
+        return matchCount;
     }
 
     const onChangeLeagueText = (e:ChangeEvent<HTMLInputElement>) => {
@@ -118,6 +126,11 @@ export const ManualDataEntry = (props:OwnProps) => {
                 setButtonDisabled(false);
             }
         )
+    }
+
+    const handleNewMatchButtonClick = () => {
+        const matchId = uuidv4();
+        navigate(`/team/${teamId}/update-match/${props.selectedLeague}/${matchId}`);
     }
 
     const newLeagueNameInput = (
@@ -217,7 +230,7 @@ export const ManualDataEntry = (props:OwnProps) => {
                         {seasonSelector}
                         <ButtonDiv
                             buttonText="Submit"
-                            onClickFunction={handleNewSeasonButtonClick}
+                            onClickFunction={handleNewMatchButtonClick}
                             buttonDisabled={buttonDisabled}
                         />
                     </div>

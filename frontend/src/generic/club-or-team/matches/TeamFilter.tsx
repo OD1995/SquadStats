@@ -1,13 +1,13 @@
-import { FormControl, InputLabel, MenuItem, OutlinedInput, Select, SelectChangeEvent } from "@mui/material"
+import { FormControl, MenuItem, OutlinedInput, Select, SelectChangeEvent } from "@mui/material"
 import { Club } from "../../../types/Club"
 import { Team } from "../../../types/Team"
-import { Season } from "../../../types/Season"
+import { LeagueSeason } from "../../../types/Season"
 
 interface OwnProps {
     club:Club
     selectedTeamId:string
     setSelectedTeamId:Function
-    clubSeasons:Record<string, Season[]>
+    clubSeasons:Record<string, LeagueSeason[]>
     setTeamSeasons:Function
 }
 

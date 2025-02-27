@@ -2,12 +2,10 @@ import { useEffect, useState } from "react";
 import { Club } from "../../../types/Club";
 import { Team } from "../../../types/Team";
 import { MatchesOrPlayersFilter } from "../filters/MatchesOrPlayersFilter";
-import { Season } from "../../../types/Season";
+import { LeagueSeason } from "../../../types/Season";
 import { SPLIT_BY_TYPE } from "../../../types/enums";
-import { createSearchParams, useNavigate, useSearchParams } from "react-router-dom";
-import ComboService from "../../../services/ComboService";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { BackendResponse } from "../../../types/BackendResponse";
-import { MatchesOrPlayersFilterOptional } from "../filters/MatchesOrPlayersFilterOptional";
 import { SplitByFilter } from "../filters/SplitByFilter";
 import MatchService from "../../../services/MatchService";
 

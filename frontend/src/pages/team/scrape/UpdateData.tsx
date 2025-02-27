@@ -8,13 +8,13 @@ import { BackendResponse } from "../../../types/BackendResponse";
 import { DATA_SOURCE } from "../../../types/enums";
 import { TeamScrape } from "./TeamScrape";
 import { ManualDataEntry } from "./ManualDataEntry";
-import { Season } from "../../../types/Season";
+import { LeagueSeason } from "../../../types/Season";
 import { League } from "../../../types/League";
 
 export const UpdateData = () => {
 
     const [team, setTeam] = useState<Team>();
-    const [seasons, setSeasons] = useState<Season[]>([]);
+    const [seasons, setSeasons] = useState<LeagueSeason[]>([]);
     const [selectedSeason, setSelectedSeason] = useState("");
     const [leagues, setLeagues] = useState<League[]>([]);
     const [selectedLeague, setSelectedLeague] = useState("");
@@ -37,7 +37,7 @@ export const UpdateData = () => {
                 ).then(
                     (res:BackendResponse) => {
                         if (res.success) {
-                            const ssns = res.data.seasons as Season[]
+                            const ssns = res.data.seasons as LeagueSeason[]
                             setSeasons(ssns);
                             const lgs = res.data.leagues as League[]
                             setLeagues(lgs);

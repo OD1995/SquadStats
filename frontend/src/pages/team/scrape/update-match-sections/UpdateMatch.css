@@ -1,0 +1,28 @@
+#selection-section {
+    height: 65vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.players-div {
+    border: 1px solid black;
+    width: 45vw;
+}
+
+#all-players-div {
+
+}
+
+#subtitle-and-buttons-div {
+    display: flex;
+    flex-direction: row;
+    /* border: 1px solid green; */
+    justify-content: space-around;
+    align-items: center;
+    margin-bottom: 2vh;
+}
+
+.sab-text {
+    font-size: small;
+}

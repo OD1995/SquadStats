@@ -1,8 +1,8 @@
 import { FormControl, MenuItem, Select, SelectChangeEvent } from "@mui/material"
-import { Season } from "../types/Season"
+import { LeagueSeason } from "../types/Season"
 
 interface OwnProps {
-    seasons:Season[]
+    seasons:LeagueSeason[]
     selectedSeason:string
     setSelectedSeason:Function
     flexDirection:'row'|'column'
@@ -33,7 +33,7 @@ export const SeasonSelection = (props:OwnProps) => {
                 >
                     {
                         props.seasons.map(
-                            (season:Season) => {
+                            (season:LeagueSeason) => {
                                 return (
                                     <MenuItem
                                         key={season.season_id}

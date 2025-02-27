@@ -6,7 +6,7 @@
     border: 1px solid #646cff;
     align-items: center;
     background-color: #646cff;
-    margin-bottom: 3vh;
+    margin-bottom: 2vh;
     font-size: min(3.25vmin, 15px);
     container-name: cot-link-bar-container;
 }

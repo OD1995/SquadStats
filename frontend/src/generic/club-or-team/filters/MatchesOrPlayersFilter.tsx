@@ -4,7 +4,7 @@ import { Club } from "../../../types/Club";
 import { Team } from "../../../types/Team";
 import { useEffect, useState } from "react";
 import { createSearchParams, useNavigate, useSearchParams } from "react-router-dom";
-import { Season } from "../../../types/Season";
+import { LeagueSeason } from "../../../types/Season";
 import ComboService from "../../../services/ComboService";
 import { BackendResponse } from "../../../types/BackendResponse";
 import { MatchesOrPlayersFilterOptional } from "./MatchesOrPlayersFilterOptional";
@@ -53,8 +53,8 @@ export const MatchesOrPlayersFilter = (props:OwnProps) => {
     const [selectedOpposition, setSelectedOpposition] = useState<string>("");
     const [playerIdFilter, setPlayerIdFilter] = useState<string>("");
     
-    const [clubSeasons, setClubSeasons] = useState<Record<string,Season[]>>();
-    const [teamSeasons, setTeamSeasons] = useState<Season[]>([]);
+    const [clubSeasons, setClubSeasons] = useState<Record<string,LeagueSeason[]>>();
+    const [teamSeasons, setTeamSeasons] = useState<LeagueSeason[]>([]);
     const [oppositionOptions, setOppositionOptions] = useState<string[]>([]);
     const [playerFilterOptions, setPlayerFilterOptions] = useState<Player[]>([]);
     

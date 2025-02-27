@@ -141,7 +141,7 @@ class MatchesFilterDataHandler:
             for tl in team.team_leagues
         ]
         seasons = [
-            ts.league_season.get_league_season_info()
+            ts.league_season.get_league_season_info(include_team_season=True)
             for ts in team.team_seasons
         ]
         return {

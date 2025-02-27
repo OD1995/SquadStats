@@ -1,7 +1,7 @@
 import { Club } from "../../../types/Club";
 import { SPLIT_BY_TYPE } from "../../../types/enums";
 import { Player } from "../../../types/Player";
-import { Season } from "../../../types/Season";
+import { LeagueSeason } from "../../../types/Season";
 import { Team } from "../../../types/Team";
 import { OppositionFilter } from "../matches/OppositionFilter";
 import { PlayerFilter } from "../matches/PlayerFilter";
@@ -14,13 +14,13 @@ interface OwnProps {
     team?:Team
     players?:boolean
     matches?:boolean
-    clubSeasons:Record<string,Season[]>
+    clubSeasons:Record<string,LeagueSeason[]>
     selectedTeamId:string
     setSelectedTeamId:Function
     setTeamSeasons:Function
     selectedSeason:string
     setSelectedSeason:Function
-    teamSeasons:Season[]
+    teamSeasons:LeagueSeason[]
     selectedSplitBy:string
     selectedOpposition:string
     setSelectedOpposition:Function

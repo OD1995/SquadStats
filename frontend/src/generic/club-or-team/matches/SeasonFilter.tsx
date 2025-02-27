@@ -1,10 +1,10 @@
 import { FormControl, MenuItem, OutlinedInput, Select, SelectChangeEvent } from "@mui/material";
-import { Season } from "../../../types/Season";
+import { LeagueSeason } from "../../../types/Season";
 
 interface OwnProps {
     selectedSeason:string
     setSelectedSeason:Function
-    seasonOptions:Season[]
+    seasonOptions:LeagueSeason[]
 }
 
 export const SeasonFilter = (props:OwnProps) => {
@@ -17,7 +17,7 @@ export const SeasonFilter = (props:OwnProps) => {
         {
             season_name: "",
             season_id: ""
-        } as Season
+        } as LeagueSeason
     ].concat(props.seasonOptions);
 
     return (
@@ -37,7 +37,7 @@ export const SeasonFilter = (props:OwnProps) => {
                 >
                     {
                         options.map(
-                            (season:Season) => {
+                            (season:LeagueSeason) => {
                                 return (
                                     <MenuItem
                                         key={season.season_id}

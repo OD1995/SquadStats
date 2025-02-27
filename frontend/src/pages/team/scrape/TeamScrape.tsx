@@ -1,10 +1,9 @@
-import { FormControl, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Team } from "../../../types/Team";
 import { getBigTitle, getIsClubAdmin } from "../../../helpers/other";
 import { BackendResponse } from "../../../types/BackendResponse";
-import { Season } from "../../../types/Season";
+import { LeagueSeason } from "../../../types/Season";
 import "./TeamScrape.css";
 import { Match } from "../../../types/Match";
 import { MatchInfoView } from "./MatchInfoView";
