@@ -18,13 +18,16 @@ interface SectionInfo {
 
 export const UpdateMatch = () => {
 
-    const [sectionIndex, setSectionIndex] = useState<number>(1);
+    const [sectionIndex, setSectionIndex] = useState<number>(0);
     // const [sectionSubtitle, setSectionSubtitle] = useState<string>();
     // const [sectionContent, setSectionContent] = useState<JSX.Element>();
     const [team, setTeam] = useState<Team>();
     const [availablePlayers, setAvailablePlayers] = useState<Player[]>();
     const [activePlayers, setActivePlayers] = useState<Player[]>([]);
-    const [match, setMatch] = useState<Match>({} as Match);
+    const [match, setMatch] = useState<Match>({
+        goals_for: 0,
+        goals_against: 0
+    } as Match);
 
     const user = getUserLS();
     let { teamId, teamSeasonId, matchId } = useParams();
@@ -96,6 +99,10 @@ export const UpdateMatch = () => {
         return sectionArray[sectionIndex + 1].subtitle;
     }
 
+    const serialiseMatch = (match:Match) => {
+        return JSON.stringify(match);
+    }
+
     return (
         <div className='page-parent'>
             {getBigTitle(team?.team_name)}
@@ -111,6 +118,9 @@ export const UpdateMatch = () => {
                 nextSubtitle={getNextSubtitle()}
                 setSectionIndex={setSectionIndex}
             />
+            <div id='match-serialised'>
+                {serialiseMatch(match)}
+            </div>
         </div>
     );
 }

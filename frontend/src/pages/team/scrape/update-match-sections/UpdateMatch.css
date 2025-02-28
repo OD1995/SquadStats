@@ -53,4 +53,5 @@
     height: 6vh;
     display: flex;
     align-items: center;
+    max-width: 200px;
 }
