@@ -43,25 +43,28 @@ export const MatchScore = (props:OwnProps) => {
     return (
         <div id='match-score' className="match-info-div">
             <table>
-                <tr>
-                    <td><b>{homeTeam}</b></td>
-                    {homePens && <td></td>}
-                    <td><b>{awayTeam}</b></td>
-                </tr>
-                {
-                    homePens && (
-                        <tr>
-                            <td>{homePens}</td>
-                            <td className="small-caps-subtitle">PENALTIES</td>
-                            <td>{awayPens}</td>
-                        </tr>
-                    )
-                }
-                <tr>
-                    <td>{homeScore}</td>
-                    {homePens && <td></td>}
-                    <td>{awayScore}</td>
-                </tr>
+                <tbody>
+
+                    <tr>
+                        <td><b>{homeTeam}</b></td>
+                        {homePens && <td></td>}
+                        <td><b>{awayTeam}</b></td>
+                    </tr>
+                    {
+                        homePens && (
+                            <tr>
+                                <td>{homePens}</td>
+                                <td className="small-caps-subtitle">PENALTIES</td>
+                                <td>{awayPens}</td>
+                            </tr>
+                        )
+                    }
+                    <tr>
+                        <td>{homeScore}</td>
+                        {homePens && <td></td>}
+                        <td>{awayScore}</td>
+                    </tr>
+                </tbody>
             </table>
         </div>
     )

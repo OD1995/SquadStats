@@ -55,3 +55,7 @@
     align-items: center;
     max-width: 200px;
 }
+
+#mii-time-input {
+    padding: 1%;
+}
