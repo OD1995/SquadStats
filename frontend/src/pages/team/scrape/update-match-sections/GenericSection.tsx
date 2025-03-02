@@ -1,3 +1,4 @@
+import { Match } from "../../../../types/Match";
 import { SubtitleAndButtons } from "./SubtitleAndButtons";
 import "./UpdateMatch.css"
 
@@ -7,6 +8,8 @@ interface OwnProps {
     previousSubtitle:string|null
     nextSubtitle:string|null
     setSectionIndex:Function
+    match:Match
+    setErrorMessage:Function
 }
 
 export const GenericSection = (props:OwnProps) => {
@@ -17,6 +20,8 @@ export const GenericSection = (props:OwnProps) => {
                 forwardText={props.nextSubtitle}
                 backText={props.previousSubtitle}
                 setSectionIndex={props.setSectionIndex}
+                match={props.match}
+                setErrorMessage={props.setErrorMessage}
             />
             {props.sectionContent}
         </div>

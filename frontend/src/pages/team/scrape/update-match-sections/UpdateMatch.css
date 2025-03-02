@@ -38,15 +38,17 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 45vw;
 }
 
 #match-info-input-labels {
-    width: 40vw;
+    /* width: 50vw; */
 }
 
 #match-info-input {
     display: flex;
     flex-direction: row;
+    justify-content: space-evenly;
 }
 
 .match-info-input-row {
@@ -58,4 +60,65 @@
 
 #mii-time-input {
     padding: 1%;
+}
+
+#location-select {
+    text-align: center;
+}
+
+#han-radios {
+    display: flex;
+    flex-direction: row;
+    padding: 0;
+    /* border: 1px solid red; */
+    width: 120px;
+    justify-content: space-around;
+}
+
+#match-serialised {
+    white-space: break-spaces;
+    color: red;
+}
+
+#player-selection {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.match-player-list {
+    width: 45vw;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.player-list {
+    height: 50vh;
+    border: 1px solid black;
+}
+
+.mpl-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20px;
+    height: 20px;
+    padding: 10px;
+    border-radius: 50%;
+    margin-left: 1vw;
+    margin-right: 1vw;
+}
+
+.mpl-row {
+    display: flex;
+    flex-direction: row;
+    margin-top: 0.2vh;
+    margin-bottom: 0.2vh;
+    font-size: small;
+    align-items: center;
+}
+
+.mpl-below-players {
+    margin-top: 2vh;
 }

@@ -40,3 +40,12 @@ export enum MANUAL_DATA_ENTRY_ACTION_TYPE {
     ADD_NEW_MATCH = 'Add New Match',
     EDIT_MATCH = 'Edit Match'
 }
+
+export enum MATCH_LOCATION_TYPE {
+    NEW_LOCATION = '-- New Location --'
+}
+
+export enum PLAYER_LIST_TYPE {
+    ALL_PLAYERS = 'All Players',
+    ACTIVE_PLAYERS = 'Active Players'
+}
