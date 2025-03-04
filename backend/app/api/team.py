@@ -25,6 +25,10 @@ def get_team(team_id):
         team = db.session.query(Team) \
             .filter_by(team_id=UUID(team_id)) \
             .first()
+        if team is None:
+            return {
+                "message" : "This team does not exist"
+            }, 400
         return team.get_team_info(), 200
     except Exception as e:
         return {

@@ -10,6 +10,7 @@ import { Player } from "../../../../types/Player";
 import { MatchInfoInput } from "./MatchInfoInput";
 import { GoalsInput } from "./GoalsInput";
 import { Match } from "../../../../types/Match";
+import { UPDATE_MATCH_SECTIONS } from "../../../../types/enums";
 
 interface SectionInfo {
     subtitle:string
@@ -27,6 +28,9 @@ export const UpdateMatch = () => {
         goals_against: 0
     } as Match);
     const [locations, setLocations] = useState<Record<string,string[]>>();
+    // const [playerGoalsAndPotms, setPlayerGoalsAndPotms] = useState<Record<string, GoalsAndPotm>>({});
+    const [goals, setGoals] = useState<Record<string, number>>({});
+    const [potm, setPotm] = useState<string>("");
     const [errorMessage, setErrorMessage] = useState<string>("");
 
     const user = getUserLS();
@@ -35,7 +39,7 @@ export const UpdateMatch = () => {
 
     const sectionArray = [
         {
-            subtitle: 'Match Info',
+            subtitle: UPDATE_MATCH_SECTIONS.MATCH_INFO,
             sectionContent: (
                 <MatchInfoInput
                     match={match}
@@ -45,7 +49,7 @@ export const UpdateMatch = () => {
             )
         },
         {
-            subtitle: 'Players',
+            subtitle: UPDATE_MATCH_SECTIONS.PLAYERS,
             sectionContent: (
                 <PlayerSelection
                     availablePlayers={availablePlayers}
@@ -56,10 +60,17 @@ export const UpdateMatch = () => {
             )
         },
         {
-            subtitle: 'Goals & POTM',
+            subtitle: UPDATE_MATCH_SECTIONS.GOALS_AND_POTM,
             sectionContent: (
                 <GoalsInput
-
+                    activePlayers={activePlayers}
+                    // playerGoalsAndPotms={playerGoalsAndPotms}
+                    // setPlayerGoalsAndPotms={setPlayerGoalsAndPotms}
+                    goals={goals}
+                    setGoals={setGoals}
+                    potm={potm}
+                    setPotm={setPotm}
+                    goalsFor={match.goals_for}
                 />
             )
         }
@@ -85,7 +96,7 @@ export const UpdateMatch = () => {
                     opposition_team_name: "X",
                     home_away_neutral: "H",
                     location: "The Beach",
-                    goals_for: 0,
+                    goals_for: 4,
                     goals_against: 2
                 } as Match
             );
@@ -145,12 +156,19 @@ export const UpdateMatch = () => {
         .join("\n");
     }
 
-    useEffect(
-        () => {
-            setErrorMessage(serialiseMatch(match));
-        },
-        [match]
-    )
+    // useEffect(
+    //     () => {
+    //         setErrorMessage(serialiseMatch(match));
+    //     },
+    //     [match]
+    // )
+
+    // useEffect(
+    //     () => {
+    //         setErrorMessage(JSON.stringify(goals) + `potm:'${potm}'`);
+    //     },
+    //     [goals, potm]
+    // )
 
     return (
         <div className='page-parent'>
@@ -160,7 +178,7 @@ export const UpdateMatch = () => {
                 isClubAdmin={getIsClubAdmin(user, team?.club_id!)}
                 clubId={team?.club_id!}
             />
-            <p id='match-serialised'>
+            <p id='update-match-error'>
                 {errorMessage}
             </p>
             <GenericSection
@@ -171,6 +189,7 @@ export const UpdateMatch = () => {
                 setSectionIndex={setSectionIndex}
                 match={match}
                 setErrorMessage={setErrorMessage}
+                potm={potm}
             />
         </div>
     );

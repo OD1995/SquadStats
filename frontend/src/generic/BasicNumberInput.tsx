@@ -4,6 +4,7 @@ import "./BasicNumberInput.css";
 interface OwnProps {
     value: number | null;
     setValue: (updater: (prevValue: number) => number) => void; // Use function updater
+    className?:string
 }
 
 export const BasicNumberInput = (props: OwnProps) => {
@@ -15,7 +16,7 @@ export const BasicNumberInput = (props: OwnProps) => {
     };
 
     return (
-        <div className="bni-parent">
+        <div className={"bni-parent" + ((props.className != undefined) ? ` ${props.className}` : "")}>
             <button
                 className="bni-button ss-green-button"
                 onClick={() => props.setValue((prev) => (prev ?? 0) + 1)}

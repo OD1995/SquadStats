@@ -75,9 +75,10 @@
     justify-content: space-around;
 }
 
-#match-serialised {
+#update-match-error {
     white-space: break-spaces;
     color: red;
+    text-align: center;
 }
 
 #player-selection {
@@ -121,4 +122,41 @@
 
 .mpl-below-players {
     margin-top: 2vh;
+}
+
+#goals-input {
+    /* height: 60vh; */
+    /* border: 1px solid blue; */
+    text-align: center;
+}
+
+.gi-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: center;
+    justify-content: space-around;
+    margin-bottom: 0.5vh;
+}
+
+.gi-name {
+    width: 35vw;
+    /* border: 1px solid pink; */
+}
+
+.gi-goals {
+    width: 35vw;
+    /* border: 1px solid pink; */
+}
+
+.gi-potm {
+    width: 20vw;
+    /* border: 1px solid pink; */
+}
+
+#goals-scored-text {
+    font-style: italic;
+    margin-bottom: 1.5vh;
+    /* border: 1px solid #646cff; */
+    /* max-width: fit-content; */
 }

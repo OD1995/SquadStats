@@ -10,6 +10,7 @@ interface OwnProps {
     setSectionIndex:Function
     match:Match
     setErrorMessage:Function
+    potm:string
 }
 
 export const GenericSection = (props:OwnProps) => {
@@ -22,6 +23,7 @@ export const GenericSection = (props:OwnProps) => {
                 setSectionIndex={props.setSectionIndex}
                 match={props.match}
                 setErrorMessage={props.setErrorMessage}
+                potm={props.potm}
             />
             {props.sectionContent}
         </div>

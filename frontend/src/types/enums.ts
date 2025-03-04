@@ -45,6 +45,12 @@ export enum MATCH_LOCATION_TYPE {
     NEW_LOCATION = '-- New Location --'
 }
 
+export enum UPDATE_MATCH_SECTIONS {
+    MATCH_INFO = 'Match Info',
+    PLAYERS = 'Players',
+    GOALS_AND_POTM = 'Goals & POTM'
+}
+
 export enum PLAYER_LIST_TYPE {
     ALL_PLAYERS = 'All Players',
     ACTIVE_PLAYERS = 'Active Players'

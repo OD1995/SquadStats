@@ -1,3 +1,4 @@
+import { UPDATE_MATCH_SECTIONS } from "../../../../types/enums"
 import { Match } from "../../../../types/Match"
 
 interface OwnProps {
@@ -7,31 +8,43 @@ interface OwnProps {
     setSectionIndex:Function
     match:Match
     setErrorMessage:Function
+    potm:string
 }
 
 export const SubtitleAndButtons = (props:OwnProps) => {
 
     const validateAndMoveForward = () => {
-        const properties = {
-            "date": "Date",
-            "time": "Time",
-            "home_away_neutral": "Home/Away/Neutral",
-            "location": "Location",
-            "opposition_team_name": "Opponent",
-            "goals_for": "Goals For",
-            "goals_against": "Goals Against",
-        } as Record<string, string>;
-        var problems = []
-        for (const prop of Object.keys(properties)) {
-            const val = props.match[prop as keyof Match];
-            if ((val == null) || (val == undefined) || (val === "")) {
-                problems.push(properties[prop]);
+        var advance = true;
+        if (props.subtitle == UPDATE_MATCH_SECTIONS.MATCH_INFO) {
+            const properties = {
+                "date": "Date",
+                "time": "Time",
+                "home_away_neutral": "Home/Away/Neutral",
+                "location": "Location",
+                "opposition_team_name": "Opponent",
+                "goals_for": "Goals For",
+                "goals_against": "Goals Against",
+            } as Record<string, string>;
+            var problems = []
+            for (const prop of Object.keys(properties)) {
+                const val = props.match[prop as keyof Match];
+                if ((val == null) || (val == undefined) || (val === "")) {
+                    problems.push(properties[prop]);
+                }
+            }
+            if (problems.length > 0) {
+                const txt = "Set the following values before moving on " + problems.join(", ");
+                props.setErrorMessage(txt);
+                advance = false;
+            } 
+        } else if (props.subtitle == UPDATE_MATCH_SECTIONS.GOALS_AND_POTM) {
+            if (props.potm == "") {
+                const txt = "Set a POTM before saving";
+                props.setErrorMessage(txt);
+                advance = false;
             }
         }
-        if (problems.length > 0) {
-            const txt = "Set the following values before moving on " + problems.join(", ");
-            props.setErrorMessage(txt);
-        } else {
+        if (advance) {
             props.setErrorMessage("");
             props.setSectionIndex((prevVal:number) => prevVal + 1)
         }
@@ -72,7 +85,8 @@ export const SubtitleAndButtons = (props:OwnProps) => {
                 ) : (
                     <button
                         className="sab-button-text ss-green-button"
-                        disabled={true}
+                        // disabled={true}
+                        onClick={validateAndMoveForward}
                     >
                         Save
                     </button>
