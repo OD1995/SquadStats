@@ -8,6 +8,8 @@ Make sure same club not added twice, once testing finished
 
 get_team_matches for manual entry team
 
+Handle situation where user tries to scrape matches for unavailable team e.g. U12s
+
 Make sure all necessary endpoints need a user
 
 Maybe combine backend calls for team and club overview pages
@@ -24,7 +26,7 @@ login navigation:
  - otherwise, go to 'my clubs'
 
 alembic init alembic
-alembic revision --autogenerate -m "comment"
+alembic revision --autogenerate -m "initial commit"
 alembic upgrade head
 
 182317005

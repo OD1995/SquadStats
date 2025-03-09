@@ -20,8 +20,8 @@ import { v4 as uuidv4 } from "uuid";
 interface OwnProps {
     team:Team
     seasons:LeagueSeason[]
-    selectedSeason:string
-    setSelectedSeason:Function
+    selectedLeagueSeason:string
+    setSelectedLeagueSeason:Function
     leagues:League[]
     selectedLeague:string
     setSelectedLeague:Function
@@ -118,7 +118,10 @@ export const ManualDataEntry = (props:OwnProps) => {
             (res:BackendResponse) => {
                 if (res.success) {
                     setBackendResponseColour("green");
-                    setBackendResponse(res.data.message);
+                    const teamSeasonId = res.data.team_season_id;
+                    const newMatchId = uuidv4();
+                    // '/team/:teamId/update-match/:teamSeasonId/:matchId'
+                    navigate(`/team/${teamId}/update-match/${teamSeasonId}/${newMatchId}`)
                 } else {
                     setBackendResponseColour("red");
                     setBackendResponse(res.data.message);
@@ -130,7 +133,7 @@ export const ManualDataEntry = (props:OwnProps) => {
 
     const handleNewMatchButtonClick = () => {
         const matchId = uuidv4();
-        navigate(`/team/${teamId}/update-match/${props.selectedLeague}/${matchId}`);
+        navigate(`/team/${teamId}/update-match/${props.selectedLeagueSeason}/${matchId}`);
     }
 
     const newLeagueNameInput = (
@@ -164,8 +167,8 @@ export const ManualDataEntry = (props:OwnProps) => {
     const seasonSelector = (
         <SeasonSelection
             seasons={props.seasons}
-            selectedSeason={props.selectedSeason}
-            setSelectedSeason={props.setSelectedSeason}
+            selectedSeason={props.selectedLeagueSeason}
+            setSelectedSeason={props.setSelectedLeagueSeason}
             flexDirection="row"
             justifyContent="space-around"
         />

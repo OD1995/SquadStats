@@ -15,7 +15,7 @@ export const UpdateData = () => {
 
     const [team, setTeam] = useState<Team>();
     const [seasons, setSeasons] = useState<LeagueSeason[]>([]);
-    const [selectedSeason, setSelectedSeason] = useState("");
+    const [selectedLeagueSeason, setSelectedLeagueSeason] = useState<string>("");
     const [leagues, setLeagues] = useState<League[]>([]);
     const [selectedLeague, setSelectedLeague] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
@@ -42,7 +42,7 @@ export const UpdateData = () => {
                             const lgs = res.data.leagues as League[]
                             setLeagues(lgs);
                             if (ssns.length > 0) {
-                                setSelectedSeason(ssns[0].season_id);
+                                setSelectedLeagueSeason(ssns[0].season_id);
                             }
                             if (lgs.length > 0) {
                                 setSelectedLeague(lgs[0].league_id);
@@ -64,8 +64,8 @@ export const UpdateData = () => {
                 <ManualDataEntry
                     team={team}
                     seasons={seasons}
-                    selectedSeason={selectedSeason}
-                    setSelectedSeason={setSelectedSeason}
+                    selectedLeagueSeason={selectedLeagueSeason}
+                    setSelectedLeagueSeason={setSelectedLeagueSeason}
                     leagues={leagues}
                     selectedLeague={selectedLeague}
                     setSelectedLeague={setSelectedLeague}
@@ -80,8 +80,8 @@ export const UpdateData = () => {
                     setErrorMessage={setErrorMessage}
                     seasons={seasons}
                     setSeasons={setSeasons}
-                    selectedSeason={selectedSeason}
-                    setSelectedSeason={setSelectedSeason}
+                    selectedSeason={selectedLeagueSeason}
+                    setSelectedSeason={setSelectedLeagueSeason}
                 />
             )
         }

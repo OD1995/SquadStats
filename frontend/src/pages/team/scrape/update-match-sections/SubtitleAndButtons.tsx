@@ -10,6 +10,8 @@ interface OwnProps {
     setErrorMessage:Function
     potm:string
     saveMatch:Function
+    newCompName:string
+    newCompAcronym:string
 }
 
 export const SubtitleAndButtons = (props:OwnProps) => {
@@ -31,6 +33,14 @@ export const SubtitleAndButtons = (props:OwnProps) => {
                 const val = props.match[prop as keyof Match];
                 if ((val == null) || (val == undefined) || (val === "")) {
                     problems.push(properties[prop]);
+                }
+            }
+            if (!props.match.competition_id) {
+                if (props.newCompName == "") {
+                    problems.push('New Competition Name')
+                }
+                if (props.newCompAcronym == "") {
+                    problems.push("New Competition Acronym/Shortening")
                 }
             }
             if (problems.length > 0) {

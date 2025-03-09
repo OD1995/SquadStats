@@ -5,14 +5,15 @@ from uuid import UUID, uuid4
 from sqlalchemy import ForeignKey
 from app.models import Base
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from app.models.Team import Team
 
 if TYPE_CHECKING:
     from app.models.Match import Match
     from app.models.LeagueSeason import LeagueSeason
+    from app.models.Team import Team
 else:
     Match = 'Match'
     LeagueSeason = 'LeagueSeason'
+    Team = 'Team'
 
 @dataclass
 class TeamSeason(Base):

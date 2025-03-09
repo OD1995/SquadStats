@@ -1,10 +1,13 @@
-from typing import List
+from typing import TYPE_CHECKING
 from uuid import UUID, uuid4
 from sqlalchemy import ForeignKey, String
 from app.models import Base
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.models.TeamSeason import TeamSeason
+if TYPE_CHECKING:
+    from app.models.League import League
+else:
+    League = 'League'
 
 class Competition(Base):
     __tablename__ = 'competitions'
@@ -18,6 +21,7 @@ class Competition(Base):
         index=True
     )
     competition_acronym: Mapped[str] = mapped_column(String(10), nullable=True)
+    league: Mapped[League] = relationship(back_populates='competitions')
 
     def __init__(
         self,

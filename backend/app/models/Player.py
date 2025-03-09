@@ -20,9 +20,10 @@ class Player(Base):
     def __init__(
         self,
         club_id:UUID,
-        data_source_player_name:str
+        data_source_player_name:str,
+        player_id:UUID|None = None
     ):
-        self.player_id = uuid4()
+        self.player_id = player_id or uuid4()
         self.club_id = club_id
         self.data_source_player_name = data_source_player_name
         self.better_player_name = None

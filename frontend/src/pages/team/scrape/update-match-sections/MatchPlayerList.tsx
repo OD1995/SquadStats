@@ -58,6 +58,7 @@ export const MatchPlayerList = (props:OwnProps) => {
         if (props.addNewPlayer) {
             props.addNewPlayer(newPlayerName);
             setShowModal(false);
+            setNewPlayerName("");
         }
     }
 

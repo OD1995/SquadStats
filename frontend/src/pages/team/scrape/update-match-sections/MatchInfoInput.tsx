@@ -16,14 +16,15 @@ interface OwnProps {
     setNewCompName:Function
     newCompAcronym:string
     setNewCompAcronym:Function
-    newCompId:string
+    // newCompId:string
+    newLocation:string
+    setNewLocation:Function
 }
 
 export const MatchInfoInput = (props:OwnProps) => {
     const [showPens, setShowPens] = useState<boolean>(false);
     const [locationDropdownVal, setLocationDropdownVal] = useState<string>("");
     const [competitionDropdownVal, setCompetitionDropdownVal] = useState<string>("");
-    const [newLocation, setNewLocation] = useState<string>("");
 
     // Function to update match properties (supports function updaters)
     const updateMatch = (
@@ -47,6 +48,18 @@ export const MatchInfoInput = (props:OwnProps) => {
         updateMatch("pens_for", showPens ? 0 : null);
         updateMatch("pens_against", showPens ? 0 : null);
     }, [showPens]);
+
+    useEffect(
+        () => {
+            if ((props.newCompName != "") || (props.newCompAcronym != "")) {
+                setCompetitionDropdownVal(MATCH_COMPETITION_TYPE.NEW_COMPETITION);
+            }
+            if (props.newLocation) {
+                setLocationDropdownVal(MATCH_LOCATION_TYPE.NEW_LOCATION);
+            }
+        },
+        []
+    )
 
 
     // Labels for form fields
@@ -256,8 +269,8 @@ export const MatchInfoInput = (props:OwnProps) => {
                         <div className="match-info-input-row">
                             <input
                                 type="text"
-                                value={newLocation}
-                                onChange={(e) =>  setNewLocation(e.target.value)}
+                                value={props.newLocation}
+                                onChange={(e) =>  props.setNewLocation(e.target.value)}
                             />
                         </div>
                     )

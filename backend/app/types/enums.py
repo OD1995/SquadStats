@@ -29,6 +29,7 @@ class Metric(str, Enum):
     ASSISTS: str = 'Assists'
     PLAYER_OF_MATCH: str = 'Player Of Match'
     BENCH_UNUSED: str = 'Bench Unused'
+    POTM: str = 'POTM'
 
 class SplitByType(str, Enum):
     NA: str = 'N/A'

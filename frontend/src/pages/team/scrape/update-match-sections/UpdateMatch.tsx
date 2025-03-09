@@ -15,6 +15,7 @@ import MatchService from "../../../../services/MatchService";
 import { BackendResponse } from "../../../../types/BackendResponse";
 import { Competition } from "../../../../types/Competition";
 import {v4 as uuidv4} from "uuid";
+import { Loading } from "../../../../generic/Loading";
 
 interface SectionInfo {
     subtitle:string
@@ -37,13 +38,15 @@ export const UpdateMatch = () => {
     // const [newCompetition, setNewCompetition] = useState<Competition>();
     const [newCompName, setNewCompName] = useState<string>("");
     const [newCompAcronym, setNewCompAcronym] = useState<string>("");
+    const [newLocation, setNewLocation] = useState<string>("");
     const [competitions, setCompetitions] = useState<Competition[]>([]);
     const [errorMessage, setErrorMessage] = useState<string>("");
+    const [loading, setLoading] = useState<boolean>(false);
 
     const user = getUserLS();
-    let { teamId, teamSeasonId, matchId } = useParams();
+    let { teamId, leagueSeasonId, matchId } = useParams();
     const navigate = useNavigate();
-    const newCompId = uuidv4();
+    // const newCompId = uuidv4();
 
     const sectionArray = [
         {
@@ -58,7 +61,8 @@ export const UpdateMatch = () => {
                     setNewCompName={setNewCompName}
                     newCompAcronym={newCompAcronym}
                     setNewCompAcronym={setNewCompAcronym}
-                    newCompId={newCompId}
+                    newLocation={newLocation}
+                    setNewLocation={setNewLocation}
                 />
             )
         },
@@ -106,8 +110,8 @@ export const UpdateMatch = () => {
                     {
                         competition_id: uuidv4(),
                         league_id: uuidv4(),
-                        competition_name: "Docklands Football League",
-                        competition_acronym: "DFL"
+                        competition_name: "Test Competition",
+                        competition_acronym: "TC"
                     }
                 ] as Competition[]
             )
@@ -122,40 +126,40 @@ export const UpdateMatch = () => {
                     goals_against: 2
                 } as Match
             );
-            setActivePlayers({
-                'ad' : {
-                    player_id: 'ad',
-                    player_name: 'Alex Dernie'
-                },
-                'asl' : {
-                    player_id: 'asl',
-                    player_name: 'Aaron Singer-Lee'
-                },
-                'oal' : {
-                    player_id: 'oal',
-                    player_name: 'Oli Akinwumni-Ladega'
-                },
-            });
-            setAvailablePlayers({
-                'th' : {
-                    player_id: 'th',
-                    player_name: 'Test Human'
-                },
-                'tlh' : {
-                    player_id: 'tlh',
-                    player_name: 'Test Long Human'
-                },
-                'ckw' : {
-                    player_id: 'ckw',
-                    player_name: 'Corey Kearney-Wellington'
-                },
-            });
+            // setActivePlayers({
+            //     'ad' : {
+            //         player_id: 'ad',
+            //         player_name: 'Alex Dernie'
+            //     },
+            //     'asl' : {
+            //         player_id: 'asl',
+            //         player_name: 'Aaron Singer-Lee'
+            //     },
+            //     'oal' : {
+            //         player_id: 'oal',
+            //         player_name: 'Oli Akinwumni-Ladega'
+            //     },
+            // });
+            // setAvailablePlayers({
+            //     'th' : {
+            //         player_id: 'th',
+            //         player_name: 'Test Human'
+            //     },
+            //     'tlh' : {
+            //         player_id: 'tlh',
+            //         player_name: 'Test Long Human'
+            //     },
+            //     'ckw' : {
+            //         player_id: 'ckw',
+            //         player_name: 'Corey Kearney-Wellington'
+            //     },
+            // });
             setMatch(
                 (prevMatch:Match) => (
                     {
                         ...prevMatch,
                         match_id: matchId!,
-                        team_season_id: teamSeasonId!
+                        // team_season_id: teamSeasonId!
                     }
                 )
             );
@@ -202,11 +206,16 @@ export const UpdateMatch = () => {
     // )
 
     const saveMatch = () => {
+        setLoading(true);
         MatchService.createMatch(
             match,
             activePlayers,
             goals,
-            potm
+            potm,
+            newCompName, 
+            newCompAcronym,
+            teamId!,
+            leagueSeasonId!
         ).then(
             (res:BackendResponse) => {
                 if (res.success) {
@@ -214,6 +223,7 @@ export const UpdateMatch = () => {
                 } else {
                     setErrorMessage(res.data.message);
                 }
+                setLoading(false);
             }
         )
     }
@@ -229,17 +239,23 @@ export const UpdateMatch = () => {
             <p id='update-match-error'>
                 {errorMessage}
             </p>
-            <GenericSection
-                subtitle={sectionArray[sectionIndex].subtitle}
-                sectionContent={sectionArray[sectionIndex].sectionContent}
-                previousSubtitle={getPreviousSubtitle()}
-                nextSubtitle={getNextSubtitle()}
-                setSectionIndex={setSectionIndex}
-                match={match}
-                setErrorMessage={setErrorMessage}
-                potm={potm}
-                saveMatch={saveMatch}
-            />
+            {
+                (loading) ? <Loading/> : (
+                    <GenericSection
+                        subtitle={sectionArray[sectionIndex].subtitle}
+                        sectionContent={sectionArray[sectionIndex].sectionContent}
+                        previousSubtitle={getPreviousSubtitle()}
+                        nextSubtitle={getNextSubtitle()}
+                        setSectionIndex={setSectionIndex}
+                        match={match}
+                        setErrorMessage={setErrorMessage}
+                        potm={potm}
+                        saveMatch={saveMatch}
+                        newCompName={newCompName}
+                        newCompAcronym={newCompAcronym}
+                    />
+                )
+            }
         </div>
     );
 }

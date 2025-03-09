@@ -78,7 +78,8 @@ class MatchInfoDataHandler:
         preferred_order = [
             Metric.GOALS,
             Metric.ASSISTS,
-            Metric.PLAYER_OF_MATCH
+            Metric.PLAYER_OF_MATCH,
+            Metric.POTM
         ]
         metric_dict = {}
         for metric in unique_metrics:

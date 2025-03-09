@@ -11,6 +11,7 @@ class Scraper:
         self,
         url:str
     ) -> BeautifulSoup:
+        print(url)
         req = requests.get(url)
         if req.ok:
             return BeautifulSoup(req.text, 'html.parser')

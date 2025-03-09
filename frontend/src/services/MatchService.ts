@@ -66,7 +66,11 @@ class MatchService {
         match:Match,
         activePlayers:Record<string, Player>,
         goals:Record<string,number>,
-        potm:string
+        potm:string,
+        newCompName:string, 
+        newCompAcronym:string,
+        teamId:string,
+        leagueSeasonId:string
     ) {
         return makePostRequest(
             this.base_url + "/create",
@@ -74,7 +78,11 @@ class MatchService {
                 match,
                 activePlayers,
                 goals,
-                potm
+                potm,
+                newCompName,
+                newCompAcronym,
+                teamId,
+                leagueSeasonId
             }
         )
     }

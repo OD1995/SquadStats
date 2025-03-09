@@ -61,7 +61,7 @@ const App = () => {
 						<Route path='/club/:clubId/players' element={<ClubPlayersOverviewSelector/>}/>
 						<Route path='/team/:teamId/overview' element={<TeamOverview/>}/>
 						<Route path='/team/:teamId/update-data' element={<UpdateData/>}/>
-						<Route path='/team/:teamId/update-match/:teamSeasonId/:matchId' element={<UpdateMatch/>}/>
+						<Route path='/team/:teamId/update-match/:leagueSeasonId/:matchId' element={<UpdateMatch/>}/>
 						<Route path='/team/:teamId/matches' element={<TeamMatches/>}/>
 						<Route path='/team/:teamId/players-leaderboards' element={<TeamPlayers/>}/>
 						<Route path='/team/:teamId/players' element={<TeamPlayersOverviewSelector/>}/>

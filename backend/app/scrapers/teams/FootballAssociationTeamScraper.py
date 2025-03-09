@@ -87,6 +87,15 @@ class FootballAssociationTeamScraper(TeamScraper):
                 params
             )
         )
+        if "There are no recent results to display" in str(soup):
+            return (
+                [],
+                [],
+                [],
+                [],
+                [],
+                []
+            )
         tbody = soup.find(
             'div',
             attrs={

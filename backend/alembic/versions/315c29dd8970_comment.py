@@ -1,8 +1,8 @@
-"""initial migration
+"""comment
 
-Revision ID: eb9edaeda121
+Revision ID: 315c29dd8970
 Revises: 
-Create Date: 2025-02-22 21:54:07.255992
+Create Date: 2025-03-09 20:00:52.266216
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'eb9edaeda121'
+revision: str = '315c29dd8970'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -115,6 +115,17 @@ def upgrade() -> None:
     op.create_index(op.f('ix_teams_club_id'), 'teams', ['club_id'], unique=False)
     op.create_index(op.f('ix_teams_data_source_id'), 'teams', ['data_source_id'], unique=False)
     op.create_index(op.f('ix_teams_sport_id'), 'teams', ['sport_id'], unique=False)
+    op.create_table('competitions',
+    sa.Column('competition_id', sa.Uuid(), nullable=False),
+    sa.Column('data_source_competition_id', sa.String(length=100), nullable=True),
+    sa.Column('competition_name', sa.String(length=100), nullable=False),
+    sa.Column('league_id', sa.Uuid(), nullable=False),
+    sa.Column('competition_acronym', sa.String(length=10), nullable=True),
+    sa.ForeignKeyConstraint(['league_id'], ['leagues.league_id'], name='fk_leagues_league_id'),
+    sa.PrimaryKeyConstraint('competition_id'),
+    mysql_engine='InnoDB'
+    )
+    op.create_index(op.f('ix_competitions_league_id'), 'competitions', ['league_id'], unique=False)
     op.create_table('league_seasons',
     sa.Column('league_season_id', sa.Uuid(), nullable=False),
     sa.Column('league_id', sa.Uuid(), nullable=False),
@@ -156,22 +167,11 @@ def upgrade() -> None:
     )
     op.create_index(op.f('ix_team_seasons_league_season_id'), 'team_seasons', ['league_season_id'], unique=False)
     op.create_index(op.f('ix_team_seasons_team_id'), 'team_seasons', ['team_id'], unique=False)
-    op.create_table('competitions',
-    sa.Column('competition_id', sa.Uuid(), nullable=False),
-    sa.Column('data_source_competition_id', sa.String(length=100), nullable=True),
-    sa.Column('competition_name', sa.String(length=100), nullable=False),
-    sa.Column('team_season_id', sa.Uuid(), nullable=False),
-    sa.ForeignKeyConstraint(['team_season_id'], ['team_seasons.team_season_id'], name='fk_team_seasons_team_season_id'),
-    sa.PrimaryKeyConstraint('competition_id'),
-    mysql_engine='InnoDB'
-    )
-    op.create_index(op.f('ix_competitions_team_season_id'), 'competitions', ['team_season_id'], unique=False)
     op.create_table('matches',
     sa.Column('match_id', sa.Uuid(), nullable=False),
-    sa.Column('data_source_match_id', sa.String(length=50), nullable=False),
+    sa.Column('data_source_match_id', sa.String(length=50), nullable=True),
     sa.Column('competition_id', sa.Uuid(), nullable=True),
     sa.Column('team_season_id', sa.Uuid(), nullable=False),
-    sa.Column('competition_acronym', sa.String(length=10), nullable=True),
     sa.Column('goals_for', sa.Integer(), nullable=True),
     sa.Column('goals_against', sa.Integer(), nullable=True),
     sa.Column('goal_difference', sa.Integer(), nullable=True),
@@ -228,8 +228,6 @@ def downgrade() -> None:
     op.drop_index(op.f('ix_matches_team_season_id'), table_name='matches')
     op.drop_index(op.f('ix_matches_competition_id'), table_name='matches')
     op.drop_table('matches')
-    op.drop_index(op.f('ix_competitions_team_season_id'), table_name='competitions')
-    op.drop_table('competitions')
     op.drop_index(op.f('ix_team_seasons_team_id'), table_name='team_seasons')
     op.drop_index(op.f('ix_team_seasons_league_season_id'), table_name='team_seasons')
     op.drop_table('team_seasons')
@@ -240,6 +238,8 @@ def downgrade() -> None:
     op.drop_table('team_leagues')
     op.drop_index(op.f('ix_league_seasons_league_id'), table_name='league_seasons')
     op.drop_table('league_seasons')
+    op.drop_index(op.f('ix_competitions_league_id'), table_name='competitions')
+    op.drop_table('competitions')
     op.drop_index(op.f('ix_teams_sport_id'), table_name='teams')
     op.drop_index(op.f('ix_teams_data_source_id'), table_name='teams')
     op.drop_index(op.f('ix_teams_club_id'), table_name='teams')

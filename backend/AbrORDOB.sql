@@ -15,3 +15,9 @@ INSERT INTO `data_sources` (`data_source_id`,`data_source_name`,`url`)
 VALUES
 ('FOOTBALL_ASSOCIATION', 'Football Association', 'https://fulltime.thefa.com'),
 ('MANUAL', 'Manual', NULL);
+
+INSERT INTO metrics (metric_id, data_source_id, metric_name, better_metric_name)
+VALUES
+(REPLACE(uuid(), '-', ''), 'MANUAL', 'Appearances', NULL),
+(REPLACE(uuid(), '-', ''), 'MANUAL', 'Goals', NULL),
+(REPLACE(uuid(), '-', ''), 'MANUAL', 'POTM', NULL);

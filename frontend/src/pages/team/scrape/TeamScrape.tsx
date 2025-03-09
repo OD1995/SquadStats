@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import { Team } from "../../../types/Team";
 import { getBigTitle, getIsClubAdmin } from "../../../helpers/other";
 import { BackendResponse } from "../../../types/BackendResponse";
-import { LeagueSeason } from "../../../types/Season";
 import "./TeamScrape.css";
 import { Match } from "../../../types/Match";
 import { MatchInfoView } from "./MatchInfoView";
@@ -102,7 +101,21 @@ export const TeamScrape = (props:OwnProps) => {
         setStartUpdateDisabled(false);
     }
 
+    const getTickedBoxCount = () => {
+        var count = 0;
+        for (const tb of tickedBoxes) {
+            if (tb) {
+                count += 1;
+            }
+        }
+        return count;
+    }
+
     const handleStartUpdateButtonPress = () => {
+        if (getTickedBoxCount() == 0) {
+            props.setErrorMessage("Select at least one match to update");
+            return;
+        }
         setStartUpdateDisabled(true);
         props.setErrorMessage("");
         setIsLoading(true);
@@ -125,6 +138,7 @@ export const TeamScrape = (props:OwnProps) => {
                 }
                 setStartUpdateDisabled(false);
                 setIsLoading(false);
+                setIsPlayerInfoView(false);
             }
         )
     }

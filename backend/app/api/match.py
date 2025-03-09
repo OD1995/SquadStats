@@ -7,6 +7,8 @@ from sqlalchemy import and_, or_
 from app import db
 from app.data_handlers.MatchInfoDataHandler import MatchInfoDataHandler
 from app.data_handlers.MatchesDataHandler import MatchesDataHandler
+from app.helpers.MetricIdGetter import MetricIdGetter
+from app.models.Competition import Competition
 from app.models.DataSource import DataSource
 from app.models.League import League
 from app.models.LeagueSeason import LeagueSeason
@@ -18,8 +20,7 @@ from app.models.PlayerMatchPerformance import PlayerMatchPerformance
 from app.models.Team import Team
 from app.models.TeamSeason import TeamSeason
 from app.scrapers.teams.FootballAssociationTeamScraper import FootballAssociationTeamScraper
-from app.types.GenericTableData import GenericTableData
-from app.types.enums import DataSource as DataSourceEnum, HomeAwayNeutral, Result
+from app.types.enums import DataSource as DataSourceEnum, HomeAwayNeutral, Result, Metric as MetricEnum
 
 match_bp = Blueprint(
     name="match",
@@ -318,35 +319,118 @@ def create_match():
         active_players = req['activePlayers']
         goals = req['goals']
         potm = req['potm']
-        ## Could be creating or editing
-        # match_obj = db.session.query(Match) \
-        #     .filter_by(match_id=UUID(match_js['match_id'])) \
-        #     .first()
+        new_comp_name = req.get('newCompName', None)
+        new_comp_acronym = req.get('newCompAcronym', None)
+        team_id = UUID(req['teamId'])
+        league_season_id = UUID(req['leagueSeasonId'])
+
+        match_comp_id = match_js.get('competition_id', None)
+        league_season = db.session.query(LeagueSeason) \
+            .filter_by(league_season_id=league_season_id) \
+            .first()
+        team_season = db.session.query(TeamSeason) \
+            .filter_by(league_season_id=league_season_id, team_id=team_id) \
+            .first()
+        if (
+            (match_comp_id is None) &
+            (new_comp_name != "") & 
+            (new_comp_acronym != "")
+        ):
+            new_comp = Competition(
+                league_id=league_season.league_id,
+                data_source_competition_id=None,
+                competition_name=new_comp_name,
+                competition_acronym=new_comp_acronym,
+            )
+            db.session.add(new_comp)
+            competition_id = new_comp.competition_id
+        else:
+            competition_id = UUID(match_comp_id)
         goals_for = match_js['goals_for']
         goals_against = match_js['goals_against']
         goal_diff = goals_for - goals_against
         result = Result.WIN if (goal_diff > 0) else \
             Result.DRAW if (goal_diff == 0) else Result.LOSS
-        han_js = match_js['home_away_neutral']
-        a = 1
-        # match_obj = Match(
-        #     match_id=UUID(match_js['match_id']),
-        #     data_source_match_id=None,
-        #     team_season_id=UUID(match_js['team_season_id']),
-        #     competition_id:UUID|None,
-        #     competition_acronym:str,
-        #     goals_for=goals_for,
-        #     goals_against=goals_against,
-        #     goal_difference=goal_diff,
-        #     pens_for=match_js.get('pens_for', None),
-        #     pens_against=match_js.get('pens_against', None),
-        #     opposition_team_name=match_js['opposition_team_name'],
-        #     result=datetime.strptime(match_js['date'],"%H:%M").time(),
-        #     date=datetime.strptime(match_js['date'], "%Y-%m-%d").date(),
-        #     location=match_js['location'],
-        #     home_away_neutral=HomeAwayNeutral(match_js['home_away_neutral']),
-        #     notes=None
-        # )
+        match_obj = Match(
+            match_id=UUID(match_js['match_id']),
+            data_source_match_id=None,
+            team_season_id=team_season.team_season_id,
+            competition_id=competition_id,
+            goals_for=goals_for,
+            goals_against=goals_against,
+            goal_difference=goal_diff,
+            pens_for=match_js.get('pens_for', None),
+            pens_against=match_js.get('pens_against', None),
+            opposition_team_name=match_js['opposition_team_name'],
+            result=result,
+            date=datetime.strptime(match_js['date'], "%Y-%m-%d").date(),
+            time=datetime.strptime(match_js['time'],"%H:%M").time(),
+            location=match_js['location'],
+            home_away_neutral=HomeAwayNeutral(match_js['home_away_neutral']),
+            notes=None
+        )
+        mig = MetricIdGetter(
+            metric_list=[
+                MetricEnum.APPEARANCES,
+                MetricEnum.GOALS, 
+                MetricEnum.POTM
+            ],
+            data_source=DataSourceEnum.MANUAL
+        )
+        metric_ids = mig.get_metric_ids_dict()
+        player_id_list = [
+            UUID(player_id)
+            for player_id in active_players.keys()
+        ]
+        players_by_id = {
+            str(pl.player_id) : pl
+            for pl in db.session.query(Player) \
+                .filter(Player.player_id.in_(player_id_list)) \
+                .all()
+        }
+        pmps = []
+        new_players = []
+        club_id = team_season.team.club_id
+        for player_id, player_js in active_players.items(): 
+            if player_id not in players_by_id:
+                new_players.append(
+                    Player(
+                        player_id=UUID(player_id),
+                        club_id=club_id,
+                        data_source_player_name=player_js['player_name']
+                    )
+                )
+            pmps.append(
+                PlayerMatchPerformance(
+                    player_id=UUID(player_id),
+                    match_id=match_obj.match_id,
+                    metric_id=metric_ids[MetricEnum.APPEARANCES],
+                    value=1
+                )
+            )
+            if player_id in goals:
+                pmps.append(
+                    PlayerMatchPerformance(
+                        player_id=UUID(player_id),
+                        match_id=match_obj.match_id,
+                        metric_id=metric_ids[MetricEnum.GOALS],
+                        value=goals[player_id]
+                    )
+                )
+            if player_id == potm:
+                pmps.append(
+                    PlayerMatchPerformance(
+                        player_id=UUID(player_id),
+                        match_id=match_obj.match_id,
+                        metric_id=metric_ids[MetricEnum.POTM],
+                        value=1
+                    )
+                )
+        db.session.add_all(new_players)
+        db.session.add_all(pmps)
+        db.session.add(match_obj)
+        db.session.commit()
+        return jsonify(success=True)
     except Exception as e:
         return {
             'message' : traceback.format_exc()
