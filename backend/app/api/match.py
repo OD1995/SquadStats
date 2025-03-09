@@ -1,4 +1,5 @@
 import asyncio
+from datetime import datetime
 import traceback
 from uuid import UUID
 from flask import Blueprint, jsonify, request
@@ -18,7 +19,7 @@ from app.models.Team import Team
 from app.models.TeamSeason import TeamSeason
 from app.scrapers.teams.FootballAssociationTeamScraper import FootballAssociationTeamScraper
 from app.types.GenericTableData import GenericTableData
-from app.types.enums import DataSource as DataSourceEnum
+from app.types.enums import DataSource as DataSourceEnum, HomeAwayNeutral, Result
 
 match_bp = Blueprint(
     name="match",
@@ -308,3 +309,45 @@ def get_matches_data():
         return {
             'message' : traceback.format_exc()
         }, 400
+    
+@match_bp.route("/create", methods=['POST'])
+def create_match():
+    try:
+        req = request.get_json()
+        match_js = req["match"]
+        active_players = req['activePlayers']
+        goals = req['goals']
+        potm = req['potm']
+        ## Could be creating or editing
+        # match_obj = db.session.query(Match) \
+        #     .filter_by(match_id=UUID(match_js['match_id'])) \
+        #     .first()
+        goals_for = match_js['goals_for']
+        goals_against = match_js['goals_against']
+        goal_diff = goals_for - goals_against
+        result = Result.WIN if (goal_diff > 0) else \
+            Result.DRAW if (goal_diff == 0) else Result.LOSS
+        han_js = match_js['home_away_neutral']
+        a = 1
+        # match_obj = Match(
+        #     match_id=UUID(match_js['match_id']),
+        #     data_source_match_id=None,
+        #     team_season_id=UUID(match_js['team_season_id']),
+        #     competition_id:UUID|None,
+        #     competition_acronym:str,
+        #     goals_for=goals_for,
+        #     goals_against=goals_against,
+        #     goal_difference=goal_diff,
+        #     pens_for=match_js.get('pens_for', None),
+        #     pens_against=match_js.get('pens_against', None),
+        #     opposition_team_name=match_js['opposition_team_name'],
+        #     result=datetime.strptime(match_js['date'],"%H:%M").time(),
+        #     date=datetime.strptime(match_js['date'], "%Y-%m-%d").date(),
+        #     location=match_js['location'],
+        #     home_away_neutral=HomeAwayNeutral(match_js['home_away_neutral']),
+        #     notes=None
+        # )
+    except Exception as e:
+        return {
+            'message' : traceback.format_exc()
+        }, 400    

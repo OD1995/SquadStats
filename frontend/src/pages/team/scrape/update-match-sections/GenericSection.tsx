@@ -11,6 +11,7 @@ interface OwnProps {
     match:Match
     setErrorMessage:Function
     potm:string
+    saveMatch:Function
 }
 
 export const GenericSection = (props:OwnProps) => {
@@ -24,6 +25,7 @@ export const GenericSection = (props:OwnProps) => {
                 match={props.match}
                 setErrorMessage={props.setErrorMessage}
                 potm={props.potm}
+                saveMatch={props.saveMatch}
             />
             {props.sectionContent}
         </div>

@@ -1,3 +1,5 @@
+import { Match } from "../types/Match.ts";
+import { Player } from "../types/Player.ts";
 import { makeGetRequest, makePostRequest } from "./api.ts";
 
 class MatchService {
@@ -58,6 +60,23 @@ class MatchService {
             url += `&teamId=${teamId}`;
         }
         return makeGetRequest(url);
+    }
+
+    createMatch(
+        match:Match,
+        activePlayers:Record<string, Player>,
+        goals:Record<string,number>,
+        potm:string
+    ) {
+        return makePostRequest(
+            this.base_url + "/create",
+            {
+                match,
+                activePlayers,
+                goals,
+                potm
+            }
+        )
     }
 }
 

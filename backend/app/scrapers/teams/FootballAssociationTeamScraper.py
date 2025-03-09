@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 from app import db
 from app.helpers.misc import build_url_using_params
 from app.models.Competition import Competition
+from app.models.League import League
 from app.models.Match import Match
 from app.models.MatchError import MatchError
 from app.models.Team import Team
@@ -97,14 +98,19 @@ class FootballAssociationTeamScraper(TeamScraper):
             'div',
             id=lambda x: x and x.startswith('fixture-')
         )
-        competitions = db.session.query(Competition) \
-            .join(TeamSeason) \
-            .join(Team) \
-            .filter(Team.data_source_team_id == self.fa_team_id) \
-            .all()
+        league = db.session.query(League) \
+            .filter_by(data_source_league_id=self.fa_league_id) \
+            .first()
+        if league is None:
+            raise ValueError(f"No league exists for FA league ID - {self.fa_league_id}")
+        # competitions = db.session.query(Competition) \
+        #     .join(TeamSeason) \
+        #     .join(Team) \
+        #     .filter(Team.data_source_team_id == self.fa_team_id) \
+        #     .all()
         competitions_by_name = {
             c.competition_name : c
-            for c in competitions
+            for c in league.competitions
         }
         still_exists = {}
         matches_by_fa_match_id = {}
@@ -113,7 +119,7 @@ class FootballAssociationTeamScraper(TeamScraper):
             matches_by_fa_match_id[m.data_source_match_id] = m
         new_matches = []
         new_match_errors = []
-        new_competitions = []
+        new_competitions = {}
         delete_match_errors = []
         matches_to_return = []
         for fixture_div in fixture_divs:
@@ -128,15 +134,15 @@ class FootballAssociationTeamScraper(TeamScraper):
                 competition = Competition(
                     data_source_competition_id=competition_options.get(competition_name,None),
                     competition_name=competition_name,
-                    team_season_id=team_season_id
+                    league_id=league.league_id,
+                    competition_acronym=None
                 )
-                new_competitions.append(competition)
+                new_competitions[competition.competition_id] = competition
             fa_match_id = match_row.get_fa_match_id()
             if fa_match_id in matches_by_fa_match_id:
                 match = matches_by_fa_match_id[fa_match_id]
                 match.competition_id = competition.competition_id
                 match.team_season_id = team_season_id
-                match.competition_acronym = match_row.get_competition_acronym()
                 match.goals_for=match_row.get_goals_for()
                 match.goals_against=match_row.get_goals_against()
                 match.goal_difference=match_row.get_goal_difference()
@@ -156,7 +162,6 @@ class FootballAssociationTeamScraper(TeamScraper):
                     data_source_match_id=match_row.get_fa_match_id(),
                     competition_id=competition.competition_id,
                     team_season_id=team_season_id,
-                    competition_acronym=match_row.get_competition_acronym(),
                     goals_for=match_row.get_goals_for(),
                     goals_against=match_row.get_goals_against(),
                     goal_difference=match_row.get_goal_difference(),
@@ -171,6 +176,9 @@ class FootballAssociationTeamScraper(TeamScraper):
                     notes=match_row.get_notes()
                 )
                 new_matches.append(match)
+            if competition.competition_acronym == None:
+                competition.competition_acronym = match_row.get_competition_acronym()
+                new_competitions[competition.competition_id] = competition
             match_errors = [
                 MatchError(
                     match_id=match.match_id,
@@ -189,7 +197,7 @@ class FootballAssociationTeamScraper(TeamScraper):
         return (
             new_matches,
             new_match_errors,
-            new_competitions,
+            list(new_competitions.values()),
             delete_match_errors,
             match_ids_to_delete,
             matches_to_return

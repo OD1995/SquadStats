@@ -45,6 +45,10 @@ export enum MATCH_LOCATION_TYPE {
     NEW_LOCATION = '-- New Location --'
 }
 
+export enum MATCH_COMPETITION_TYPE {
+    NEW_COMPETITION = '-- New Competition --'
+}
+
 export enum UPDATE_MATCH_SECTIONS {
     MATCH_INFO = 'Match Info',
     PLAYERS = 'Players',

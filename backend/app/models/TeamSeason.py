@@ -31,6 +31,7 @@ class TeamSeason(Base):
     team: Mapped[Team] = relationship(back_populates='team_seasons')
     league_season: Mapped[LeagueSeason] = relationship(back_populates='team_season')
     matches: Mapped[List["Match"]] = relationship(back_populates='team_season')
+    # competition: Mapped[Com]
 
     def __init__(
         self,

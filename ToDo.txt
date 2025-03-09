@@ -2,11 +2,13 @@ If no clubs, put message and link to 'Add Clubs'/'Get Started'
 
 Write some tests
 
-Write 'About' page
+Write 'About' page, include description on Leagues/Comps
 
 Make sure same club not added twice, once testing finished
 
 get_team_matches for manual entry team
+
+Make sure all necessary endpoints need a user
 
 Maybe combine backend calls for team and club overview pages
 

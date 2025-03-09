@@ -3,7 +3,8 @@ import { MatchError } from "./MatchError";
 export interface Match {
     match_id:string,
     data_source_match_id: string,
-    competition_acronym: string,
+    team_season_id: string,
+    competition_id: string,
     goals_for: number,
     goals_against: number,
     goal_difference: number,

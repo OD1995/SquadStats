@@ -99,20 +99,34 @@ export const generateId = () => {
     return Math.floor(Math.random() * 10000)
 }
 
+export const getFontSize = (
+    text:string,
+    startingVal:number,
+    maxChars:number,
+    increment:number
+) => {
+    var val = startingVal;
+    if (text.length > maxChars) {
+        val -= (text.length - maxChars) * increment
+    }
+    return `${val}rem`
+}
+
 export const getBigTitle = (title:string|undefined) => {
     if (title == undefined) {
         return;
     }
-    var val = 2;
-    const max_chars = 16
-    if (title.length > max_chars) {
-        val -= (title.length - max_chars) * 0.0455
-    }
+    // var val = 2;
+    // const max_chars = 16
+    // if (title.length > max_chars) {
+    //     val -= (title.length - max_chars) * 0.0455
+    // }
     return (
         <h1
             style={{
                 marginLeft: "5vw",
-                fontSize: `${val}rem`,
+                // fontSize: `${val}rem`,
+                fontSize: getFontSize(title, 2, 16, 0.0455),
                 marginBottom: "3vh",
             }}
         >

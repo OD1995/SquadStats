@@ -82,38 +82,6 @@ class MatchesFilterDataHandler:
             reverse=True
         )
         return result
-        # league_ids = []
-        # team_ids = []
-        # for team in club.teams:
-        #     for tl in team.team_leagues:
-        #         league_ids.append(tl.league_id)
-        #     team_ids.append(team.team_id)
-        # league_seasons = db.session.query(LeagueSeason) \
-        #     .join(League) \
-        #     .filter(League.league_id.in_(league_ids)) \
-        #     .order_by(LeagueSeason.data_source_season_name.desc()) \
-        #     .all()
-        # result = {}
-        # distinct_season_names = {
-        #     ls.data_source_season_name : {
-        #         'season_name' : ls.data_source_season_name,
-        #         'season_id' : ls.data_source_season_name
-        #     }
-        #     for ls in league_seasons
-        # }
-        # for team_id in team_ids:
-        #     ls_info_list = []
-        #     for ls in league_seasons:
-        #         for team_lg in ls.league.team_leagues:
-        #             if team_id == team_lg.team_id:
-        #                 ls_info_list.append(ls.get_league_season_info())
-        #     result[str(team_id)] = ls_info_list
-        # result[''] = sorted(list(
-        #     distinct_season_names.values()),
-        #     key=itemgetter('season_name'),
-        #     reverse=True
-        # )
-        # return result
     
     def get_team_seasons(self, team:Team|None):
         if team is None:

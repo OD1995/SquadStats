@@ -11,6 +11,10 @@ import { MatchInfoInput } from "./MatchInfoInput";
 import { GoalsInput } from "./GoalsInput";
 import { Match } from "../../../../types/Match";
 import { UPDATE_MATCH_SECTIONS } from "../../../../types/enums";
+import MatchService from "../../../../services/MatchService";
+import { BackendResponse } from "../../../../types/BackendResponse";
+import { Competition } from "../../../../types/Competition";
+import {v4 as uuidv4} from "uuid";
 
 interface SectionInfo {
     subtitle:string
@@ -25,17 +29,21 @@ export const UpdateMatch = () => {
     const [activePlayers, setActivePlayers] = useState<Record<string, Player>>({});
     const [match, setMatch] = useState<Match>({
         goals_for: 0,
-        goals_against: 0
+        goals_against: 0,
     } as Match);
     const [locations, setLocations] = useState<Record<string,string[]>>();
-    // const [playerGoalsAndPotms, setPlayerGoalsAndPotms] = useState<Record<string, GoalsAndPotm>>({});
     const [goals, setGoals] = useState<Record<string, number>>({});
     const [potm, setPotm] = useState<string>("");
+    // const [newCompetition, setNewCompetition] = useState<Competition>();
+    const [newCompName, setNewCompName] = useState<string>("");
+    const [newCompAcronym, setNewCompAcronym] = useState<string>("");
+    const [competitions, setCompetitions] = useState<Competition[]>([]);
     const [errorMessage, setErrorMessage] = useState<string>("");
 
     const user = getUserLS();
     let { teamId, teamSeasonId, matchId } = useParams();
     const navigate = useNavigate();
+    const newCompId = uuidv4();
 
     const sectionArray = [
         {
@@ -45,6 +53,12 @@ export const UpdateMatch = () => {
                     match={match}
                     setMatch={setMatch}
                     locations={locations}
+                    competitions={competitions}
+                    newCompName={newCompName}
+                    setNewCompName={setNewCompName}
+                    newCompAcronym={newCompAcronym}
+                    setNewCompAcronym={setNewCompAcronym}
+                    newCompId={newCompId}
                 />
             )
         },
@@ -64,8 +78,6 @@ export const UpdateMatch = () => {
             sectionContent: (
                 <GoalsInput
                     activePlayers={activePlayers}
-                    // playerGoalsAndPotms={playerGoalsAndPotms}
-                    // setPlayerGoalsAndPotms={setPlayerGoalsAndPotms}
                     goals={goals}
                     setGoals={setGoals}
                     potm={potm}
@@ -88,6 +100,16 @@ export const UpdateMatch = () => {
                 {
                     'H': ['The Beach']
                 } as Record<string, string[]>
+            )
+            setCompetitions(
+                [
+                    {
+                        competition_id: uuidv4(),
+                        league_id: uuidv4(),
+                        competition_name: "Docklands Football League",
+                        competition_acronym: "DFL"
+                    }
+                ] as Competition[]
             )
             setMatch(
                 {
@@ -128,6 +150,15 @@ export const UpdateMatch = () => {
                     player_name: 'Corey Kearney-Wellington'
                 },
             });
+            setMatch(
+                (prevMatch:Match) => (
+                    {
+                        ...prevMatch,
+                        match_id: matchId!,
+                        team_season_id: teamSeasonId!
+                    }
+                )
+            );
         },
         []
     )
@@ -146,15 +177,15 @@ export const UpdateMatch = () => {
         return sectionArray[sectionIndex + 1].subtitle;
     }
 
-    // const serialiseMatch = (match:Match) => {
-    //     return JSON.stringify(match);
-    // }
-
     const serialiseMatch = (match:Match) => {
-        return Object.entries(match)
-        .map(([key, value]) => `${key}: ${value}`)
-        .join("\n");
+        return JSON.stringify(match);
     }
+
+    // const serialiseMatch = (match:Match) => {
+    //     return Object.entries(match)
+    //     .map(([key, value]) => `${key}: ${value}`)
+    //     .join("\n");
+    // }
 
     // useEffect(
     //     () => {
@@ -169,6 +200,23 @@ export const UpdateMatch = () => {
     //     },
     //     [goals, potm]
     // )
+
+    const saveMatch = () => {
+        MatchService.createMatch(
+            match,
+            activePlayers,
+            goals,
+            potm
+        ).then(
+            (res:BackendResponse) => {
+                if (res.success) {
+                    navigate(`/match/${match.match_id}`);
+                } else {
+                    setErrorMessage(res.data.message);
+                }
+            }
+        )
+    }
 
     return (
         <div className='page-parent'>
@@ -190,6 +238,7 @@ export const UpdateMatch = () => {
                 match={match}
                 setErrorMessage={setErrorMessage}
                 potm={potm}
+                saveMatch={saveMatch}
             />
         </div>
     );

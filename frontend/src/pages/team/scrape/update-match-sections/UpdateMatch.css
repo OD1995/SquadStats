@@ -38,11 +38,11 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 45vw;
+    text-align: center;
 }
 
 #match-info-input-labels {
-    /* width: 50vw; */
+    width: 40vw;
 }
 
 #match-info-input {
@@ -56,6 +56,8 @@
     display: flex;
     align-items: center;
     max-width: 200px;
+    width: 45vw;
+    justify-content: center;
 }
 
 #mii-time-input {
@@ -70,7 +72,6 @@
     display: flex;
     flex-direction: row;
     padding: 0;
-    /* border: 1px solid red; */
     width: 120px;
     justify-content: space-around;
 }
@@ -125,8 +126,6 @@
 }
 
 #goals-input {
-    /* height: 60vh; */
-    /* border: 1px solid blue; */
     text-align: center;
 }
 
@@ -141,22 +140,22 @@
 
 .gi-name {
     width: 35vw;
-    /* border: 1px solid pink; */
 }
 
 .gi-goals {
     width: 35vw;
-    /* border: 1px solid pink; */
 }
 
 .gi-potm {
     width: 20vw;
-    /* border: 1px solid pink; */
 }
 
 #goals-scored-text {
     font-style: italic;
     margin-bottom: 1.5vh;
-    /* border: 1px solid #646cff; */
-    /* max-width: fit-content; */
+}
+
+.mii-select {
+    max-width: 180px;
+    text-align: center;
 }

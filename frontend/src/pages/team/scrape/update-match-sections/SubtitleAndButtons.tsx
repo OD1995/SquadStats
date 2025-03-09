@@ -9,6 +9,7 @@ interface OwnProps {
     match:Match
     setErrorMessage:Function
     potm:string
+    saveMatch:Function
 }
 
 export const SubtitleAndButtons = (props:OwnProps) => {
@@ -46,7 +47,11 @@ export const SubtitleAndButtons = (props:OwnProps) => {
         }
         if (advance) {
             props.setErrorMessage("");
-            props.setSectionIndex((prevVal:number) => prevVal + 1)
+            if (props.forwardText === null) {
+                props.saveMatch();
+            } else {
+                props.setSectionIndex((prevVal:number) => prevVal + 1);
+            }
         }
     }
 
@@ -85,7 +90,6 @@ export const SubtitleAndButtons = (props:OwnProps) => {
                 ) : (
                     <button
                         className="sab-button-text ss-green-button"
-                        // disabled={true}
                         onClick={validateAndMoveForward}
                     >
                         Save

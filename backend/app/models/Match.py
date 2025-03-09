@@ -22,7 +22,10 @@ class Match(Base):
     __table_args__ = {"mysql_engine": "InnoDB"}
     
     match_id: Mapped[UUID] = mapped_column(primary_key=True)
-    data_source_match_id: Mapped[str] = mapped_column(String(50))
+    data_source_match_id: Mapped[str] = mapped_column(
+        String(50),
+        nullable=True
+    )
     competition_id: Mapped[UUID] = mapped_column(
         ForeignKey("competitions.competition_id", name="fk_competitions_competition_id"),
         index=True,
@@ -32,7 +35,6 @@ class Match(Base):
         ForeignKey("team_seasons.team_season_id", name="team_seasons_team_season_id"),
         index=True
     )
-    competition_acronym: Mapped[str] = mapped_column(String(10), nullable=True)
     goals_for: Mapped[int] = mapped_column(nullable=True)
     goals_against: Mapped[int] = mapped_column(nullable=True)
     goal_difference: Mapped[int] = mapped_column(nullable=True)
@@ -55,10 +57,9 @@ class Match(Base):
 
     def __init__(
         self,
-        data_source_match_id:str,
+        data_source_match_id:str|None,
         team_season_id:UUID,
         competition_id:UUID|None,
-        competition_acronym:str,
         goals_for:int,
         goals_against:int,
         goal_difference:int,
@@ -70,13 +71,13 @@ class Match(Base):
         time:timeDT,
         location:str,
         home_away_neutral:HomeAwayNeutral,
-        notes:str
+        notes:str,
+        match_id:UUID|None=None,
     ):
-        self.match_id = uuid4()
+        self.match_id = match_id or uuid4()
         self.data_source_match_id = data_source_match_id
         self.team_season_id = team_season_id
         self.competition_id = competition_id
-        self.competition_acronym = competition_acronym
         self.goals_for = goals_for
         self.goals_against = goals_against
         self.goal_difference = goal_difference
@@ -204,7 +205,7 @@ class Match(Base):
             'match_id' : self.match_id,
             'data_source_match_id' : self.data_source_match_id,
             'team_season_id' : self.team_season_id,
-            'competition_acronym' : self.competition_acronym,
+            'competition_acronym' : self.competition.competition_acronym,
             'goals_for' : self.goals_for,
             'goals_against' : self.goals_against,
             'goal_difference' : self.goal_difference,

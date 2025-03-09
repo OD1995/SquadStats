@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent } from "react";
 import { BasicNumberInput } from "../../../../generic/BasicNumberInput";
 import { Player } from "../../../../types/Player";
 
@@ -13,25 +13,12 @@ interface OwnProps {
 
 export const GoalsInput = (props:OwnProps) => {
 
-    // const [rows, setRows] = useState<JSX.Element[]>([]);
-
     const updatePlayerGoals = (
         playerId:string,
         updater: ((prev: number) => number)// | number | string | null
     ) => {
-        // props.setMatch((prevMatch) => ({
-        //     ...prevMatch,
-        //     [key]: typeof updater === "function"
-        //         ? updater(prevMatch[key] as number ?? 0) // Ensure prev is always a number
-        //         : updater,
-        // }));
         props.setGoals(
             (prevGoals:Record<string, number>) => {
-                // const gap = prevPgap[playerId] ?? {
-                //     goals: null,
-                //     potm: false
-                // } as GoalsAndPotm;
-                // gap.goals = updater(gap.goals ?? 0)
                 return {
                     ...prevGoals,
                     [playerId]: updater(prevGoals[playerId] ?? 0)
@@ -39,22 +26,6 @@ export const GoalsInput = (props:OwnProps) => {
             }
         )
     };
-
-    // const updatePlayerPotm = (playerId:string, newVal:boolean) => {
-    //     props.setPlayerGoalsAndPotms(
-    //         (prevPgap:Record<string, GoalsAndPotm>) => {
-    //             const gap = prevPgap[playerId] ?? {
-    //                 goals: null,
-    //                 potm: false
-    //             } as GoalsAndPotm;
-    //             gap.potm = newVal;
-    //             return {
-    //                 ...prevPgap,
-    //                 [playerId]: gap
-    //             }
-    //         }
-    //     )
-    // }
 
     const handlePotmChange = (playerId:string, isChecked:boolean) => {
         if (isChecked) {
@@ -103,9 +74,6 @@ export const GoalsInput = (props:OwnProps) => {
                 goalsVal = goalsLeftToAssign;
             } else {
                 player = props.activePlayers[playerId];
-                // if ((props.playerGoalsAndPotms) && (props.playerGoalsAndPotms[playerId])) {
-                // if (props.goals[playerId])
-                // }
                 goalsVal = Math.min(props.goals[playerId] ?? 0, goalsLeftToAssign);
                 goalsLeftToAssign -= goalsVal;
                 potmInput = (
@@ -139,13 +107,6 @@ export const GoalsInput = (props:OwnProps) => {
         }
         return rows;
     }
-
-    // useEffect(
-    //     () => {
-    //         setRows(getRows())
-    //     },
-    //     [props.playerGoalsAndPotms]
-    // )
 
     return (
         <div id='goals-input'>
