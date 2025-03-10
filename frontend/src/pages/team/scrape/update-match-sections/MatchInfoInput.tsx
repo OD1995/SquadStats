@@ -16,15 +16,16 @@ interface OwnProps {
     setNewCompName:Function
     newCompAcronym:string
     setNewCompAcronym:Function
-    // newCompId:string
     newLocation:string
     setNewLocation:Function
+    locationDropdownVal:string
+    setLocationDropdownVal:Function
+    competitionDropdownVal:string
+    setCompetitionDropdownVal:Function
 }
 
 export const MatchInfoInput = (props:OwnProps) => {
     const [showPens, setShowPens] = useState<boolean>(false);
-    const [locationDropdownVal, setLocationDropdownVal] = useState<string>("");
-    const [competitionDropdownVal, setCompetitionDropdownVal] = useState<string>("");
 
     // Function to update match properties (supports function updaters)
     const updateMatch = (
@@ -52,10 +53,10 @@ export const MatchInfoInput = (props:OwnProps) => {
     useEffect(
         () => {
             if ((props.newCompName != "") || (props.newCompAcronym != "")) {
-                setCompetitionDropdownVal(MATCH_COMPETITION_TYPE.NEW_COMPETITION);
+                props.setCompetitionDropdownVal(MATCH_COMPETITION_TYPE.NEW_COMPETITION);
             }
             if (props.newLocation) {
-                setLocationDropdownVal(MATCH_LOCATION_TYPE.NEW_LOCATION);
+                props.setLocationDropdownVal(MATCH_LOCATION_TYPE.NEW_LOCATION);
             }
         },
         []
@@ -85,7 +86,7 @@ export const MatchInfoInput = (props:OwnProps) => {
     const labels = [
         createBoldLabel("Competition"),
         ...(
-            (competitionDropdownVal == MATCH_COMPETITION_TYPE.NEW_COMPETITION) ? 
+            (props.competitionDropdownVal == MATCH_COMPETITION_TYPE.NEW_COMPETITION) ? 
             [
                 createItalicLabel("New Competition Name"),
                 createItalicLabel("New Competition Acronym/Shortening")
@@ -96,7 +97,7 @@ export const MatchInfoInput = (props:OwnProps) => {
         createBoldLabel("Home/Away/Neutral"),
         createBoldLabel("Location"),
         ...(
-            (locationDropdownVal == MATCH_LOCATION_TYPE.NEW_LOCATION) ?
+            (props.locationDropdownVal == MATCH_LOCATION_TYPE.NEW_LOCATION) ?
             [createItalicLabel("New Location")] : []
         ),
         createBoldLabel("Opponent"),
@@ -112,12 +113,12 @@ export const MatchInfoInput = (props:OwnProps) => {
 
     const setLoc = (loc:string) => {
         updateMatch('location', loc);
-        setLocationDropdownVal(loc);
+        props.setLocationDropdownVal(loc);
     }
 
     const setComp = (comp:string) => {
         updateMatch('competition_id',comp);
-        setCompetitionDropdownVal(comp);
+        props.setCompetitionDropdownVal(comp);
     }
 
     const createDummyComp = (basicVal:string) => {
@@ -157,7 +158,7 @@ export const MatchInfoInput = (props:OwnProps) => {
                     <select
                         id='competition-select'
                         className="mii-select"
-                        value={competitionDropdownVal}
+                        value={props.competitionDropdownVal}
                         onChange={(e) => setComp(e.target.value)}
                     >
                         {
@@ -185,7 +186,7 @@ export const MatchInfoInput = (props:OwnProps) => {
                     </select>
                 </div>
                 {
-                    (competitionDropdownVal == MATCH_COMPETITION_TYPE.NEW_COMPETITION) && (
+                    (props.competitionDropdownVal == MATCH_COMPETITION_TYPE.NEW_COMPETITION) && (
                         <>
                             <div className="match-info-input-row">
                                 <input
@@ -208,8 +209,8 @@ export const MatchInfoInput = (props:OwnProps) => {
                 <div className="match-info-input-row">
                     <input
                         type="date"
-                        value={props.match.date ?? ""}
-                        onChange={(e) => updateMatch("date", e.target.value)}
+                        value={props.match.computer_date ?? ""}
+                        onChange={(e) => updateMatch("computer_date", e.target.value)}
                     />
                 </div>
                 <div className="match-info-input-row">
@@ -243,7 +244,7 @@ export const MatchInfoInput = (props:OwnProps) => {
                 <div className="match-info-input-row">
                     <select
                         id='location-select'
-                        value={locationDropdownVal}
+                        value={props.locationDropdownVal}
                         onChange={(e) => setLoc(e.target.value)}
                         disabled={props.match.home_away_neutral == undefined}
                     >
@@ -265,7 +266,7 @@ export const MatchInfoInput = (props:OwnProps) => {
                     </select>
                 </div>
                 {
-                    (locationDropdownVal == MATCH_LOCATION_TYPE.NEW_LOCATION) && (
+                    (props.locationDropdownVal == MATCH_LOCATION_TYPE.NEW_LOCATION) && (
                         <div className="match-info-input-row">
                             <input
                                 type="text"

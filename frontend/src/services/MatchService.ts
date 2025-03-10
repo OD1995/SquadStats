@@ -62,6 +62,15 @@ class MatchService {
         return makeGetRequest(url);
     }
 
+    getMatchEditUpdateInfo(
+        teamId:string,
+        matchId:string,
+        leagueSeasonId:string
+    ) {
+        const url = this.base_url + `/get-match-edit-update-data-info/${leagueSeasonId}/${teamId}/${matchId}`
+        return makeGetRequest(url)
+    }
+
     createMatch(
         match:Match,
         activePlayers:Record<string, Player>,

@@ -32,7 +32,7 @@ export const UpdateMatch = () => {
         goals_for: 0,
         goals_against: 0,
     } as Match);
-    const [locations, setLocations] = useState<Record<string,string[]>>();
+    const [locations, setLocations] = useState<Record<string,string[]>>({});
     const [goals, setGoals] = useState<Record<string, number>>({});
     const [potm, setPotm] = useState<string>("");
     // const [newCompetition, setNewCompetition] = useState<Competition>();
@@ -41,6 +41,8 @@ export const UpdateMatch = () => {
     const [newLocation, setNewLocation] = useState<string>("");
     const [competitions, setCompetitions] = useState<Competition[]>([]);
     const [errorMessage, setErrorMessage] = useState<string>("");
+    const [locationDropdownVal, setLocationDropdownVal] = useState<string>("");
+    const [competitionDropdownVal, setCompetitionDropdownVal] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
 
     const user = getUserLS();
@@ -63,6 +65,10 @@ export const UpdateMatch = () => {
                     setNewCompAcronym={setNewCompAcronym}
                     newLocation={newLocation}
                     setNewLocation={setNewLocation}
+                    locationDropdownVal={locationDropdownVal}
+                    setLocationDropdownVal={setLocationDropdownVal}
+                    competitionDropdownVal={competitionDropdownVal}
+                    setCompetitionDropdownVal={setCompetitionDropdownVal}
                 />
             )
         },
@@ -100,32 +106,67 @@ export const UpdateMatch = () => {
                 const _team_ = getTeam(user, teamId);
                 setTeam(_team_!);
             }
-            setLocations(
-                {
-                    'H': ['The Beach']
-                } as Record<string, string[]>
-            )
-            setCompetitions(
-                [
-                    {
-                        competition_id: uuidv4(),
-                        league_id: uuidv4(),
-                        competition_name: "Test Competition",
-                        competition_acronym: "TC"
+            setLoading(true);
+            MatchService.getMatchEditUpdateInfo(
+                teamId!,
+                matchId!,
+                leagueSeasonId!
+            ).then(
+                (res:BackendResponse) => {
+                    if (res.success) {
+                        setLocations(res.data.locations as Record<string,string[]>);
+                        setCompetitions(res.data.competitions as Competition[]);
+                        setAvailablePlayers(res.data.available_player as Record<string, Player>);
+                        if (res.data.match) {
+                            const m = res.data.match as Match;
+                            setMatch(m);
+                            setCompetitionDropdownVal(m.competition_id);
+                            setLocationDropdownVal(m.location);
+                        }
+                        if (res.data.active_players) {
+                            setActivePlayers(res.data.active_players as Record<string, Player>);
+                        }
+                        if (res.data.available_players) {
+                            setAvailablePlayers(res.data.available_players as Record<string, Player>);
+                        }
+                        if (res.data.goals) {
+                            setGoals(res.data.goals as Record<string, number>);
+                        }
+                        if (res.data.potm) {
+                            setPotm(res.data.potm as string);
+                        }
+                    } else {
+                        setErrorMessage(res.data.message);
                     }
-                ] as Competition[]
+                    setLoading(false);
+                }
             )
-            setMatch(
-                {
-                    date: "1995-03-13",
-                    time: "19:15",
-                    opposition_team_name: "X",
-                    home_away_neutral: "H",
-                    location: "The Beach",
-                    goals_for: 4,
-                    goals_against: 2
-                } as Match
-            );
+            // setLocations(
+            //     {
+            //         'H': ['The Beach']
+            //     } as Record<string, string[]>
+            // )
+            // setCompetitions(
+            //     [
+            //         {
+            //             competition_id: uuidv4(),
+            //             league_id: uuidv4(),
+            //             competition_name: "Test Competition",
+            //             competition_acronym: "TC"
+            //         }
+            //     ] as Competition[]
+            // )
+            // setMatch(
+            //     {
+            //         date: "1995-03-13",
+            //         time: "19:15",
+            //         opposition_team_name: "X",
+            //         home_away_neutral: "H",
+            //         location: "The Beach",
+            //         goals_for: 4,
+            //         goals_against: 2
+            //     } as Match
+            // );
             // setActivePlayers({
             //     'ad' : {
             //         player_id: 'ad',

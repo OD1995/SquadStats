@@ -20,7 +20,7 @@ from app.models.PlayerMatchPerformance import PlayerMatchPerformance
 from app.models.Team import Team
 from app.models.TeamSeason import TeamSeason
 from app.scrapers.teams.FootballAssociationTeamScraper import FootballAssociationTeamScraper
-from app.types.enums import DataSource as DataSourceEnum, HomeAwayNeutral, Result, Metric as MetricEnum
+from app.types.enums import DataSource as DataSourceEnum, HomeAwayNeutral, MiscStrings, Result, Metric as MetricEnum
 
 match_bp = Blueprint(
     name="match",
@@ -311,6 +311,16 @@ def get_matches_data():
             'message' : traceback.format_exc()
         }, 400
     
+@match_bp.route("/get-match-edit-update-data-info/<league_season_id>/<team_id>/<match_id>", methods=['GET'])
+def get_match_edit_update(league_season_id, team_id, match_id):
+    try:
+        match_info_data_handler = MatchInfoDataHandler(match_id)
+        return jsonify(match_info_data_handler.get_edit_update_info(league_season_id, team_id))
+    except Exception as e:
+        return {
+            'message' : traceback.format_exc()
+        }, 400
+
 @match_bp.route("/create", methods=['POST'])
 def create_match():
     try:
@@ -363,7 +373,7 @@ def create_match():
             pens_against=match_js.get('pens_against', None),
             opposition_team_name=match_js['opposition_team_name'],
             result=result,
-            date=datetime.strptime(match_js['date'], "%Y-%m-%d").date(),
+            date=datetime.strptime(match_js['computer_date'], "%Y-%m-%d").date(),
             time=datetime.strptime(match_js['time'],"%H:%M").time(),
             location=match_js['location'],
             home_away_neutral=HomeAwayNeutral(match_js['home_away_neutral']),
@@ -426,9 +436,41 @@ def create_match():
                         value=1
                     )
                 )
-        db.session.add_all(new_players)
-        db.session.add_all(pmps)
-        db.session.add(match_obj)
+        club_own_goaler = db.session.query(Player) \
+            .filter(
+                Player.data_source_player_name == MiscStrings.OWN_GOALS,
+                Player.club_id == club_id
+            ) \
+            .first()
+        if club_own_goaler is None:
+            club_own_goaler = Player(
+                club_id=club_id,
+                data_source_player_name=MiscStrings.OWN_GOALS
+            )
+            new_players.append(club_own_goaler)
+        pmps.append(
+            PlayerMatchPerformance(
+                player_id=club_own_goaler.player_id,
+                metric_id=metric_ids[MetricEnum.APPEARANCES],
+                value=1,
+                match_id=match_obj.match_id
+            )
+        )
+        own_goals = match_obj.goals_for - sum(goals.values())
+        if own_goals > 0:
+            pmps.append(
+                PlayerMatchPerformance(
+                    player_id=club_own_goaler.player_id,
+                    metric_id=metric_ids[MetricEnum.GOALS],
+                    value=own_goals,
+                    match_id=match_obj.match_id
+                )
+            )
+        for np in new_players:
+            db.session.merge(np)
+        for pmp in pmps:
+            db.session.merge(pmp)
+        db.session.merge(match_obj)
         db.session.commit()
         return jsonify(success=True)
     except Exception as e:

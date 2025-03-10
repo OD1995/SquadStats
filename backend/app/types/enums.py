@@ -49,3 +49,4 @@ class LeaderboardType(str, Enum):
 class MiscStrings(str, Enum):
     WITH: str = 'With'
     WITHOUT: str = 'Without'
+    OWN_GOALS: str = 'OWN GOALS'

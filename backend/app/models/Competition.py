@@ -38,5 +38,8 @@ class Competition(Base):
 
     def get_competition_info(self):
         return {
-            
+            'competition_id' : self.competition_id,
+            'competition_name' : self.competition_name,
+            'competition_acronym' : self.competition_acronym,
+            'league_id' : self.league_id
         }

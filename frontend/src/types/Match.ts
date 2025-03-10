@@ -14,6 +14,7 @@ export interface Match {
     opposition_team_name: string,
     result: string,
     date: string,
+    computer_date: string,
     time: string,
     location: string,
     home_away_neutral: string,
