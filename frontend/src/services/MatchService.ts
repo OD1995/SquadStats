@@ -79,8 +79,10 @@ class MatchService {
         newCompName:string, 
         newCompAcronym:string,
         teamId:string,
-        leagueSeasonId:string
+        leagueSeasonId:string,
+        newLocation:string
     ) {
+        match.location = newLocation;
         return makePostRequest(
             this.base_url + "/create",
             {
@@ -91,7 +93,8 @@ class MatchService {
                 newCompName,
                 newCompAcronym,
                 teamId,
-                leagueSeasonId
+                leagueSeasonId,
+                // newLocation
             }
         )
     }

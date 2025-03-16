@@ -14,6 +14,7 @@ interface OwnProps {
     saveMatch:Function
     newCompName:string
     newCompAcronym:string
+    newLocation:string
 }
 
 export const GenericSection = (props:OwnProps) => {
@@ -30,6 +31,7 @@ export const GenericSection = (props:OwnProps) => {
                 saveMatch={props.saveMatch}
                 newCompName={props.newCompName}
                 newCompAcronym={props.newCompAcronym}
+                newLocation={props.newLocation}
             />
             {props.sectionContent}
         </div>

@@ -1,18 +1,19 @@
 import { FormControl, MenuItem, Select, SelectChangeEvent } from "@mui/material"
 import { League } from "../types/League"
+import { Match } from "../types/Match"
 
 interface OwnProps {
-    leagues:Record<string, League>
-    selectedLeague:string
-    setSelectedLeague:Function
+    matches:Match[]
+    selectedMatch:string
+    setSelectedMatch:Function
     flexDirection:'row'|'column'
     justifyContent?:string
 }
 
-export const LeagueSelection = (props:OwnProps) => {
+export const MatchSelection = (props:OwnProps) => {
 
-    const handleLeagueSelect = (event:SelectChangeEvent) => {
-        props.setSelectedLeague(event.target.value as string);
+    const handleMatchSelect = (event:SelectChangeEvent) => {
+        props.setSelectedMatch(event.target.value as string);
     }
 
     return (
@@ -24,23 +25,24 @@ export const LeagueSelection = (props:OwnProps) => {
             }}
         >
             <strong id='team-scrape-season-label'>
-                League
+                Match
             </strong>
             <FormControl>
                 <Select
                     className="filter-select"
-                    value={props.selectedLeague}
-                    onChange={handleLeagueSelect}
+                    value={props.selectedMatch}
+                    onChange={handleMatchSelect}
                 >
                     {
-                        Object.values(props.leagues).map(
-                            (league:League) => {
+                        props.matches.map(
+                            (match:Match) => {
+                                const matchName = `${match.opposition_team_name} (${match.home_away_neutral}) ${match.date}`;
                                 return (
                                     <MenuItem
-                                        key={league.league_id}
-                                        value={league.league_id}
+                                        key={match.match_id}
+                                        value={match.match_id}
                                     >
-                                        {league.league_name}
+                                        {matchName}
                                     </MenuItem>
                                 )
                             }

@@ -28,6 +28,7 @@ export const SeasonSelection = (props:OwnProps) => {
             </strong>
             <FormControl>
                 <Select
+                    className="filter-select"
                     value={props.selectedSeason}
                     onChange={handleSeasonSelect}
                 >

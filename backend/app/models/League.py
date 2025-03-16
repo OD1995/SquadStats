@@ -43,10 +43,13 @@ class League(Base):
         self.data_source_league_id = data_source_league_id
         self.data_source_id = data_source_id
 
-    def get_league_info(self):
+    def get_league_info(self, include_team_season=False):
         return {
             'league_id' : self.league_id,
             'league_name' : self.league_name,
-            'league_seasons' : [ls.get_league_season_info() for ls in self.league_seasons],
+            'league_seasons' : {
+                str(ls.league_season_id) : ls.get_league_season_info(include_team_season=include_team_season)
+                for ls in self.league_seasons
+            },
             'competitions' : [c.get_competition_info() for c in self.competitions]
         }

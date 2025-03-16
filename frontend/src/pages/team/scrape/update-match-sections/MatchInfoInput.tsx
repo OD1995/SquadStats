@@ -83,33 +83,46 @@ export const MatchInfoInput = (props:OwnProps) => {
             }
         } as GenericTableCell
     }
-    const labels = [
-        createBoldLabel("Competition"),
-        ...(
-            (props.competitionDropdownVal == MATCH_COMPETITION_TYPE.NEW_COMPETITION) ? 
+    const getLabels = () => {
+        var labels = [];
+        labels.push(createBoldLabel("Competition"));
+        if (props.competitionDropdownVal == MATCH_COMPETITION_TYPE.NEW_COMPETITION) {
+            labels = labels.concat(
+                [
+                    createItalicLabel("New Competition Name"),
+                    createItalicLabel("New Competition Acronym/Shortening")
+                ]
+            );
+        }
+        labels = labels.concat(
             [
-                createItalicLabel("New Competition Name"),
-                createItalicLabel("New Competition Acronym/Shortening")
-            ] : []
-        ),
-        createBoldLabel("Date"),
-        createBoldLabel("Time"),
-        createBoldLabel("Home/Away/Neutral"),
-        createBoldLabel("Location"),
-        ...(
-            (props.locationDropdownVal == MATCH_LOCATION_TYPE.NEW_LOCATION) ?
-            [createItalicLabel("New Location")] : []
-        ),
-        createBoldLabel("Opponent"),
-        createBoldLabel("Goals For"),
-        createBoldLabel("Goals Against"),
-        createBoldLabel("Penalties?"),
-        ...(
-            showPens ? [
-            createBoldLabel("Penalties For"),
-            createBoldLabel("Penalties Against")
-        ] : []),
-    ] as GenericTableCell[];
+                createBoldLabel("Date"),
+                createBoldLabel("Time"),
+                createBoldLabel("Home/Away/Neutral"),
+                createBoldLabel("Location"),
+            ]
+        );
+        if (props.locationDropdownVal == MATCH_LOCATION_TYPE.NEW_LOCATION) {
+            labels.push(createItalicLabel("New Location"));
+        }
+        labels = labels.concat(
+            [
+                createBoldLabel("Opponent"),
+                createBoldLabel("Goals For"),
+                createBoldLabel("Goals Against"),
+                createBoldLabel("Penalties?"),
+            ]
+        );
+        if (showPens) {
+            labels = labels.concat(
+                [
+                    createBoldLabel("Penalties For"),
+                    createBoldLabel("Penalties Against")
+                ]
+            )
+        }
+        return labels as GenericTableCell[];
+    } 
 
     const setLoc = (loc:string) => {
         updateMatch('location', loc);
@@ -140,7 +153,7 @@ export const MatchInfoInput = (props:OwnProps) => {
                 className="match-info-input-div"
             >
                 {
-                    labels.map(
+                    getLabels().map(
                         (cell:GenericTableCell) => (
                             <div
                                 className="match-info-input-row"

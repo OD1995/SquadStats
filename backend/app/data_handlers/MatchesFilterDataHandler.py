@@ -11,6 +11,7 @@ from app.models.Player import Player
 from app.models.PlayerMatchPerformance import PlayerMatchPerformance
 from app.models.Team import Team
 from app.models.TeamSeason import TeamSeason
+from app.types.enums import DataSource
 
 class MatchesFilterDataHandler:
 
@@ -98,20 +99,22 @@ class MatchesFilterDataHandler:
     def get_team_leagues_and_seasons(self):
         if self.team_id is None:
             return {
-                'leagues' : [],
+                'leagues' : {},
                 'seasons' : []
             }
         team = db.session.query(Team) \
             .filter_by(team_id=UUID(self.team_id)) \
             .first()
-        leagues = [
-            tl.league.get_league_info()
+        leagues = {
+            str(tl.league_id) : tl.league.get_league_info(include_team_season=True)
             for tl in team.team_leagues
-        ]
-        seasons = [
-            ts.league_season.get_league_season_info(include_team_season=True)
-            for ts in team.team_seasons
-        ]
+        }
+        seasons = [] \
+            if team.data_source.data_source_id == DataSource.MANUAL else \
+            [
+                ts.league_season.get_league_season_info(include_team_season=True)
+                for ts in team.team_seasons
+            ]
         return {
             'leagues' : leagues,
             'seasons' : seasons

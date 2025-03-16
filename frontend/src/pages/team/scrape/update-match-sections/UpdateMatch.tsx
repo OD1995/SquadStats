@@ -232,12 +232,12 @@ export const UpdateMatch = () => {
     //     .join("\n");
     // }
 
-    // useEffect(
-    //     () => {
-    //         setErrorMessage(serialiseMatch(match));
-    //     },
-    //     [match]
-    // )
+    useEffect(
+        () => {
+            setErrorMessage(serialiseMatch(match));
+        },
+        [match]
+    )
 
     // useEffect(
     //     () => {
@@ -256,7 +256,8 @@ export const UpdateMatch = () => {
             newCompName, 
             newCompAcronym,
             teamId!,
-            leagueSeasonId!
+            leagueSeasonId!,
+            newLocation
         ).then(
             (res:BackendResponse) => {
                 if (res.success) {
@@ -294,6 +295,7 @@ export const UpdateMatch = () => {
                         saveMatch={saveMatch}
                         newCompName={newCompName}
                         newCompAcronym={newCompAcronym}
+                        newLocation={newLocation}
                     />
                 )
             }

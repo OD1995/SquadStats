@@ -10,14 +10,17 @@ import { TeamScrape } from "./TeamScrape";
 import { ManualDataEntry } from "./ManualDataEntry";
 import { LeagueSeason } from "../../../types/Season";
 import { League } from "../../../types/League";
+import { Match } from "../../../types/Match";
 
 export const UpdateData = () => {
 
     const [team, setTeam] = useState<Team>();
     const [seasons, setSeasons] = useState<LeagueSeason[]>([]);
     const [selectedLeagueSeason, setSelectedLeagueSeason] = useState<string>("");
-    const [leagues, setLeagues] = useState<League[]>([]);
+    const [leagues, setLeagues] = useState<Record<string, League>>({});
     const [selectedLeague, setSelectedLeague] = useState("");
+    // const [matches, setMatches] = useState<Match[]>([]);
+    const [selectedMatch, setSelectedMatch] = useState<string>("");
     const [errorMessage, setErrorMessage] = useState("");
     const [allLoaded, setAllLoaded] = useState<boolean>(false);
 
@@ -37,16 +40,17 @@ export const UpdateData = () => {
                 ).then(
                     (res:BackendResponse) => {
                         if (res.success) {
-                            const ssns = res.data.seasons as LeagueSeason[]
+                            const ssns = res.data.seasons as LeagueSeason[];
                             setSeasons(ssns);
-                            const lgs = res.data.leagues as League[]
+                            const lgs = res.data.leagues as Record<string, League>;
                             setLeagues(lgs);
                             if (ssns.length > 0) {
                                 setSelectedLeagueSeason(ssns[0].season_id);
                             }
-                            if (lgs.length > 0) {
-                                setSelectedLeague(lgs[0].league_id);
-                            }
+                            // if (lgs.length > 0) {
+                            //     setSelectedLeague(lgs[0].league_id);
+                            // }
+                            // setSelectedLeague(getFirstLeagueId(lgs));
                         } else {
                             setErrorMessage(res.data.message);
                         }
@@ -58,17 +62,28 @@ export const UpdateData = () => {
         []
     )
 
+    const getFirstLeagueId = (lgs:Record<string, League>) => {
+        for (const lg of Object.values(lgs)) {
+            return lg.league_id
+        }
+        return "";
+    }
+
     if (team) {
         if (team?.data_source_id == DATA_SOURCE.MANUAL) {
             return (
                 <ManualDataEntry
                     team={team}
-                    seasons={seasons}
-                    selectedLeagueSeason={selectedLeagueSeason}
-                    setSelectedLeagueSeason={setSelectedLeagueSeason}
                     leagues={leagues}
                     selectedLeague={selectedLeague}
                     setSelectedLeague={setSelectedLeague}
+                    // seasons={seasons}
+                    seasons={leagues[selectedLeague]?.league_seasons ?? {}}
+                    selectedLeagueSeason={selectedLeagueSeason}
+                    setSelectedLeagueSeason={setSelectedLeagueSeason}
+                    matches={leagues[selectedLeague]?.league_seasons[selectedLeagueSeason]?.team_season.matches ?? []}
+                    selectedMatch={selectedMatch}
+                    setSelectedMatch={setSelectedMatch}
                     allLoaded={allLoaded}
                 />
             )

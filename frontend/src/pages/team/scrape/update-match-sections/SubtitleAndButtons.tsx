@@ -12,6 +12,7 @@ interface OwnProps {
     saveMatch:Function
     newCompName:string
     newCompAcronym:string
+    newLocation:string
 }
 
 export const SubtitleAndButtons = (props:OwnProps) => {
@@ -20,10 +21,10 @@ export const SubtitleAndButtons = (props:OwnProps) => {
         var advance = true;
         if (props.subtitle == UPDATE_MATCH_SECTIONS.MATCH_INFO) {
             const properties = {
-                "date": "Date",
+                "computer_date": "Date",
                 "time": "Time",
                 "home_away_neutral": "Home/Away/Neutral",
-                "location": "Location",
+                // "location": "Location",
                 "opposition_team_name": "Opponent",
                 "goals_for": "Goals For",
                 "goals_against": "Goals Against",
@@ -41,6 +42,11 @@ export const SubtitleAndButtons = (props:OwnProps) => {
                 }
                 if (props.newCompAcronym == "") {
                     problems.push("New Competition Acronym/Shortening")
+                }
+            }
+            if (!props.match.location) {
+                if (props.newLocation == "") {
+                    problems.push("New Location")
                 }
             }
             if (problems.length > 0) {

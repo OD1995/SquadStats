@@ -16,12 +16,13 @@ import { TeamLinkBar } from "../generic/TeamLinkBar";
 import { getUserLS } from "../../../authentication/auth";
 import { SeasonSelection } from "../../../generic/SeasonSelection";
 import { Modal } from "../../../generic/Modal";
+import { LeagueSeason } from "../../../types/Season";
 
 interface OwnProps {
     team:Team
     errorMessage:string
     setErrorMessage:Function
-    seasons:any
+    seasons:LeagueSeason[]
     setSeasons:Function
     selectedSeason:string
     setSelectedSeason:Function

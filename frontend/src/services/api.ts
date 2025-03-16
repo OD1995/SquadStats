@@ -27,6 +27,7 @@ instance.interceptors.response.use(
                         (res:BackendResponse) => {
                             setNewAccessToken(res.data.new_token);
                             store.dispatch(triggerRefresh());
+                            const a = 1;
                         }
                     )
                 }

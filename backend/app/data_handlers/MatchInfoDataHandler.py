@@ -14,7 +14,7 @@ from app.models.TeamSeason import TeamSeason
 from app.types.GenericTableCell import GenericTableCell
 from app.types.GenericTableData import GenericTableData
 from app.types.GenericTableRow import GenericTableRow
-from app.types.enums import Metric as MetricEnum
+from app.types.enums import Metric as MetricEnum, MiscStrings
 
 class MatchInfoDataHandler:
 
@@ -63,6 +63,7 @@ class MatchInfoDataHandler:
         available_players = {
             str(p.player_id) : p.to_dict()
             for p in player_list
+            if p.get_best_name() != MiscStrings.OWN_GOALS
         }
         ## Match
         match_ = db.session.query(Match) \
@@ -71,6 +72,7 @@ class MatchInfoDataHandler:
         goals = {}
         potm = None
         active_players = {}
+        match_info = None
         if (match_ is not None):
             metric_name_list = [
                 MetricEnum.APPEARANCES,
@@ -97,8 +99,9 @@ class MatchInfoDataHandler:
                             goals[pid] = pmp.value
                     case MetricEnum.POTM:
                         potm = pid
+            match_info = match_.to_dict()
         return {
-            'match' : match_.to_dict(),
+            'match' : match_info,
             'goals' : goals,
             'potm' : potm,
             'locations' : location_dict,

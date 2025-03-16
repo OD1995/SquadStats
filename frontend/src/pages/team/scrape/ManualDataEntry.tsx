@@ -16,15 +16,20 @@ import { League } from "../../../types/League";
 import { LeagueSelection } from "../../../generic/LeagueSelection";
 import { Loading } from "../../../generic/Loading";
 import { v4 as uuidv4 } from "uuid";
+import { MatchSelection } from "../../../generic/MatchSelection";
+import { Match } from "../../../types/Match";
 
 interface OwnProps {
     team:Team
-    seasons:LeagueSeason[]
+    seasons:Record<string, LeagueSeason>
     selectedLeagueSeason:string
     setSelectedLeagueSeason:Function
-    leagues:League[]
+    leagues:Record<string, League>
     selectedLeague:string
     setSelectedLeague:Function
+    matches:Match[]
+    selectedMatch:string
+    setSelectedMatch:Function
     allLoaded:boolean
 }
 
@@ -45,6 +50,24 @@ export const ManualDataEntry = (props:OwnProps) => {
         setManualDataEntryActionType(event.target.value);
     }
 
+    const getTotalSeasonCount = () => {
+        var seasonCount = 0;
+        for (const lg of Object.values(props.leagues)) {
+            seasonCount += Object.values(lg.league_seasons).length;
+        }
+        return seasonCount;
+    }
+
+    const getTotalMatchCount = () => {
+        var matchCount = 0;
+        for (const lg of Object.values(props.leagues)) {
+            for (const ssn of Object.values(lg.league_seasons)) {
+                matchCount += ssn.team_season.matches.length;
+            }
+        }
+        return matchCount;
+    }
+
     const getRadioButtonOptions = () => {
         if (!props.allLoaded) {
             return [];
@@ -52,13 +75,13 @@ export const ManualDataEntry = (props:OwnProps) => {
         var options = [
             MANUAL_DATA_ENTRY_ACTION_TYPE.ADD_NEW_LEAGUE
         ];
-        if (props.leagues.length > 0) {
+        if (Object.values(props.leagues).length > 0) {
             options.push(MANUAL_DATA_ENTRY_ACTION_TYPE.ADD_NEW_SEASON);
         }
-        if (props.seasons.length > 0) {
+        if (getTotalSeasonCount() > 0) {
             options.push(MANUAL_DATA_ENTRY_ACTION_TYPE.ADD_NEW_MATCH);
         }
-        if (getMatchCount() > 0) {
+        if (getTotalMatchCount() > 0) {
             options.push(MANUAL_DATA_ENTRY_ACTION_TYPE.EDIT_MATCH);
         }
         return options.map(
@@ -71,14 +94,6 @@ export const ManualDataEntry = (props:OwnProps) => {
                 />
             )
         )
-    }
-
-    const getMatchCount = () => {
-        var matchCount = 0;
-        for (const season of props.seasons) {
-            matchCount += season.team_season.matches.length;
-        }
-        return matchCount;
     }
 
     const onChangeLeagueText = (e:ChangeEvent<HTMLInputElement>) => {
@@ -166,9 +181,19 @@ export const ManualDataEntry = (props:OwnProps) => {
 
     const seasonSelector = (
         <SeasonSelection
-            seasons={props.seasons}
+            seasons={Object.values(props.seasons)}
             selectedSeason={props.selectedLeagueSeason}
             setSelectedSeason={props.setSelectedLeagueSeason}
+            flexDirection="row"
+            justifyContent="space-around"
+        />
+    )
+
+    const matchSelector = (
+        <MatchSelection
+            matches={props.matches}
+            selectedMatch={props.selectedMatch}
+            setSelectedMatch={props.setSelectedMatch}
             flexDirection="row"
             justifyContent="space-around"
         />
@@ -244,6 +269,7 @@ export const ManualDataEntry = (props:OwnProps) => {
                     <div className='new-mde-input'>
                         {leagueSelector}
                         {seasonSelector}
+                        {matchSelector}
                         <ButtonDiv
                             buttonText="Submit"
                             onClickFunction={handleNewSeasonButtonClick}
