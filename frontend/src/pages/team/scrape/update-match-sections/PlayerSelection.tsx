@@ -2,6 +2,7 @@ import { PLAYER_LIST_TYPE } from "../../../../types/enums";
 import { Player } from "../../../../types/Player";
 import { MatchPlayerList } from "./MatchPlayerList";
 import { v4 as uuidv4 } from "uuid";
+import { PlayerOrderingToggle } from "./PlayerOrderingToggle";
 
 interface OwnProps {
     availablePlayers:Record<string, Player>
@@ -49,18 +50,21 @@ export const PlayerSelection = (props:OwnProps) => {
     }
 
     return (
-        <div id='player-selection'>
-            <MatchPlayerList
-                subsubtitle={PLAYER_LIST_TYPE.ALL_PLAYERS}
-                players={props.availablePlayers}
-                updatePlayerLists={updatePlayerLists}
-                addNewPlayer={addNewPlayer}
-            />
-            <MatchPlayerList
-                subsubtitle={PLAYER_LIST_TYPE.ACTIVE_PLAYERS}
-                players={props.activePlayers}
-                updatePlayerLists={updatePlayerLists}
-            />
+        <div id='player-selection-parent'>
+            <PlayerOrderingToggle/>
+            <div id='player-selection'>
+                <MatchPlayerList
+                    subsubtitle={PLAYER_LIST_TYPE.ALL_PLAYERS}
+                    players={props.availablePlayers}
+                    updatePlayerLists={updatePlayerLists}
+                    addNewPlayer={addNewPlayer}
+                />
+                <MatchPlayerList
+                    subsubtitle={PLAYER_LIST_TYPE.ACTIVE_PLAYERS}
+                    players={props.activePlayers}
+                    updatePlayerLists={updatePlayerLists}
+                />
+            </div>
         </div>
     );
 }

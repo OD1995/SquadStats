@@ -18,10 +18,11 @@ export const MatchScore = (props:OwnProps) => {
     const [awayScore, setAwayScore] = useState<number|null>(null);
     const [homePens, setHomePens] = useState<number|null>(null);
     const [awayPens, setAwayPens] = useState<number|null>(null);
+    const [showPens, setShowPens] = useState<boolean>(false);
     
     useEffect(
         () => {
-            if (props.homeAwayNeutral == 'a') {
+            if (props.homeAwayNeutral == "A") {
                 setHomeTeam(props.oppoTeamName);
                 setHomeScore(props.goalsAgainst);
                 setHomePens(props.pensAgainst);
@@ -36,6 +37,8 @@ export const MatchScore = (props:OwnProps) => {
                 setAwayScore(props.goalsAgainst);
                 setAwayPens(props.pensAgainst);
             }
+            const totalPensScored = (props.pensFor ?? 0) + (props.pensAgainst ?? 0);
+            setShowPens(totalPensScored > 0);
         },
         []
     )
@@ -44,26 +47,25 @@ export const MatchScore = (props:OwnProps) => {
         <div id='match-score' className="match-info-div">
             <table>
                 <tbody>
-
                     <tr>
                         <td><b>{homeTeam}</b></td>
-                        {homePens && <td></td>}
+                        {showPens && <td></td>}
                         <td><b>{awayTeam}</b></td>
                     </tr>
+                    <tr>
+                        <td className="goals-text">{homeScore}</td>
+                        {showPens && <td className="goals-text"></td>}
+                        <td className="goals-text">{awayScore}</td>
+                    </tr>
                     {
-                        homePens && (
+                        showPens && (
                             <tr>
-                                <td>{homePens}</td>
+                                <td className="pens-text">{homePens}</td>
                                 <td className="small-caps-subtitle">PENALTIES</td>
-                                <td>{awayPens}</td>
+                                <td className="pens-text">{awayPens}</td>
                             </tr>
                         )
                     }
-                    <tr>
-                        <td>{homeScore}</td>
-                        {homePens && <td></td>}
-                        <td>{awayScore}</td>
-                    </tr>
                 </tbody>
             </table>
         </div>

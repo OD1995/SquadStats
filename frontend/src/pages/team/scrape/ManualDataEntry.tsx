@@ -133,10 +133,10 @@ export const ManualDataEntry = (props:OwnProps) => {
             (res:BackendResponse) => {
                 if (res.success) {
                     setBackendResponseColour("green");
-                    const teamSeasonId = res.data.team_season_id;
+                    const leagueSeasonId = res.data.league_season_id;
                     const newMatchId = uuidv4();
                     // '/team/:teamId/update-match/:teamSeasonId/:matchId'
-                    navigate(`/team/${teamId}/update-match/${teamSeasonId}/${newMatchId}`)
+                    navigate(`/team/${teamId}/update-match/${leagueSeasonId}/${newMatchId}`)
                 } else {
                     setBackendResponseColour("red");
                     setBackendResponse(res.data.message);

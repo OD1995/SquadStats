@@ -1,3 +1,5 @@
+NEXT: Make sure player performances are written over and do player ordering
+
 If no clubs, put message and link to 'Add Clubs'/'Get Started'
 
 Write some tests
@@ -11,6 +13,8 @@ get_team_matches for manual entry team
 Handle situation where user tries to scrape matches for unavailable team e.g. U12s
 
 Make sure all necessary endpoints need a user
+
+
 
 Maybe combine backend calls for team and club overview pages
 

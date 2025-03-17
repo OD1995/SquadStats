@@ -1,0 +1,58 @@
+.toggle-container {
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+#pot-title {
+    margin-bottom: 1vh;
+    font-size: x-small;
+}
+
+.toggle-switch {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: smaller;
+    font-weight: bold;
+    margin-bottom: 1vh;
+}
+
+.pot-label {
+    transition: color 0.3s ease;
+    color: #888;
+}
+
+.pot-label.active-pot {
+    color: #000;
+}
+
+.switch {
+    width: 50px;
+    height: 25px;
+    background: #ddd;
+    border-radius: 15px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.slider {
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: 0.3s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.slider.left {
+    left: 5px;
+}
+
+.slider.right {
+    left: calc(100% - 25px);
+}

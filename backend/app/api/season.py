@@ -149,7 +149,7 @@ def create_new_league_and_season():
         db.session.add(new_team_season)
         db.session.commit()
         return jsonify({
-            "team_season_id" : new_team_season.team_season_id
+            "league_season_id" : new_league_season.league_season_id
         }), 200
     except Exception as e:
         return {

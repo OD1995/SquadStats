@@ -448,14 +448,14 @@ def create_match():
                 data_source_player_name=MiscStrings.OWN_GOALS
             )
             new_players.append(club_own_goaler)
-        pmps.append(
-            PlayerMatchPerformance(
-                player_id=club_own_goaler.player_id,
-                metric_id=metric_ids[MetricEnum.APPEARANCES],
-                value=1,
-                match_id=match_obj.match_id
-            )
-        )
+        # pmps.append(
+        #     PlayerMatchPerformance(
+        #         player_id=club_own_goaler.player_id,
+        #         metric_id=metric_ids[MetricEnum.APPEARANCES],
+        #         value=1,
+        #         match_id=match_obj.match_id
+        #     )
+        # )
         own_goals = match_obj.goals_for - sum(goals.values())
         if own_goals > 0:
             pmps.append(
@@ -466,11 +466,11 @@ def create_match():
                     match_id=match_obj.match_id
                 )
             )
+        db.session.merge(match_obj)
         for np in new_players:
             db.session.merge(np)
         for pmp in pmps:
             db.session.merge(pmp)
-        db.session.merge(match_obj)
         db.session.commit()
         return jsonify(success=True)
     except Exception as e:
