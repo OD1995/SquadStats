@@ -6,6 +6,7 @@ import {
 } from "@mui/material";
 import { GenericTableData, GenericTableRow } from "../types/GenericTableTypes";
 import "./BetterTable.css"
+import { getFontSize } from "../helpers/other";
 
 interface OwnProps extends GenericTableData {
     rowsPerPage:number
@@ -26,19 +27,16 @@ export const BetterTable = (props:OwnProps) => {
                     setSortDirection(props.sort_direction);
                 }
             }
-            // if (props.column_headers.length == 0) {
-            //     setSortBy("");
-            //     setSortDirection("");
-            // }
         },
         []
     )
 
-    const getFontSize = () => {
+    const getBetterTableFontSize = () => {
         var val = 1.15;
         val -= (0.1 * props.column_headers.length);
         val = Math.max(val, 0.6);
-        return `${val}rem !important`
+        val = Math.round(val * 100) / 100
+        return val;
     }
 
     const handleSortClick = (columnToSortBy:string) => {
@@ -97,7 +95,6 @@ export const BetterTable = (props:OwnProps) => {
                 <TableCell 
                     sx={{
                         textAlign: 'center',
-                        // columnSpan: 10//getColSpan()
                     }}
                     colSpan={getColSpan()}
                 >
@@ -127,10 +124,6 @@ export const BetterTable = (props:OwnProps) => {
             }
             <TableContainer>
                 <Table
-                    sx={{
-                        // minWidth: 750,
-                        // fontSize: getFontSize()
-                    }}
                     aria-labelledby="tableTitle"
                     size={true ? 'small' : 'medium'}
                 >
@@ -138,37 +131,44 @@ export const BetterTable = (props:OwnProps) => {
                         <TableRow>
                             {
                                 (props.is_ranked ? [""].concat(props.column_headers) : props.column_headers).map(
-                                    (colHeader:string) => (
-                                        <TableCell
-                                            key={colHeader}
-                                            sx={{
-                                                fontWeight: "bold",
-                                                padding: "0",
-                                                fontSize: getFontSize(),
-                                                // paddingLeft: "2%",
-                                                // paddingRight: "2%"
-                                            }}
-                                            align="center"
-                                            sortDirection={sortDirection}
-                                        >
-                                            {
-                                                props.not_sortable ? (
-                                                    <span>
-                                                        {colHeader}
-                                                    </span>
-                                                ) : (
-                                                    <TableSortLabel
-                                                        active={sortBy == colHeader}
-                                                        direction={sortBy == colHeader ? sortDirection : "desc"}
-                                                        hideSortIcon={true}
-                                                        onClick={() => handleSortClick(colHeader)}
-                                                    >
-                                                        {colHeader}
-                                                    </TableSortLabel>
-                                                )
-                                            }
-                                        </TableCell>
-                                    )
+                                    (colHeader:string) => {
+                                        const fs1 = getBetterTableFontSize();
+                                        const fs2 = getFontSize(
+                                            colHeader,
+                                            fs1,
+                                            10,
+                                            0.01
+                                        );
+                                        return (
+                                            <TableCell
+                                                key={colHeader}
+                                                sx={{
+                                                    fontWeight: "bold",
+                                                    padding: "0",
+                                                    fontSize: fs2,
+                                                }}
+                                                align="center"
+                                                sortDirection={sortDirection}
+                                            >
+                                                {
+                                                    props.not_sortable ? (
+                                                        <span>
+                                                            {colHeader}
+                                                        </span>
+                                                    ) : (
+                                                        <TableSortLabel
+                                                            active={sortBy == colHeader}
+                                                            direction={sortBy == colHeader ? sortDirection : "desc"}
+                                                            hideSortIcon={true}
+                                                            onClick={() => handleSortClick(colHeader)}
+                                                        >
+                                                            {colHeader}
+                                                        </TableSortLabel>
+                                                    )
+                                                }
+                                            </TableCell>
+                                        )
+                                    }
                                 )
                             }
                         </TableRow>
@@ -201,9 +201,14 @@ export const BetterTable = (props:OwnProps) => {
                                                         var styles = row[colHeader].styles ?? {} as Record<string,string>;
                                                         styles['padding'] = "0";
                                                         styles['maxWidth'] = '20vw';
-                                                        styles["fontSize"] = getFontSize();
-                                                        // styles["paddingLeft"] = "2%",
-                                                        // styles["paddingRight"] = "2%";
+                                                        const fs1 = getBetterTableFontSize();
+                                                        const fs2 = getFontSize(
+                                                            row[colHeader].value.toString(),
+                                                            fs1,
+                                                            10,
+                                                            0.01
+                                                        );
+                                                        styles["fontSize"] = fs2;
                                                         return (
                                                             <TableCell
                                                                 key={`${rowNum}-${colNum}`}

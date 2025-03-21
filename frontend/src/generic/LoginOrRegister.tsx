@@ -28,7 +28,6 @@ export const LoginOrRegister = (props:LoginOrRegisterProps) => {
     
     useEffect(
         () => {
-            // document.title = props.pageType;
             const keyEnter = (ev:KeyboardEvent) => {
                 if (ev.key === 'Enter') {
                     props.handleSubmitButton();

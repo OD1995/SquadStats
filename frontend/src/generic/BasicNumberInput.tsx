@@ -1,5 +1,6 @@
 import { ChangeEvent } from "react";
 import "./BasicNumberInput.css";
+import { AddCircle, RemoveCircle } from "@mui/icons-material";
 
 interface OwnProps {
     value: number | null;
@@ -17,24 +18,20 @@ export const BasicNumberInput = (props: OwnProps) => {
 
     return (
         <div className={"bni-parent" + ((props.className != undefined) ? ` ${props.className}` : "")}>
-            <button
+            <AddCircle
                 className="bni-button ss-green-button"
                 onClick={() => props.setValue((prev) => (prev ?? 0) + 1)}
-            >
-                +
-            </button>
+            />
             <input
-                className="bni-input"
+                className="bni-input input-padder"
                 type="number"
                 value={props.value ?? 0}
                 onChange={onChangeVal}
             />
-            <button
+            <RemoveCircle
                 className="bni-button ss-red-button"
                 onClick={() => props.setValue((prev) => Math.max((prev ?? 0) - 1, 0))}
-            >
-                -
-            </button>
+            />
         </div>
     );
 };

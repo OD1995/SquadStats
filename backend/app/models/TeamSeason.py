@@ -47,6 +47,6 @@ class TeamSeason(Base):
         return {
             'matches' : [
                 m.to_dict()
-                for m in self.matches
+                for m in sorted(self.matches, key=lambda x: x.date)
             ]
         }

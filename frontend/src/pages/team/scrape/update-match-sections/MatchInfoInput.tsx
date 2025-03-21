@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Match } from "../../../../types/Match";
 import { generateId, getFontSize } from "../../../../helpers/other";
 import { BasicNumberInput } from "../../../../generic/BasicNumberInput";
@@ -6,6 +6,7 @@ import { MATCH_COMPETITION_TYPE, MATCH_LOCATION_TYPE } from "../../../../types/e
 import { Loading } from "../../../../generic/Loading";
 import { Competition } from "../../../../types/Competition";
 import { GenericTableCell } from "../../../../types/GenericTableTypes";
+import { ExtraMatchInfo } from "../../../../types/ExtraMatchInfo";
 
 interface OwnProps {
     match: Match;
@@ -22,10 +23,12 @@ interface OwnProps {
     setLocationDropdownVal:Function
     competitionDropdownVal:string
     setCompetitionDropdownVal:Function
+    showPens:boolean
+    setShowPens:Function
+    extraMatchInfo:ExtraMatchInfo
 }
 
 export const MatchInfoInput = (props:OwnProps) => {
-    const [showPens, setShowPens] = useState<boolean>(false);
 
     // Function to update match properties (supports function updaters)
     const updateMatch = (
@@ -45,10 +48,13 @@ export const MatchInfoInput = (props:OwnProps) => {
     };
 
     // Automatically reset penalty values when `showPens` changes
-    useEffect(() => {
-        updateMatch("pens_for", showPens ? 0 : null);
-        updateMatch("pens_against", showPens ? 0 : null);
-    }, [showPens]);
+    useEffect(
+        () => {
+            updateMatch("pens_for", props.showPens ? props.match.pens_for : null);
+            updateMatch("pens_against", props.showPens ? props.match.pens_against : null);
+        },
+        [props.showPens]
+    );
 
     useEffect(
         () => {
@@ -84,8 +90,12 @@ export const MatchInfoInput = (props:OwnProps) => {
         } as GenericTableCell
     }
     const getLabels = () => {
-        var labels = [];
-        labels.push(createBoldLabel("Competition"));
+        var labels = [
+            createBoldLabel("League"),
+            createBoldLabel("Season"),
+            createBoldLabel("Competition"),
+        ];
+        // labels.push(createBoldLabel("Competition"));
         if (props.competitionDropdownVal == MATCH_COMPETITION_TYPE.NEW_COMPETITION) {
             labels = labels.concat(
                 [
@@ -113,7 +123,7 @@ export const MatchInfoInput = (props:OwnProps) => {
                 createBoldLabel("Penalties?"),
             ]
         );
-        if (showPens) {
+        if (props.showPens) {
             labels = labels.concat(
                 [
                     createBoldLabel("Penalties For"),
@@ -142,6 +152,20 @@ export const MatchInfoInput = (props:OwnProps) => {
         } as Competition
     }
 
+    const getUnchangeableLabel = (txt:string) => {
+        const fontSize = getFontSize(txt,1,18,0.02);
+        return (
+            <div
+                className="unchangeable-mii-label"
+                style={{
+                    fontSize:fontSize
+                }}
+            >
+                {txt}
+            </div>
+        )
+    }
+
     if (!props.locations) {
         return <Loading/>
     }
@@ -168,9 +192,17 @@ export const MatchInfoInput = (props:OwnProps) => {
             </div>
             <div id="match-info-input-inputs" className="match-info-input-div">
                 <div className="match-info-input-row">
+                    {getUnchangeableLabel(props.extraMatchInfo.league_name)}
+                </div>
+                <div className="match-info-input-row">
+                    <div className="unchangeable-mii-label">
+                        {getUnchangeableLabel(props.extraMatchInfo.season_name)}
+                    </div>
+                </div>
+                <div className="match-info-input-row">
                     <select
                         id='competition-select'
-                        className="mii-select"
+                        className="mii-select input-padder"
                         value={props.competitionDropdownVal}
                         onChange={(e) => setComp(e.target.value)}
                     >
@@ -204,6 +236,7 @@ export const MatchInfoInput = (props:OwnProps) => {
                             <div className="match-info-input-row">
                                 <input
                                     type="text"
+                                    className="input-padder"
                                     value={props.newCompName}
                                     onChange={(e) => props.setNewCompName(e.target.value)}
                                 />
@@ -211,6 +244,7 @@ export const MatchInfoInput = (props:OwnProps) => {
                             <div className="match-info-input-row">
                                 <input
                                     type="text"
+                                    className="input-padder"
                                     maxLength={5}
                                     value={props.newCompAcronym}
                                     onChange={(e) => props.setNewCompAcronym(e.target.value)}
@@ -222,6 +256,7 @@ export const MatchInfoInput = (props:OwnProps) => {
                 <div className="match-info-input-row">
                     <input
                         type="date"
+                        className="input-padder"
                         value={props.match.computer_date ?? ""}
                         onChange={(e) => updateMatch("computer_date", e.target.value)}
                     />
@@ -229,6 +264,7 @@ export const MatchInfoInput = (props:OwnProps) => {
                 <div className="match-info-input-row">
                     <input
                         type="time"
+                        className="input-padder"
                         value={props.match.time ?? ""}
                         onChange={(e) => updateMatch("time", e.target.value)}
                     />
@@ -257,6 +293,7 @@ export const MatchInfoInput = (props:OwnProps) => {
                 <div className="match-info-input-row">
                     <select
                         id='location-select'
+                        className="input-padder"
                         value={props.locationDropdownVal}
                         onChange={(e) => setLoc(e.target.value)}
                         disabled={props.match.home_away_neutral == undefined}
@@ -283,6 +320,7 @@ export const MatchInfoInput = (props:OwnProps) => {
                         <div className="match-info-input-row">
                             <input
                                 type="text"
+                                className="input-padder"
                                 value={props.newLocation}
                                 onChange={(e) =>  props.setNewLocation(e.target.value)}
                             />
@@ -292,6 +330,7 @@ export const MatchInfoInput = (props:OwnProps) => {
                 <div className="match-info-input-row">
                     <input
                         type="text"
+                        className="input-padder"
                         value={props.match.opposition_team_name ?? ""}
                         onChange={(e) => updateMatch("opposition_team_name", e.target.value)}
                     />
@@ -311,12 +350,13 @@ export const MatchInfoInput = (props:OwnProps) => {
                 <div className="match-info-input-row">
                     <input
                         type="checkbox"
-                        checked={showPens}
-                        onChange={() => setShowPens((prev) => !prev)}
+                        className="input-padder"
+                        checked={props.showPens}
+                        onChange={() => props.setShowPens(!props.showPens)}
                     />
                 </div>
 
-                {showPens && (
+                {props.showPens && (
                     <>
                         <div className="match-info-input-row">
                             <BasicNumberInput

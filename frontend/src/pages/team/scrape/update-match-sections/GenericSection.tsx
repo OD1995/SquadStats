@@ -1,6 +1,5 @@
 import { Match } from "../../../../types/Match";
 import { SubtitleAndButtons } from "./SubtitleAndButtons";
-import "./UpdateMatch.css"
 
 interface OwnProps {
     subtitle:string

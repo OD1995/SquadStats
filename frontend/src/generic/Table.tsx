@@ -8,9 +8,6 @@ interface TableProps {
 }
 
 export const Table = (props:TableProps) => {
-    // if (props.rows.length == 0) {
-    //     return null;
-    // }
 
     const createEmptyRow = () => {
         var colWidth = 1;
@@ -24,10 +21,6 @@ export const Table = (props:TableProps) => {
             >
                 <td
                     colSpan={colWidth}
-                    // style={{
-                    //     'columnSpan': props.headers.props.children.length,
-                    //     // 'textAlign': 'center'
-                    // }}
                 >
                     <i>
                         No data available

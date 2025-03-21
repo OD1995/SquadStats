@@ -21,7 +21,7 @@ export const AbrORDOB = () => {
 
     // const isMobile = isLongerThanWider(height, width);
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    const tellUserToRotate = isMobile && isWiderThanHigher();
+    const tellUserToRotate = isMobile && !isWiderThanHigher();
     const zoomVal = isMobile ? 0.1 : 1.5;
     // const txt = isMobile ? "yes mobile" : "no mobile";
     const txt = "";
@@ -73,6 +73,13 @@ export const AbrORDOB = () => {
                     <div style={{color: "red"}}>
                         {txt}
                     </div>
+                )
+            }
+            {
+                tellUserToRotate && (
+                    <p style={{color:"red", textAlign:"center"}}>
+                        Probably worth rotating your screen
+                    </p>
                 )
             }
             <Map

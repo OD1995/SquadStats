@@ -105,15 +105,29 @@ export const ManualDataEntry = (props:OwnProps) => {
     }
 
     const handleNewSeasonButtonClick = () => {
+        if (
+            checkIfElementExists(
+                newSeasonName,
+                Object.values(props.leagues[props.selectedLeague].league_seasons).map(
+                    (ssn:LeagueSeason) => ssn.season_name
+                )
+            )
+        ) {
+            setBackendResponseColour("red");
+            setBackendResponse(`A season with name ${newSeasonName} already exists`);
+            return;
+        }
         setButtonDisabled(true);
         SeasonService.createNewSeason(
             teamId!,
+            props.selectedLeague,
             newSeasonName
         ).then(
             (res:BackendResponse) => {
                 if (res.success) {
-                    setBackendResponseColour("green");
-                    setBackendResponse(res.data.message);
+                    const leagueSeasonId = res.data.league_season_id;
+                    const newMatchId = uuidv4();
+                    navigate(`/team/${teamId}/update-match/${leagueSeasonId}/${newMatchId}`)
                 } else {
                     setBackendResponseColour("red");
                     setBackendResponse(res.data.message);
@@ -124,6 +138,16 @@ export const ManualDataEntry = (props:OwnProps) => {
     }
 
     const handleNewLeagueButtonClick = () => {
+        if (
+            checkIfElementExists(
+                newLeagueName,
+                Object.values(props.leagues).map((lg:League) => lg.league_name)
+            )
+        ) {
+            setBackendResponseColour("red");
+            setBackendResponse(`A league with name ${newLeagueName} already exists`);
+            return;
+        }
         setButtonDisabled(true);
         SeasonService.createNewLeagueAndSeason(
             newLeagueName,
@@ -132,10 +156,8 @@ export const ManualDataEntry = (props:OwnProps) => {
         ).then(
             (res:BackendResponse) => {
                 if (res.success) {
-                    setBackendResponseColour("green");
                     const leagueSeasonId = res.data.league_season_id;
                     const newMatchId = uuidv4();
-                    // '/team/:teamId/update-match/:teamSeasonId/:matchId'
                     navigate(`/team/${teamId}/update-match/${leagueSeasonId}/${newMatchId}`)
                 } else {
                     setBackendResponseColour("red");
@@ -149,6 +171,19 @@ export const ManualDataEntry = (props:OwnProps) => {
     const handleNewMatchButtonClick = () => {
         const matchId = uuidv4();
         navigate(`/team/${teamId}/update-match/${props.selectedLeagueSeason}/${matchId}`);
+    }
+
+    const handleEditMatchButtonClick = () => {
+        navigate(`/team/${teamId}/update-match/${props.selectedLeagueSeason}/${props.selectedMatch}`);
+    }
+
+    const checkIfElementExists = (el:string, arr:string[]) => {
+        for (const s of arr) {
+            if (el.toLowerCase() == s.toLowerCase()) {
+                return true;
+            }            
+        }
+        return false;
     }
 
     const newLeagueNameInput = (
@@ -272,13 +307,18 @@ export const ManualDataEntry = (props:OwnProps) => {
                         {matchSelector}
                         <ButtonDiv
                             buttonText="Submit"
-                            onClickFunction={handleNewSeasonButtonClick}
+                            onClickFunction={handleEditMatchButtonClick}
                             buttonDisabled={buttonDisabled}
                         />
                     </div>
                 )
             }
-            <div style={{color:backendResponseColour}}>
+            <div
+                style={{
+                    color:backendResponseColour,
+                    textAlign:'center',
+                }}
+            >
                 {backendResponse}
             </div>
         </div>

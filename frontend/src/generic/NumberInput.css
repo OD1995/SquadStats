@@ -6,36 +6,29 @@
     display: flex;
     flex-direction: row;
     height: 51.4px;
-    /* justify-content: center; */
-    /* justify-content: space-evenly; */
     justify-content: space-between;
 }
 
 #number-input-buttons {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    /* width: 50%; */
-    justify-content: space-around;
+    width: 50%;
+    justify-content: space-evenly;
 }
 
 .change-value-button {
     height: 40%;
     width: 90%;
-    /* border: 1px solid black; */
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 50%;
 }
 
 #number-input-input {
-    /* width: 80%; */
-    /* width: 50px; */
-    /* padding: 0; */
-    /* border: 0; */
     padding-left: 5vw;
     border: 0.5px solid rgba(0, 0, 0, 0.23);
     border-radius: inherit;
     max-width: 50%;
-    /* text-align: center; */
 }

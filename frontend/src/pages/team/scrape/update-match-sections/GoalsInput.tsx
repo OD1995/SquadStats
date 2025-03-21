@@ -1,9 +1,9 @@
 import { ChangeEvent } from "react";
 import { BasicNumberInput } from "../../../../generic/BasicNumberInput";
-import { Player } from "../../../../types/Player";
+import { Player, SortablePlayer } from "../../../../types/Player";
 
 interface OwnProps {
-    activePlayers:Record<string, Player>
+    activePlayers:Record<string, SortablePlayer>
     goals:Record<string, number>
     setGoals:Function
     potm:string
@@ -73,7 +73,7 @@ export const GoalsInput = (props:OwnProps) => {
                 } as Player;
                 goalsVal = goalsLeftToAssign;
             } else {
-                player = props.activePlayers[playerId];
+                player = props.activePlayers[playerId].player;
                 goalsVal = Math.min(props.goals[playerId] ?? 0, goalsLeftToAssign);
                 goalsLeftToAssign -= goalsVal;
                 potmInput = (

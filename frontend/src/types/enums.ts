@@ -56,6 +56,6 @@ export enum UPDATE_MATCH_SECTIONS {
 }
 
 export enum PLAYER_LIST_TYPE {
-    ALL_PLAYERS = 'All Players',
+    ALL_PLAYERS = 'All Club Players',
     ACTIVE_PLAYERS = 'Active Players'
 }

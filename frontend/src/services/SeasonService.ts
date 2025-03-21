@@ -48,11 +48,13 @@ class SeasonService {
 
     createNewSeason(
         teamId:string,
+        leagueId:string,
         seasonName:string
     ) {
         return makePostRequest(
             this.base_url + "/create-new-season",
             {
+                leagueId,
                 teamId,
                 seasonName
             }

@@ -418,7 +418,7 @@ def create_match():
                     value=1
                 )
             )
-            if player_id in goals:
+            if (player_id in goals) and (goals[player_id] > 0):
                 pmps.append(
                     PlayerMatchPerformance(
                         player_id=UUID(player_id),
@@ -466,6 +466,11 @@ def create_match():
                     match_id=match_obj.match_id
                 )
             )
+        ## Remove all pmp data that already exists
+        db.session.query(PlayerMatchPerformance) \
+            .filter_by(match_id=match_obj.match_id) \
+            .delete()
+        
         db.session.merge(match_obj)
         for np in new_players:
             db.session.merge(np)

@@ -49,6 +49,7 @@
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
+    padding-bottom: 3vh;
 }
 
 .match-info-input-row {
@@ -98,15 +99,13 @@
 .player-list {
     height: 44vh;
     border: 1px solid black;
+    overflow-y: scroll;
 }
 
 .mpl-button {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 20px;
-    height: 20px;
-    padding: 10px;
     border-radius: 50%;
     margin-left: 1vw;
     margin-right: 1vw;
@@ -119,6 +118,7 @@
     margin-bottom: 0.2vh;
     font-size: small;
     align-items: center;
+    min-height: 4vh;
 }
 
 .mpl-below-players {
@@ -158,4 +158,8 @@
 .mii-select {
     max-width: 180px;
     text-align: center;
+}
+
+.unchangeable-mii-label {
+    font-style: italic;
 }

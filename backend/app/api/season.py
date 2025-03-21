@@ -179,7 +179,7 @@ def create_new_season():
         db.session.add(new_team_season)
         db.session.commit()
         return jsonify({
-            "message" : "This is a temporary message"
+            "league_season_id" : new_league_season.league_season_id
         }), 200
     except Exception as e:
         return {

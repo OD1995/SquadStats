@@ -6,7 +6,7 @@ import { getBigTitle, getIsClubAdmin, getTeam } from "../../../../helpers/other"
 import { TeamLinkBar } from "../../generic/TeamLinkBar";
 import { PlayerSelection } from "./PlayerSelection";
 import { GenericSection } from "./GenericSection";
-import { Player } from "../../../../types/Player";
+import { SortablePlayer } from "../../../../types/Player";
 import { MatchInfoInput } from "./MatchInfoInput";
 import { GoalsInput } from "./GoalsInput";
 import { Match } from "../../../../types/Match";
@@ -14,8 +14,9 @@ import { UPDATE_MATCH_SECTIONS } from "../../../../types/enums";
 import MatchService from "../../../../services/MatchService";
 import { BackendResponse } from "../../../../types/BackendResponse";
 import { Competition } from "../../../../types/Competition";
-import {v4 as uuidv4} from "uuid";
 import { Loading } from "../../../../generic/Loading";
+import { ExtraMatchInfo } from "../../../../types/ExtraMatchInfo";
+import "./UpdateMatch.css"
 
 interface SectionInfo {
     subtitle:string
@@ -26,12 +27,13 @@ export const UpdateMatch = () => {
 
     const [sectionIndex, setSectionIndex] = useState<number>(0);
     const [team, setTeam] = useState<Team>();
-    const [availablePlayers, setAvailablePlayers] = useState<Record<string,Player>>({});
-    const [activePlayers, setActivePlayers] = useState<Record<string, Player>>({});
+    const [availablePlayers, setAvailablePlayers] = useState<Record<string,SortablePlayer>>({});
+    const [activePlayers, setActivePlayers] = useState<Record<string, SortablePlayer>>({});
     const [match, setMatch] = useState<Match>({
         goals_for: 0,
         goals_against: 0,
     } as Match);
+    const [extraMatchInfo, setExtraMatchInfo] = useState<ExtraMatchInfo>({} as ExtraMatchInfo);
     const [locations, setLocations] = useState<Record<string,string[]>>({});
     const [goals, setGoals] = useState<Record<string, number>>({});
     const [potm, setPotm] = useState<string>("");
@@ -44,6 +46,8 @@ export const UpdateMatch = () => {
     const [locationDropdownVal, setLocationDropdownVal] = useState<string>("");
     const [competitionDropdownVal, setCompetitionDropdownVal] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
+    const [dataLoaded, setDataLoaded] = useState<boolean>(false);
+    const [showPens, setShowPens] = useState<boolean>(false);
 
     const user = getUserLS();
     let { teamId, leagueSeasonId, matchId } = useParams();
@@ -69,6 +73,9 @@ export const UpdateMatch = () => {
                     setLocationDropdownVal={setLocationDropdownVal}
                     competitionDropdownVal={competitionDropdownVal}
                     setCompetitionDropdownVal={setCompetitionDropdownVal}
+                    showPens={showPens}
+                    setShowPens={setShowPens}
+                    extraMatchInfo={extraMatchInfo}
                 />
             )
         },
@@ -116,18 +123,24 @@ export const UpdateMatch = () => {
                     if (res.success) {
                         setLocations(res.data.locations as Record<string,string[]>);
                         setCompetitions(res.data.competitions as Competition[]);
-                        setAvailablePlayers(res.data.available_player as Record<string, Player>);
-                        if (res.data.match) {
-                            const m = res.data.match as Match;
+                        const m = res.data.match as Match;
+                        if (m) {
                             setMatch(m);
+                            if (m.pens_for || m.pens_against) {
+                                setShowPens(true);
+                            }
                             setCompetitionDropdownVal(m.competition_id);
                             setLocationDropdownVal(m.location);
                         }
+                        const xmi = res.data.extra_match_info as ExtraMatchInfo;
+                        if (xmi) {
+                            setExtraMatchInfo(xmi);
+                        }
                         if (res.data.active_players) {
-                            setActivePlayers(res.data.active_players as Record<string, Player>);
+                            setActivePlayers(res.data.active_players as Record<string, SortablePlayer>);
                         }
                         if (res.data.available_players) {
-                            setAvailablePlayers(res.data.available_players as Record<string, Player>);
+                            setAvailablePlayers(res.data.available_players as Record<string, SortablePlayer>);
                         }
                         if (res.data.goals) {
                             setGoals(res.data.goals as Record<string, number>);
@@ -139,6 +152,7 @@ export const UpdateMatch = () => {
                         setErrorMessage(res.data.message);
                     }
                     setLoading(false);
+                    setDataLoaded(true);
                 }
             )
             // setLocations(
@@ -232,12 +246,12 @@ export const UpdateMatch = () => {
     //     .join("\n");
     // }
 
-    useEffect(
-        () => {
-            setErrorMessage(serialiseMatch(match));
-        },
-        [match]
-    )
+    // useEffect(
+    //     () => {
+    //         setErrorMessage(serialiseMatch(match));
+    //     },
+    //     [match]
+    // )
 
     // useEffect(
     //     () => {
@@ -282,7 +296,7 @@ export const UpdateMatch = () => {
                 {errorMessage}
             </p>
             {
-                (loading) ? <Loading/> : (
+                (loading || !dataLoaded) ? <Loading/> : (
                     <GenericSection
                         subtitle={sectionArray[sectionIndex].subtitle}
                         sectionContent={sectionArray[sectionIndex].sectionContent}

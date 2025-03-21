@@ -23,7 +23,6 @@ export const OverviewSelector = (props:OwnProps) => {
 
     return (
         <div
-            // id="player-filter"
             className="overview-selector"
         >
             <div className="overview-selector-top-row overview-selector-row">

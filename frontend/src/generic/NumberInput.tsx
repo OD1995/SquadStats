@@ -1,5 +1,6 @@
 import { ChangeEvent } from "react";
 import "./NumberInput.css";
+import { AddCircle, RemoveCircle } from "@mui/icons-material";
 
 interface OwnProps {
     value:number
@@ -40,16 +41,16 @@ export const NumberInput = (props:OwnProps) => {
                 onChange={handleInputChange}
             />
             <div id='number-input-buttons'>
-                <button
+                <AddCircle
                     id='increase-value-button'
                     className="change-value-button ss-green-button"
                     onClick={handleIncreaseClick}
-                >+</button>
-                <button
+                />
+                <RemoveCircle
                     id='decrease-value-button'
                     className="change-value-button ss-red-button"
                     onClick={handleDecreaseClick}
-                >-</button>
+                />
             </div>
         </div>
     )

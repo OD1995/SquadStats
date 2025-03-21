@@ -5,3 +5,9 @@ export interface Player {
     data_source_player_name?:string
     better_player_name?:string
 }
+
+export interface SortablePlayer {
+    player:Player
+    apps:number
+    name:string
+}

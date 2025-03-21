@@ -1,5 +1,7 @@
 from pdb import pm
 from uuid import UUID
+
+from sqlalchemy import func
 from app import db
 from app.models.Club import Club
 from app.models.Competition import Competition
@@ -47,21 +49,42 @@ class MatchInfoDataHandler:
             else:
                 location_dict[han] = [loc]
         ## Competitions
-        competition_list = db.session.query(Competition) \
-            .join(League) \
-            .join(LeagueSeason) \
-            .filter(LeagueSeason.league_season_id == league_season_id) \
-            .all()
+        # competition_list = db.session.query(Competition) \
+        #     .join(League) \
+        #     .join(LeagueSeason) \
+        #     .filter(LeagueSeason.league_season_id == league_season_id) \
+        #     .all()
+        league_season_obj = db.session.query(LeagueSeason) \
+            .filter_by(league_season_id=league_season_id) \
+            .first()
         competitions = [
             c.get_competition_info()
-            for c in competition_list
+            for c in league_season_obj.league.competitions
         ]
         ## Active players
         player_list = db.session.query(Player) \
             .filter(Player.club_id == team.club_id) \
             .all()
+        player_team_apps = db.session.query(
+                Player.player_id,
+                func.sum(PlayerMatchPerformance.value)
+            ) \
+            .join(Player) \
+            .join(Match) \
+            .join(TeamSeason) \
+            .join(Metric) \
+            .filter(
+                TeamSeason.team_id == team_id,
+                Metric.metric_name == MetricEnum.APPEARANCES
+            ) \
+            .group_by(Player.player_id)\
+            .all()
+        player_team_apps_dict = {
+            str(p_id) : apps
+            for p_id, apps in player_team_apps
+        }
         available_players = {
-            str(p.player_id) : p.to_dict()
+            str(p.player_id) : p
             for p in player_list
             if p.get_best_name() != MiscStrings.OWN_GOALS
         }
@@ -73,6 +96,10 @@ class MatchInfoDataHandler:
         potm = None
         active_players = {}
         match_info = None
+        extra_match_info = {
+            'league_name' : league_season_obj.league.league_name,
+            'season_name' : league_season_obj.data_source_season_name
+        }
         if (match_ is not None):
             metric_name_list = [
                 MetricEnum.APPEARANCES,
@@ -90,8 +117,9 @@ class MatchInfoDataHandler:
                 pid = str(pmp.player_id)
                 match pmp.metric.metric_name:
                     case MetricEnum.APPEARANCES:
-                        active_players[pid] = pmp.player.to_dict()
-                        del available_players[pid]
+                        active_players[pid] = pmp.player
+                        if pid in available_players:
+                            del available_players[pid]
                     case MetricEnum.GOALS:
                         if pid in goals:
                             goals[pid] += pmp.value
@@ -100,15 +128,39 @@ class MatchInfoDataHandler:
                     case MetricEnum.POTM:
                         potm = pid
             match_info = match_.to_dict()
+        #     extra_match_info = {
+        #         'league_name' : match_.team_season.league_season.league.league_name,
+        #         'season_name' : match_.team_season.league_season.data_source_season_name
+        #     }
+        # else:
+        #     extra_match_info = {
+        #         'league_name' : match_.team_season.league_season.league.league_name,
+        #         'season_name' : match_.team_season.league_season.data_source_season_name
+        #     }
         return {
             'match' : match_info,
+            'extra_match_info' : extra_match_info,
             'goals' : goals,
             'potm' : potm,
             'locations' : location_dict,
             'competitions' : competitions,
-            'active_players' : active_players,
-            'available_players' : available_players
+            'active_players' : self.make_players_sortable(active_players, player_team_apps_dict),
+            'available_players' : self.make_players_sortable(available_players, player_team_apps_dict),
         }
+    
+    def make_players_sortable(
+        self,
+        player_dict,
+        player_team_apps_dict
+    ):
+        return_me = {}
+        for player_id, player_obj in player_dict.items():
+            return_me[player_id] = {
+                'player' : player_obj.to_dict(),
+                'apps' : player_team_apps_dict.get(player_id, 0),
+                'name' : player_obj.get_best_name()
+            }
+        return return_me
 
     def get_result(self):
         match = db.session.query(Match) \

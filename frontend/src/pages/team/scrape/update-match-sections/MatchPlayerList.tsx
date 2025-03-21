@@ -4,10 +4,11 @@ import { PLAYER_LIST_TYPE } from "../../../../types/enums";
 import { Player } from "../../../../types/Player";
 import { Modal } from "../../../../generic/Modal";
 import { ButtonDiv } from "../../../../generic/ButtonDiv";
+import { AddCircle, RemoveCircle } from "@mui/icons-material";
 
 interface OwnProps {
     subsubtitle:PLAYER_LIST_TYPE
-    players:Record<string, Player>
+    players:Player[]
     updatePlayerLists:Function
     addNewPlayer?:Function
 }
@@ -37,17 +38,35 @@ export const MatchPlayerList = (props:OwnProps) => {
     const createButton = (player:Player) => {
         const isAdd = props.subsubtitle == PLAYER_LIST_TYPE.ALL_PLAYERS;
         const onClickFunc = () => props.updatePlayerLists(player.player_id, isAdd);
-        const sign = isAdd ? "+" : "-";
-        const classNameStr = isAdd ? "ss-green-button" : "ss-red-button";
-        return (
-            <button
-                key={generateId()}
-                className={"mpl-button " + classNameStr}
-                onClick={onClickFunc}
-            >
-                {sign}
-            </button>
-        )
+        // const sign = isAdd ? "+" : "-";
+        // const element = isAdd ? AddCircle : RemoveCircle;
+        // const classNameStr = isAdd ? "ss-green-button" : "ss-red-button";
+        // return (
+        //     <button
+        //         key={generateId()}
+        //         className={"mpl-button " + classNameStr}
+        //         onClick={onClickFunc}
+        //     >
+        //         {sign}
+        //     </button>
+        // )
+        if (isAdd) {
+            return (
+                <AddCircle
+                    key={generateId()}
+                    className="mpl-button ss-green-button"
+                    onClick={onClickFunc}                
+                />
+            )
+        } else {
+            return (
+                <RemoveCircle
+                    key={generateId()}
+                    className="mpl-button ss-red-button"
+                    onClick={onClickFunc}                
+                />
+            ) 
+        }
     }
 
     const handleModalClose = () => {
@@ -96,7 +115,7 @@ export const MatchPlayerList = (props:OwnProps) => {
             </h1>
             <div className="player-list">
                 {
-                    Object.values(props.players).map(
+                    props.players.map(
                         (player:Player) => (
                             <div
                                 key={generateId()}
@@ -113,7 +132,7 @@ export const MatchPlayerList = (props:OwnProps) => {
                 {
                     (props.subsubtitle == PLAYER_LIST_TYPE.ACTIVE_PLAYERS) ? (
                         <b>
-                            Player Count: {Object.values(props.players).length}
+                            Player Count: {props.players.length}
                         </b>
                     ) : (
                         <a onClick={() => setShowModal(true)}>

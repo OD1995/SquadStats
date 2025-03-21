@@ -1,5 +1,5 @@
 import { Match } from "../types/Match.ts";
-import { Player } from "../types/Player.ts";
+import { Player, SortablePlayer } from "../types/Player.ts";
 import { makeGetRequest, makePostRequest } from "./api.ts";
 
 class MatchService {
@@ -73,7 +73,7 @@ class MatchService {
 
     createMatch(
         match:Match,
-        activePlayers:Record<string, Player>,
+        sortableActivePlayers:Record<string, SortablePlayer>,
         goals:Record<string,number>,
         potm:string,
         newCompName:string, 
@@ -82,7 +82,13 @@ class MatchService {
         leagueSeasonId:string,
         newLocation:string
     ) {
-        match.location = newLocation;
+        if (newLocation != "") {
+            match.location = newLocation;
+        }
+        var activePlayers = {} as Record<string, Player>;
+        for (const player of Object.values(sortableActivePlayers)) {
+            activePlayers[player.player.player_id] = player.player
+        }
         return makePostRequest(
             this.base_url + "/create",
             {
