@@ -8,6 +8,7 @@ from flask_praetorian.exceptions import (
     MisusedRegistrationToken
 )
 from app import guard, db
+from app.helpers.misc import do_error_handling
 from app.models.User import User
 
 user_management_bp = Blueprint(
@@ -72,9 +73,7 @@ def forgotten_password():
             }
         )
     except Exception as e:
-        return {
-            'message' : traceback.format_exc()
-        }, 400
+        return do_error_handling(e)
     
 @user_management_bp.route("/reset-password", methods=['POST'])
 def reset_password():
@@ -103,6 +102,4 @@ def reset_password():
                 }
             ), 400
     except Exception as e:
-        return {
-            'message' : traceback.format_exc()
-        }, 400
+        return do_error_handling(e)

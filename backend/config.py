@@ -22,3 +22,4 @@ class Config:
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     PRAETORIAN_RESET_SENDER = os.environ.get('PRAETORIAN_RESET_SENDER')
     PRAETORIAN_RESET_URI = os.environ.get('PRAETORIAN_RESET_URI')
+    SENTRY_DSN = os.environ.get("SENTRY_DSN")

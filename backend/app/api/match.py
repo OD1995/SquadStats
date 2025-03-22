@@ -8,6 +8,7 @@ from app import db
 from app.data_handlers.MatchInfoDataHandler import MatchInfoDataHandler
 from app.data_handlers.MatchesDataHandler import MatchesDataHandler
 from app.helpers.MetricIdGetter import MetricIdGetter
+from app.helpers.misc import do_error_handling
 from app.models.Competition import Competition
 from app.models.DataSource import DataSource
 from app.models.League import League
@@ -180,9 +181,7 @@ def scrape_matches():
         else:
             raise Exception(f"Unexpected data source: {data_source.data_source_id}")
     except Exception as e:
-        return {
-            'message' : traceback.format_exc()
-        }, 400
+        return do_error_handling(e)
 
 @match_bp.route("/get-current-matches/<team_id>/<league_season_id>", methods=['GET']) #
 def get_current_matches(team_id, league_season_id):
@@ -198,9 +197,7 @@ def get_current_matches(team_id, league_season_id):
                 for match in sorted(current_matches, key=lambda x: x.date)
             ])
     except Exception as e:
-        return {
-            'message' : traceback.format_exc()
-        }, 400
+        return do_error_handling(e)
     
 
 @match_bp.route("/update-matches", methods=['POST'])
@@ -276,9 +273,7 @@ def update_matches():
         else:
             raise Exception('Unexpected data source type')
     except Exception as e:
-        return {
-            'message' : traceback.format_exc()
-        }, 400
+        return do_error_handling(e)
     
 
 @match_bp.route("/get-match-info/<match_id>", methods=['GET'])
@@ -288,9 +283,7 @@ def get_match_info(match_id):
         result = match_info_data_handler.get_result()
         return jsonify(result)
     except Exception as e:
-        return {
-            'message' : traceback.format_exc()
-        }, 400
+        return do_error_handling(e)
     
 @match_bp.route("/get-matches-data", methods=['GET'])
 def get_matches_data():
@@ -307,9 +300,7 @@ def get_matches_data():
         result = matches_data_handler.get_result()
         return jsonify(result)
     except Exception as e:
-        return {
-            'message' : traceback.format_exc()
-        }, 400
+        return do_error_handling(e)
     
 @match_bp.route("/get-match-edit-update-data-info/<league_season_id>/<team_id>/<match_id>", methods=['GET'])
 def get_match_edit_update(league_season_id, team_id, match_id):
@@ -317,9 +308,7 @@ def get_match_edit_update(league_season_id, team_id, match_id):
         match_info_data_handler = MatchInfoDataHandler(match_id)
         return jsonify(match_info_data_handler.get_edit_update_info(league_season_id, team_id))
     except Exception as e:
-        return {
-            'message' : traceback.format_exc()
-        }, 400
+        return do_error_handling(e)
 
 @match_bp.route("/create", methods=['POST'])
 def create_match():
@@ -479,6 +468,4 @@ def create_match():
         db.session.commit()
         return jsonify(success=True)
     except Exception as e:
-        return {
-            'message' : traceback.format_exc()
-        }, 400    
+        return do_error_handling(e)  

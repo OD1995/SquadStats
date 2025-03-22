@@ -5,7 +5,7 @@ from flask.config import T
 from app import db
 from app.data_handlers.LeaderboardDataHandler import LeaderboardDataHandler
 from app.data_handlers.PlayerDataHandler import PlayerDataHandler
-from app.helpers.misc import get_unappearance_metrics
+from app.helpers.misc import do_error_handling, get_unappearance_metrics
 from app.models.Match import Match
 from app.models.Metric import Metric
 from app.models.Player import Player
@@ -38,9 +38,7 @@ def get_leaderboard_data():
         result = matches_data_handler.get_result()
         return jsonify(result)
     except Exception as e:
-        return {
-            'message' : traceback.format_exc()
-        }, 400
+        return do_error_handling(e)
     
 @player_bp.route("/get-player-info/<player_id>", methods=['GET'])
 def get_player_info(player_id):
@@ -50,9 +48,7 @@ def get_player_info(player_id):
         )
         return jsonify(player_data_handler.get_result())
     except Exception as e:
-        return {
-            'message' : traceback.format_exc()
-        }, 400
+        return do_error_handling(e)
 
 @player_bp.route("/update-better-player-name", methods=['POST'])
 def update_better_player_name():
@@ -67,9 +63,7 @@ def update_better_player_name():
         db.session.commit()
         return jsonify(player.to_dict(include_both_names=True))
     except Exception as e:
-        return {
-            'message' : traceback.format_exc()
-        }, 400
+        return do_error_handling(e)
 
 @player_bp.route("/get-player-teams/<player_id>", methods=['GET'])
 def get_player_teams(player_id):
@@ -98,6 +92,4 @@ def get_player_teams(player_id):
             }
         )
     except Exception as e:
-        return {
-            'message' : traceback.format_exc()
-        }, 400
+        return do_error_handling(e)

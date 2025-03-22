@@ -4,6 +4,7 @@ from flask import Blueprint, jsonify, request
 import flask_praetorian
 from app import db
 from app.data_handlers.TeamOverview import TeamOverview
+from app.helpers.misc import do_error_handling
 from app.models.Club import Club
 from app.models.Match import Match
 from app.models.Player import Player
@@ -31,9 +32,7 @@ def get_team(team_id):
             }, 400
         return jsonify(team.get_team_info())
     except Exception as e:
-        return {
-            'message' : traceback.format_exc()
-        }, 400
+        return do_error_handling(e)
     
 @team_bp.route("/create-manual", methods=['POST'])
 @flask_praetorian.auth_required
@@ -64,9 +63,7 @@ def create_team():
             }
         )
     except Exception as e:
-        return {
-            'message' : traceback.format_exc()
-        }, 400
+        return do_error_handling(e)
         
 @team_bp.route("/get-team-names/<team_id>", methods=['GET'])
 def get_team_names(team_id):
@@ -77,9 +74,7 @@ def get_team_names(team_id):
             .all()
         return jsonify(team_names)
     except Exception as e:
-        return {
-            'message' : traceback.format_exc()
-        }, 400
+        return do_error_handling(e)
 
 @team_bp.route("/save-team-names", methods=['POST'])
 def save_team_names():
@@ -101,9 +96,7 @@ def save_team_names():
             .all()
         return jsonify(team_names)
     except Exception as e:
-        return {
-            'message' : traceback.format_exc()
-        }, 400
+        return do_error_handling(e)
     
 @team_bp.route("/get-team-overview-stats/<team_id>", methods=['GET'])
 def get_team_overview_stats(team_id):
@@ -112,9 +105,7 @@ def get_team_overview_stats(team_id):
         team_overview_data = team_overview.get_data()
         return jsonify(team_overview_data)
     except Exception as e:
-        return {
-            'message' : traceback.format_exc()
-        }, 400
+        return do_error_handling(e)
     
 @team_bp.route("/get-player-information/<team_id>", methods=['GET']) #
 def get_team_player_information(team_id):
@@ -139,6 +130,4 @@ def get_team_player_information(team_id):
             }
         )
     except Exception as e:
-        return {
-            'message' : traceback.format_exc()
-        }, 400
+        return do_error_handling(e)

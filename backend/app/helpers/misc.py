@@ -1,5 +1,6 @@
 import colorsys
-
+import traceback
+from sentry_sdk import capture_message
 from app.types.enums import Metric
 
 
@@ -55,3 +56,13 @@ def none_of_list1_in_list2(list1,list2):
         if el in list2:
             return False
     return True
+
+def do_error_handling(e):
+    error_message = traceback.format_exc()
+    capture_message(
+        message=error_message,
+        level='error'
+    )
+    return {
+        'message' : error_message
+    }, 400

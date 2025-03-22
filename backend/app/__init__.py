@@ -3,6 +3,7 @@ from flask_cors import CORS
 # from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_praetorian import Praetorian
+import sentry_sdk
 from config import Config
 from flask_mailman import Mail
 
@@ -13,6 +14,13 @@ mail = Mail()
 
 def create_app(config_class=Config):
     """Create and configure an instance of the Flask application."""
+    sentry_sdk.init(
+        dsn=config_class.SENTRY_DSN,
+        # Add data like request headers and IP for users,
+        # see https://docs.sentry.io/platforms/python/data-management/data-collected/ for more info
+        send_default_pii=True,
+    )
+    
     app = Flask(
         __name__,
         instance_relative_config=True

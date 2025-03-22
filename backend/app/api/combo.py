@@ -1,6 +1,7 @@
 import traceback
 from flask import Blueprint, jsonify, request
 from app.data_handlers.MatchesFilterDataHandler import MatchesFilterDataHandler
+from app.helpers.misc import do_error_handling
 
 combo_bp = Blueprint(
     name="combo",
@@ -18,6 +19,4 @@ def get_mop_filter_data():
         )
         return jsonify(matches_filter_data_handler.get_data())
     except Exception as e:
-        return {
-            'message' : traceback.format_exc()
-        }, 400
+        return do_error_handling(e)

@@ -5,6 +5,7 @@ from flask import Blueprint, jsonify, request
 from app import db
 from app.api import team
 from app.data_handlers.MatchesFilterDataHandler import MatchesFilterDataHandler
+from app.helpers.misc import do_error_handling
 from app.models.League import League
 from app.models.LeagueSeason import LeagueSeason
 from app.models.Team import Team
@@ -28,9 +29,7 @@ def get_team_seasons(team_id):
         )
         return jsonify(matches_filter_data_handler.get_team_leagues_and_seasons())
     except Exception as e:
-        return {
-            'message' : traceback.format_exc()
-        }, 400
+        return do_error_handling(e)
     
 @season_bp.route("/get-club-seasons/<club_id>", methods=['GET'])
 def get_club_seasons(club_id):
@@ -41,9 +40,7 @@ def get_club_seasons(club_id):
         )
         return jsonify(matches_filter_data_handler.get_club_seasons())
     except Exception as e:
-        return {
-            'message' : traceback.format_exc()
-        }, 400
+        return do_error_handling(e)
 
 @season_bp.route("/update-seasons", methods=['POST'])
 def update_seasons():
@@ -114,9 +111,7 @@ def update_seasons():
         ]
         return jsonify(league_season_info_list)
     except Exception as e:
-        return {
-            'message' : traceback.format_exc()
-        }, 400
+        return do_error_handling(e)
     
 @season_bp.route("/create-new-league-and-season", methods=['POST'])
 def create_new_league_and_season():
@@ -152,9 +147,7 @@ def create_new_league_and_season():
             "league_season_id" : new_league_season.league_season_id
         })
     except Exception as e:
-        return {
-            'message' : traceback.format_exc()
-        }, 400
+        return do_error_handling(e)
 
 @season_bp.route("/create-new-season", methods=['POST'])
 def create_new_season():
@@ -182,6 +175,4 @@ def create_new_season():
             "league_season_id" : new_league_season.league_season_id
         })
     except Exception as e:
-        return {
-            'message' : traceback.format_exc()
-        }, 400
+        return do_error_handling(e)
