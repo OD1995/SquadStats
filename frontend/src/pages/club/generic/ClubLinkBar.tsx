@@ -24,6 +24,12 @@ export const ClubLinkBar = (props:OwnProps) => {
                 label: 'Players',
                 to: `/club/${clubId}/players`
             },
+            ...(props.isClubAdmin ? [
+                {
+                    label: 'Share ID',
+                    to: `/club/${clubId}/share-id`
+                }
+            ] : []),
             {
                 label: 'Matches',
                 to: `/club/${clubId}/matches`

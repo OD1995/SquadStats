@@ -1,0 +1,15 @@
+#share-id-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.share-id-text {
+    width: 90vw;
+    text-align: center;
+}
+
+#share-id-label {
+    margin-top: 3vh;
+    margin-bottom: 3vh;
+}

@@ -1,10 +1,8 @@
-NEXT: Make sure player performances are written over and do player ordering
+NEXT: check share id works
 
 If no clubs, put message and link to 'Add Clubs'/'Get Started'
 
 Write some tests
-
-Write 'About' page, include description on Leagues/Comps
 
 Make sure same club not added twice, once testing finished
 
@@ -14,7 +12,7 @@ Handle situation where user tries to scrape matches for unavailable team e.g. U1
 
 Make sure all necessary endpoints need a user
 
-
+Club -> Match -> should load automatically
 
 Maybe combine backend calls for team and club overview pages
 

@@ -29,9 +29,13 @@ export const VerticalNavigationBarItems = (props:VerticalNavigationBarItemsProps
                         <Link to="/about" onClick={props.handleLogoutClick}  className="navigation-bar-link">
                             Logout
                         </Link>
-                        <Link to="/my-clubs" onClick={props.handleItemSelection} className="navigation-bar-link">
-                            My Clubs
-                        </Link>
+                        {
+                            (props.user.clubs.length > 0) && (
+                                <Link to="/my-clubs" onClick={props.handleItemSelection} className="navigation-bar-link">
+                                    My Clubs
+                                </Link>
+                            )
+                        }
                         <Link to="/add-club" onClick={props.handleItemSelection} className="navigation-bar-link">
                             Add Club
                         </Link>

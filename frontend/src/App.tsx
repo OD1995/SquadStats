@@ -29,6 +29,7 @@ import { ForgottenPassword } from './pages/login/ForgottenPassword';
 import { ResetPassword } from './pages/login/ResetPassword';
 import { UpdateData } from './pages/team/scrape/UpdateData';
 import { UpdateMatch } from './pages/team/scrape/update-match-sections/UpdateMatch';
+import { ShareId } from './pages/club/ShareId';
 
 
 const App = () => {
@@ -59,6 +60,7 @@ const App = () => {
 						<Route path='/club/:clubId/teams' element={<ClubTeamsOverviewSelector/>}/>
 						<Route path='/club/:clubId/add-team' element={<ClubAddTeam/>}/>
 						<Route path='/club/:clubId/players' element={<ClubPlayersOverviewSelector/>}/>
+						<Route path='/club/:clubId/share-id' element={<ShareId/>}/>
 						<Route path='/team/:teamId/overview' element={<TeamOverview/>}/>
 						<Route path='/team/:teamId/update-data' element={<UpdateData/>}/>
 						<Route path='/team/:teamId/update-match/:leagueSeasonId/:matchId' element={<UpdateMatch/>}/>
