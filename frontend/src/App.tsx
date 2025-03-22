@@ -10,7 +10,6 @@ import { Login } from './pages/login/Login';
 import { GetStarted } from './pages/get-started/GetStarted';
 import { MyClubs } from './pages/my-clubs/MyClubs';
 import { TeamOverview } from './pages/team/overview/TeamOverview';
-import { TeamScrape } from './pages/team/scrape/TeamScrape';
 import { TeamNames } from './pages/team/name/TeamNames';
 import { MatchView } from './pages/match/MatchView';
 import { ClubMatches } from './pages/club/ClubMatches';

@@ -7,9 +7,12 @@ import { BackendResponse } from "../../types/BackendResponse";
 import { useDispatch } from "react-redux";
 import { triggerRefresh } from "../../store/slices/userSlice";
 import { useNavigate } from "react-router-dom";
-import { setUserLS } from "../../authentication/auth";
+import { getUserLS, setUserLS } from "../../authentication/auth";
 import TeamService from "../../services/TeamService";
 import { User } from "../../types/User";
+import { getClub, reverseEngineerShareId } from "../../helpers/other";
+import { Club } from "../../types/Club";
+import { Team } from "../../types/Team";
 
 interface OwnProps {
     clubType?:CLUB_TYPE
@@ -29,9 +32,31 @@ export const NewClubOrTeamSubmit = (props:OwnProps) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    const user = getUserLS();
+
     const handleSubmit = () => {
         setButtonDisabled(true);
         if (props.club) {
+            if (props.clubType! == CLUB_TYPE.ALREADY_EXISTS) {
+                const shareId = reverseEngineerShareId(textValue);
+                const clubIdArray = user?.clubs.map(
+                    (club:Club) => club.club_id
+                )
+                if (clubIdArray?.includes(shareId)) {
+                    setErrorMessage("Your account is already linked to this club")
+                    setButtonDisabled(false);
+                    return;
+                }
+            } else if (props.clubType! == CLUB_TYPE.COMPLETELY_NEW) {
+                const clubNameArray = user?.clubs.map(
+                    (club:Club) => club.club_name
+                )
+                if (clubNameArray?.includes(textValue)) {
+                    setErrorMessage("Your account is already link to a club with the same name");
+                    setButtonDisabled(false);
+                    return;
+                }
+            }
             ClubService.createNewClub(
                 props.clubType!,
                 props.dataSource!,
@@ -53,6 +78,14 @@ export const NewClubOrTeamSubmit = (props:OwnProps) => {
         }
         if (props.team) {
             const clubId = window.location.pathname.split("/")[2];
+            const teamNameArray = getClub(user, clubId)!.teams.map(
+                (team:Team) => team.team_name
+            );
+            if (teamNameArray.includes(textValue)) {
+                setErrorMessage("This club already has a team with the same name linked to it");
+                setButtonDisabled(false);
+                return;
+            }
             TeamService.createNewTeam(
                 clubId,
                 textValue
@@ -81,6 +114,9 @@ export const NewClubOrTeamSubmit = (props:OwnProps) => {
             id='new-cot-submit-parent'
             className="new-cot-entry-parent add-cot-section"
         >
+            <p className="error-message">
+                {errorMessage}
+            </p>
             <FormControl
                 id='new-cot-submit-form'
             >
@@ -101,9 +137,6 @@ export const NewClubOrTeamSubmit = (props:OwnProps) => {
             >
                 Submit
             </button>
-            <p className="error-message">
-                {errorMessage}
-            </p>
         </div>
     )
 }

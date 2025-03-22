@@ -35,7 +35,7 @@ export const NewClubType = (props:NewClubTypeProps) => {
                     <FormControlLabel
                         value={CLUB_TYPE.ALREADY_EXISTS}
                         control={<Radio/>}
-                        label='I want to link my account to a club that already exists'
+                        label='I want to link my account to a club that already exists within Squad Stats'
                     />
                 </RadioGroup>
             </FormControl>

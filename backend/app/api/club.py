@@ -38,28 +38,52 @@ def create_club():
         data_source = req.get("dataSource")
         club_id = req.get("clubId")
         save_teams = False
-        if club_type == ClubType.ALREADY_EXISTS:
+        user_id = UUID(flask_praetorian.current_user_id())
+        current_user = flask_praetorian.current_user()
+        if club_type == ClubType.ALREADY_EXISTS.value:
             try:
                 actual_club_id = get_club_id_from_shared_club_id(club_id)
             except AssertionError:
                 return {
                     "message" : "Invalid club ID"
                 }, 400
-            club_count = db.session.query(Club).filter_by(club_id=actual_club_id).count()
+            club_count = db.session.query(Club) \
+                .filter_by(club_id=actual_club_id) \
+                .count()
             if club_count == 0:
                 return {
                     "message" : "Club does not exist"
                 }, 400
             new_club_admin = ClubAdmin(
                 club_id=actual_club_id,
-                user_id=flask_praetorian.current_user_id
+                user_id=user_id
             )
             db.session.add(new_club_admin)
             db.session.commit()
-            return jsonify(success=True)
+            res = {
+                "ss_user" : current_user.get_ss_user_data(),
+                "new_club_id" : actual_club_id
+            }
+            return jsonify(res)
         elif data_source in [
             DataSourceEnum.FOOTBALL_ASSOCIATION.value
         ]:
+            ## First check if the club already exists
+            club_obj = db.session.query(Club) \
+                .filter_by(data_source_club_id=club_id) \
+                .first()
+            if club_obj is not None:
+                new_club_admin = ClubAdmin(
+                    club_id=club_obj.club_id,
+                    user_id=user_id
+                )
+                db.session.add(new_club_admin)
+                db.session.commit()
+                res = {
+                    "ss_user" : current_user.get_ss_user_data(),
+                    "new_club_id" : club_obj.club_id
+                }
+                return jsonify(res)
             base_url = db.session.query(DataSource).filter_by(
                 data_source_id=DataSourceEnum.FOOTBALL_ASSOCIATION
             ).first().url
@@ -77,10 +101,9 @@ def create_club():
             club_name=club_name,
             data_source_club_id=club_id
         )
-        user_id = flask_praetorian.current_user_id()
         new_club_admin = ClubAdmin(
             club_id=new_club.club_id,
-            user_id=UUID(user_id)
+            user_id=user_id
         )
         db.session.add(new_club)
         db.session.add(new_club_admin)
@@ -100,11 +123,11 @@ def create_club():
             db.session.add_all(new_team_leagues)
             db.session.add_all(new_league_seasons)
             db.session.commit()
-        current_user = flask_praetorian.current_user()
-        return {
+        res = {
             "ss_user" : current_user.get_ss_user_data(),
             "new_club_id" : new_club.club_id
-        }, 200
+        }
+        return jsonify(res)
     except Exception as e:
         return {
             'message' : traceback.format_exc()

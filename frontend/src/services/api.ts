@@ -11,59 +11,61 @@ const instance = axios.create(
     }
 );
 
+let isRefreshing = false;
+let failedQueue: any[] = [];
+
 instance.interceptors.response.use(
     (res) => {
         return res;
     },
     async (err) => {
         const originalConfig = err.config;
+
         if (err.response) {
-            if ((err.response.status == 401) && err.response.data) {
-                if (err.response.data.error == 'ExpiredAccessError') {
+            if (err.response.status === 401 && err.response.data) {
+                if (err.response.data.error === 'ExpiredAccessError') {
                     const user = getUserLS();
-                    UserManagementService.refreshAccessToken(
-                        user?.access_token
-                    ).then(
-                        (res:BackendResponse) => {
-                            setNewAccessToken(res.data.new_token);
+                    
+                    // Check if refresh is already in progress
+                    if (!isRefreshing) {
+                        isRefreshing = true;
+                        
+                        try {
+                            // Refresh the access token
+                            const refreshResponse = await UserManagementService.refreshAccessToken(user?.access_token);
+
+                            // Set the new access token
+                            setNewAccessToken(refreshResponse.data.new_token);
+
+                            // Dispatch refresh action
                             store.dispatch(triggerRefresh());
-                            const a = 1;
+                            
+                            // Retry all the failed requests with the new token
+                            failedQueue.forEach((callback) => callback(refreshResponse.data.new_token));
+                            failedQueue = [];
+
+                            // Return the original request with new token
+                            originalConfig.headers['Authorization'] = `Bearer ${refreshResponse.data.new_token}`;
+                            return instance(originalConfig);
+                        } catch (refreshError) {
+                            // Handle error in refreshing token, e.g., logout user or redirect
+                            return Promise.reject(refreshError);
+                        } finally {
+                            isRefreshing = false;
                         }
-                    )
+                    } else {
+                        // If refresh is in progress, queue the failed request to retry later
+                        return new Promise((resolve, reject) => {
+                            failedQueue.push((newToken: string) => {
+                                originalConfig.headers['Authorization'] = `Bearer ${newToken}`;
+                                resolve(instance(originalConfig));
+                            });
+                        });
+                    }
                 }
             }
         }
         return Promise.reject(err);
-        // if ((originalConfig.url !== "/v1/auth/login") && err.response) {
-        //     // Access token has expired
-        //     if ((err.response.status === 401) && (!originalConfig._retry)) {
-        //         originalConfig._retry = true;
-        //         try {
-        //             const rs = await instance.post(
-        //                 "/v1/auth/refresh-access-token",
-        //                 {
-        //                     refreshToken: TokenService.getLocalRefreshToken()
-        //                 }
-        //             );
-        //             const { accessToken } = rs.data;
-        //             TokenService.updateLocalAccessToken(accessToken);
-        //             return instance(originalConfig);
-        //         } catch (_error) {
-        //             if (_error.response.status === 403) {
-        //                 // Refresh token has expired
-        //                 // Logout and maybe set message
-        //                 EventBus.dispatch(
-        //                     "logout",
-        //                     {
-        //                         message: "Logged out after more than 1 month since last activity"
-        //                     }
-        //                 );
-        //             }
-        //             return Promise.reject(_error);
-        //         }
-        //     }
-        // }
-        // return Promise.reject(err);
     }
 )
 

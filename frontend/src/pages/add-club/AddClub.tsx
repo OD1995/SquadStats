@@ -50,6 +50,7 @@ export const AddClub = (props:AddClubProps) => {
                             clubType={CLUB_TYPE.ALREADY_EXISTS}
                             modalContent={<AlreadyExistsClub/>}
                             dataSource={null}
+                            club
                         />
                     )
                 }

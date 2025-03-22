@@ -7,6 +7,7 @@ import { LoginOrRegister } from "../../generic/LoginOrRegister";
 import { PAGE_TYPE } from "../../types/enums";
 import { setUserLS } from "../../authentication/auth";
 import { User } from "../../types/User";
+import { getAllLinkedTeams } from "../../helpers/other";
 
 
 
@@ -30,10 +31,16 @@ export const Login = () => {
                     const user = res.data.ss_user as User;
                     setUserLS(user);
                     dispatch(triggerRefresh());
-                    if (user.clubs.length > 0) {
-                        navigate("/my-clubs");
-                    } else {
+                    const clubLength = user.clubs.length;
+                    const linkedTeamArray = getAllLinkedTeams(user);
+                    if (clubLength == 0) {
                         navigate("/get-started");
+                    } else if (linkedTeamArray.length == 1) {
+                        navigate(`/team/${linkedTeamArray[0].team_id}/overview`);
+                    } else if (clubLength == 1) {
+                        navigate(`/club/${user.clubs[0].club_id}/overview`)
+                    } else {
+                        navigate("/my-clubs");
                     }
                 } else {
                     setLoginErrorColour("red");

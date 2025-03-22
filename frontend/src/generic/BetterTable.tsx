@@ -206,7 +206,7 @@ export const BetterTable = (props:OwnProps) => {
                                                             row[colHeader].value.toString(),
                                                             fs1,
                                                             10,
-                                                            0.01
+                                                            0.013
                                                         );
                                                         styles["fontSize"] = fs2;
                                                         return (

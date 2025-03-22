@@ -1,4 +1,3 @@
-import { RestaurantMenu } from "@mui/icons-material";
 import { CLUB_TYPE, DATA_SOURCE } from "../types/enums.ts";
 import { makeGetRequest, makePostRequest } from "./api.ts";
 

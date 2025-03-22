@@ -30,7 +30,8 @@ export const LoginOrRegister = (props:LoginOrRegisterProps) => {
         () => {
             const keyEnter = (ev:KeyboardEvent) => {
                 if (ev.key === 'Enter') {
-                    props.handleSubmitButton();
+                    // props.handleSubmitButton();
+                    handleButtonPress()
                 }
             }
             document.addEventListener('keydown',keyEnter);

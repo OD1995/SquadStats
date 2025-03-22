@@ -22,6 +22,8 @@ export const MyClubs = () => {
         () => {
             if (!user) {
                 navigate("/about");
+            } else if (user.clubs.length == 0) {
+                navigate("/get-started");
             } else {
                 setClubOptions(getClubOptions(user));
                 setTeamOptions(getTeamOptions(user));

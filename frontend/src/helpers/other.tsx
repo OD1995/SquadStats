@@ -146,6 +146,27 @@ export const getOverviewRowCount = (
     return rowCount;
 }
 
+export const generateShareId = (cId:string) => {
+    const halfLength = cId.length / 2;
+    const firstHalf = cId.substring(0, halfLength);
+    const secondHalf = cId.substring(halfLength, halfLength * 2);
+    return firstHalf + cId + secondHalf
+}
+
+export const reverseEngineerShareId = (shareId:string) => {
+    return shareId.substring(18, 18+36);
+}
+
+export const getAllLinkedTeams = (user:User) => {
+    var linkedTeams = [] as Team[];
+    for (const club of user.clubs) {
+        for (const team of club.teams) {
+            linkedTeams.push(team);
+        }
+    }
+    return linkedTeams;
+}
+
 // export const wait = (seconds:number) => {
 //     return new Promise(res => setTimeout(res, seconds));
 // }

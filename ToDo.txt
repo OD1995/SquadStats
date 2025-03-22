@@ -1,12 +1,10 @@
-NEXT: check share id works
+better metric than biggest losses
 
-If no clubs, put message and link to 'Add Clubs'/'Get Started'
+fix permissions expired workflow
 
-Write some tests
+Do some logging
 
-Make sure same club not added twice, once testing finished
-
-get_team_matches for manual entry team
+get_team_matches for manual entry team - ??
 
 Handle situation where user tries to scrape matches for unavailable team e.g. U12s
 

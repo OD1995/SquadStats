@@ -5,7 +5,7 @@ def get_club_id_from_shared_club_id(shared_club_id:str):
     second_half = shared_club_id[-18:]
     middle_whole = shared_club_id[18:54]
     assert middle_whole == first_half + second_half
-    return middle_whole
+    return UUID(middle_whole)
 
 def is_valid_uuid(uuid_to_test, version=4):
     """
