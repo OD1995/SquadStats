@@ -22,7 +22,7 @@ club_bp = Blueprint(
 def get_club(club_id):
     try:
         club = db.session.query(Club).filter_by(club_id=UUID(club_id)).first()
-        return club.get_club_info(), 200
+        return jsonify(club.get_club_info())
     except Exception as e:
         return {
             'message' : traceback.format_exc()

@@ -51,7 +51,10 @@ export const generateBodyRow = (values:TableCellValue[]) => {
                 values.map(
                     (val:TableCellValue) => {
                         return (
-                            <TableCell className={"ss-table-cell " + val.className}>
+                            <TableCell
+                                className={"ss-table-cell " + val.className}
+                                key={generateId()}
+                            >
                                 {val.value}
                             </TableCell>
                         )

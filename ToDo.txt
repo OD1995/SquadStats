@@ -10,20 +10,12 @@ Handle situation where user tries to scrape matches for unavailable team e.g. U1
 
 Make sure all necessary endpoints need a user
 
-Club -> Match -> should load automatically
+Club Overview -> Matches -> should load automatically
 
 Maybe combine backend calls for team and club overview pages
 
 Better description of how to use the Update Data page
 
-NEXT when creating new manual entry club
-decide on logic for club's share(?) id
-
-login navigation:
- - if zero teams -> go to 'get started'
- - if one team -> go to 'team overview'
- - if one club -> go to 'club overview'
- - otherwise, go to 'my clubs'
 
 alembic init alembic
 alembic revision --autogenerate -m "initial commit"

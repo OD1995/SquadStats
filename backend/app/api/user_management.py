@@ -31,10 +31,12 @@ def register():
     )
     db.session.add(new_user)
     db.session.commit()
-    return {
-        "message" : "User registered",
-        "ss_user" : new_user.get_ss_user_data()
-    }, 200
+    return jsonify(
+        {
+            "message" : "User registered",
+            "ss_user" : new_user.get_ss_user_data()
+        }
+    )
 
 @user_management_bp.route("/login", methods=['POST'])
 def login():
@@ -42,9 +44,7 @@ def login():
     email = req.get('email')
     password = req.get('password')
     user:User = guard.authenticate(email, password)
-    return {
-        'ss_user' : user.get_ss_user_data()
-    }, 200
+    return jsonify({'ss_user' : user.get_ss_user_data()})
 
 @user_management_bp.route("/refresh", methods=['POST'])
 # @flask_praetorian.auth_required
@@ -52,9 +52,7 @@ def refresh():
     old_token = request.get_json(force=True)['access_token']
     new_token = guard.refresh_jwt_token(old_token)
     # user = guard.get_user_from_registration_token(new_token)
-    return {
-        'new_token' : new_token
-    }, 200
+    return jsonify({'new_token' : new_token})
 
 @user_management_bp.route("/forgotten-password", methods=['POST'])
 def forgotten_password():

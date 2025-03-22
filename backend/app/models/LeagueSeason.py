@@ -40,6 +40,6 @@ class LeagueSeason(Base):
             'season_name' : self.data_source_season_name,
             'season_id' : self.league_season_id
         }
-        if include_team_season:
+        if include_team_season and (self.team_season is not None):
             return_dict['team_season'] = self.team_season.get_team_season_info()
         return return_dict

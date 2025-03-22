@@ -112,8 +112,9 @@ class MatchesFilterDataHandler:
         seasons = [] \
             if team.data_source.data_source_id == DataSource.MANUAL else \
             [
-                ts.league_season.get_league_season_info(include_team_season=True)
-                for ts in team.team_seasons
+                lg_ssn.get_league_season_info(include_team_season=True)
+                for tm_lg in team.team_leagues
+                for lg_ssn in tm_lg.league.league_seasons
             ]
         return {
             'leagues' : leagues,

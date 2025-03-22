@@ -29,7 +29,7 @@ def get_team(team_id):
             return {
                 "message" : "This team does not exist"
             }, 400
-        return team.get_team_info(), 200
+        return jsonify(team.get_team_info())
     except Exception as e:
         return {
             'message' : traceback.format_exc()
@@ -57,10 +57,12 @@ def create_team():
         db.session.add(new_team_name)
         db.session.commit()
         current_user = flask_praetorian.current_user()
-        return {
-            "ss_user" : current_user.get_ss_user_data(),
-            "new_team_id" : new_team.team_id
-        }, 200
+        return jsonify(
+            {
+                "ss_user" : current_user.get_ss_user_data(),
+                "new_team_id" : new_team.team_id,
+            }
+        )
     except Exception as e:
         return {
             'message' : traceback.format_exc()

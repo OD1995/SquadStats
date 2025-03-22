@@ -72,7 +72,8 @@ export const MatchInfoView = (props:MatchInfoViewProps) => {
                                 </h3>
                                 <i
                                     style={{
-                                        color: 'red'
+                                        color: 'red',
+                                        textAlign: 'center'
                                     }}
                                 >
                                     Most errors will be because neither team name is expected. You can change that <Link target='_blank' to={`/team/${teamId}/team-names`}>here</Link>

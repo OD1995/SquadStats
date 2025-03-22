@@ -293,6 +293,7 @@ export const TeamScrape = (props:OwnProps) => {
                             selectedSeason={props.selectedSeason}
                             setSelectedSeason={props.setSelectedSeason}
                             flexDirection='column'
+                            teamScrape
                         />
                         <div id='team-scrape-buttons-div'>
                             <TeamScrapeButtonColumn

@@ -15,6 +15,14 @@ export const LeagueSelection = (props:OwnProps) => {
         props.setSelectedLeague(event.target.value as string);
     }
 
+    const getLeagueMatchCount = (lg:League) => {
+        var matchCount = 0;
+        for (const lgSsn of Object.values(lg.league_seasons)) {
+            matchCount += lgSsn.team_season.matches.length
+        }
+        return matchCount;
+    }
+
     return (
         <div
             id='team-scrape-season-div'
@@ -33,7 +41,9 @@ export const LeagueSelection = (props:OwnProps) => {
                     onChange={handleLeagueSelect}
                 >
                     {
-                        Object.values(props.leagues).map(
+                        Object.values(props.leagues).filter(
+                            (league:League) => getLeagueMatchCount(league) > 0
+                        ).map(
                             (league:League) => {
                                 return (
                                     <MenuItem

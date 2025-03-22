@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom"
 import { LinkBarInfo } from "../../../types/LinkBarInfo";
 import { LinkBar } from "../../../generic/LinkBar";
 import { Team } from "../../../types/Team";
+import { SPLIT_BY_TYPE } from "../../../types/enums";
 
 interface OwnProps {
     isClubAdmin:boolean
@@ -41,7 +42,7 @@ export const TeamLinkBar = (props:OwnProps) => {
             [
                 {
                     label: 'Matches',
-                    to: `/team/${teamId}/matches`
+                    to: `/team/${teamId}/matches?splitBy=${SPLIT_BY_TYPE.NA}`
                 },
                 {
                     label: 'Player Leaderboards',

@@ -43,6 +43,15 @@ class FootballAssociationFixtureScraper(FixtureScraper):
                     response_text = await response.text()
                 except Exception as e:
                     match_errors.append(repr(e)[:10000])
+
+                if "no longer displayed for youth leagues" in response_text:
+                    match_errors.append("Players' names are no longer displayed for youth leagues.")
+                    return {
+                        "player_data" : player_data,
+                        "match_info" : match_info,
+                        "match_errors" : match_errors,
+                        'match_id' : match_id
+                    }
                 
                 try:
                     soup = BeautifulSoup(response_text, 'html.parser')

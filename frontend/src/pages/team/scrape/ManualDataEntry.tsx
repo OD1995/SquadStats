@@ -91,6 +91,16 @@ export const ManualDataEntry = (props:OwnProps) => {
                     control={<Radio/>}
                     label={option}
                     key={generateId()}
+                    // className="mde-radio-option"
+                    sx={{
+                        '& .MuiFormControlLabel-label': {
+                            fontSize: '0.8rem'
+                        },
+                        '& .MuiRadio-root': {
+                            // fontSize: '0.75rem'
+                            height: '5vh'
+                        },
+                    }}
                 />
             )
         )

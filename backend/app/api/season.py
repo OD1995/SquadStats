@@ -26,7 +26,7 @@ def get_team_seasons(team_id):
             club_id=None,
             team_id=team_id
         )
-        return jsonify(matches_filter_data_handler.get_team_leagues_and_seasons()), 200
+        return jsonify(matches_filter_data_handler.get_team_leagues_and_seasons())
     except Exception as e:
         return {
             'message' : traceback.format_exc()
@@ -39,7 +39,7 @@ def get_club_seasons(club_id):
             club_id=club_id,
             team_id=None
         )
-        return jsonify(matches_filter_data_handler.get_club_seasons()), 200
+        return jsonify(matches_filter_data_handler.get_club_seasons())
     except Exception as e:
         return {
             'message' : traceback.format_exc()
@@ -150,7 +150,7 @@ def create_new_league_and_season():
         db.session.commit()
         return jsonify({
             "league_season_id" : new_league_season.league_season_id
-        }), 200
+        })
     except Exception as e:
         return {
             'message' : traceback.format_exc()
@@ -180,7 +180,7 @@ def create_new_season():
         db.session.commit()
         return jsonify({
             "league_season_id" : new_league_season.league_season_id
-        }), 200
+        })
     except Exception as e:
         return {
             'message' : traceback.format_exc()

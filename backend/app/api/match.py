@@ -196,7 +196,7 @@ def get_current_matches(team_id, league_season_id):
         return jsonify([
                 match.to_dict()
                 for match in sorted(current_matches, key=lambda x: x.date)
-            ]), 200
+            ])
     except Exception as e:
         return {
             'message' : traceback.format_exc()

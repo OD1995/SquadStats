@@ -81,11 +81,9 @@ class FootballAssociationTeamScraper(TeamScraper):
             'previousSelectedClub' : "",
             'selectedTeam' : self.fa_team_id,
         }
+        url = f"{self.fa_base_url}/results/1/100.html"
         soup = self.get_soup(
-            build_url_using_params(
-                f"{self.fa_base_url}/results/1/100.html",
-                params
-            )
+            build_url_using_params(url,params)
         )
         if "There are no recent results to display" in str(soup):
             return (
