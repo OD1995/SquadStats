@@ -54,6 +54,7 @@ const App = () => {
 						<Route path='/add-club' element={<AddClub includeHeirachy={false}/>}/>
 						<Route path='/my-clubs' element={<MyClubs/>}/>
 						<Route path='/club/:clubId/overview' element={<ClubOverview/>}/>
+						
 						<Route path='/club/:clubId/matches' element={<ClubMatches/>}/>
 						<Route path='/club/:clubId/player-leaderboards' element={<ClubPlayerLeaderboards/>}/>
 						<Route path='/club/:clubId/teams' element={<ClubTeamsOverviewSelector/>}/>

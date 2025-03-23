@@ -12,10 +12,22 @@
     margin-bottom: 2vh;
 }
 
-#mobile-expanded-mop-filter {
+.expanded-mop-filter {
     display: flex;
-    flex-direction: column;
+    /* flex-direction: column; */
     align-items: center;
+}
+
+#mobile-expanded-mop-filter {
+    /* display: flex; */
+    flex-direction: column;
+    /* align-items: center; */
+}
+
+#desktop-expanded-mop-filter {
+    /* display: flex; */
+    flex-direction: row;
+    /* align-items: center; */
 }
 
 .select-group-item {
@@ -66,4 +78,13 @@
 
 .cotm-twt {
     font-size: 0.8em;
+}
+
+#desktop-mop-fop-parent {
+
+}
+
+#desktop-mop-fop-filters {
+    display: flex;
+    flex-direction: row;
 }

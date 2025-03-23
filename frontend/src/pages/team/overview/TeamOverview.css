@@ -9,9 +9,12 @@
 }
 
 #team-overview-parent-table .team-overview-cell {
-    border: 1px solid #646cff;
+    /* border: 1px solid #646cff; */
+    /* margin: 1vh; */
     /* display: flex; */
     /* text-align: center; */
+    padding-left: 2vw;
+    padding-right: 2vw;
 }
 
 .team-overview-cell {

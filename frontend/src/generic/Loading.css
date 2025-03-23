@@ -1,8 +1,15 @@
-#loading-logo {
-    /* height: 8vw; */
+#desktop-loading {
+    width: 5vw;
+    margin-bottom: 2vw;
+}
+
+#mobile-loading {
     width: 15vw;
-    margin-top: 8vw;
     margin-bottom: 4vw;
+}
+
+.loading-logo {
+    margin-top: 8vw;
     border: 1px solid black;
 }
 
@@ -21,7 +28,7 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
-    #loading-logo {
+    .loading-logo {
         animation: App-logo-spin infinite 3s linear;
     }
 }

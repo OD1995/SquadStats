@@ -58,7 +58,7 @@ export const MatchesOrPlayersFilter = (props:OwnProps) => {
     const [oppositionOptions, setOppositionOptions] = useState<string[]>([]);
     const [playerFilterOptions, setPlayerFilterOptions] = useState<Player[]>([]);
     
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [searchParams, _] = useSearchParams();
     const navigate = useNavigate();
 
     useEffect(

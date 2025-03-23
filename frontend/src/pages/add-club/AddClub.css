@@ -29,7 +29,8 @@
 }
 
 #heirachy-text {
-    font-size: x-small;
+    /* font-size: x-small; */
+    font-size: 0.7em;
     width: 80vw;
     text-align: center;
 }

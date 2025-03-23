@@ -15,6 +15,7 @@
 .overview-selector-row {
     margin-top: 3vh;
     margin-bottom: 3vh;
+    max-width: 700px;
 }
 
 .overview-selector {

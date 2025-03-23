@@ -6,6 +6,7 @@ better metric than biggest losses
 
 fix permissions expired workflow
 
+add upcoming milestones to club/team overview
 
 alembic init alembic
 alembic revision --autogenerate -m "initial commit"

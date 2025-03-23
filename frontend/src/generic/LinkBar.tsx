@@ -2,7 +2,7 @@ import { Link, useLocation } from "react-router-dom"
 import { LinkBarInfo } from "../types/LinkBarInfo"
 import "./LinkBar.css"
 import { isWiderThanHigher } from "../helpers/windowDimensions"
-import { generateId } from "../helpers/other"
+import { generateId, getStringUpToChar } from "../helpers/other"
 
 interface OwnProps {
     links:LinkBarInfo[]
@@ -16,8 +16,9 @@ export const LinkBar = (props:OwnProps) => {
 
     const getClassName = (linkStr:string) => {
         var cn = "cot-link";
+        const betterLink = getStringUpToChar(linkStr, "?");
         const pathName = location.pathname;
-        if (pathName == linkStr) {
+        if (pathName == betterLink) {
             cn += " current-cot-link";
         }
         return cn;

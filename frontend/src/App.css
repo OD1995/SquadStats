@@ -126,6 +126,16 @@
 	width: 100%;
 }
 
+/* .page-content {
+	width: 100vw;
+}
+
+@media (max-width: 768px) {
+	.page-content {
+		width: 90vw;
+	}
+} */
+
 .small-caps-subtitle {
     font-size: 0.67em;
     font-weight: normal;

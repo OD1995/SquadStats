@@ -180,3 +180,8 @@ export const getAllLinkedTeams = (user:User) => {
 // export const sleep = (secs:number) => {
 //     msleep(secs*1000);
 // }
+
+export function getStringUpToChar(str:string, char:string) {
+    const index = str.indexOf(char);
+    return index !== -1 ? str.slice(0, index) : str;
+}

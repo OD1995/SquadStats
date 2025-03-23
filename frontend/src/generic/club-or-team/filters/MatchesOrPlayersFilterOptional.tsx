@@ -1,3 +1,4 @@
+import { isWiderThanHigher } from "../../../helpers/windowDimensions";
 import { Club } from "../../../types/Club";
 import { SPLIT_BY_TYPE } from "../../../types/enums";
 import { Player } from "../../../types/Player";
@@ -34,67 +35,68 @@ interface OwnProps {
 }
 
 export const MatchesOrPlayersFilterOptional = (props:OwnProps) => {
+
+    const isDesktop = isWiderThanHigher();
     
     const getSeasons = () => {
         if (props.team) {
             return props.teamSeasons;
         }
-        // if (props.clubSeasons && (props.selectedTeamId != "")) {
-        //     return props.clubSeasons[props.selectedTeamId]
-        // }
-        if (props.club) {
+        if (props.club && props.clubSeasons) {
             return props.clubSeasons[props.selectedTeamId];
         }
         return []
     }
     
     return (
-        <div> 
+        <div id={(isDesktop ? "desktop" : "mobile") + '-mop-fop-parent'}> 
             <h4 className="small-caps-subtitle">
                 OPTIONAL FILTERS
-            </h4>           
-            {
-                props.club && (
-                    <TeamFilter
-                        club={props.club}
-                        selectedTeamId={props.selectedTeamId}
-                        setSelectedTeamId={props.setSelectedTeamId}
-                        clubSeasons={props.clubSeasons!}
-                        setTeamSeasons={props.setTeamSeasons}
-                    />
-                )
-            }
-            <SeasonFilter
-                selectedSeason={props.selectedSeason}
-                setSelectedSeason={props.setSelectedSeason}
-                seasonOptions={getSeasons()}
-            />
-            {
-                props.matches && (
-                    <PlayerFilter
-                        playerIdFilter={props.playerIdFilter}
-                        setPlayerIdFilter={props.setPlayerIdFilter}
-                        playerFilterOptions={props.playerFilterOptions}
-                    />
-                )
-            }
-            {
-                (props.selectedSplitBy == SPLIT_BY_TYPE.OPPOSITION) && (
-                    <OppositionFilter
-                        selectedOpposition={props.selectedOpposition}
-                        setSelectedOpposition={props.setSelectedOpposition}
-                        oppositionOptions={props.oppositionOptions}
-                    />
-                )
-            }
-            {
-                (props.perGame) && (
-                    <MinAppsFilter
-                        minApps={props.minApps}
-                        setMinApps={props.setMinApps}
-                    />
-                )
-            }
+            </h4>
+            <div id={(isDesktop ? "desktop" : "mobile") + '-mop-fop-filters'}>
+                {
+                    props.club && (
+                        <TeamFilter
+                            club={props.club}
+                            selectedTeamId={props.selectedTeamId}
+                            setSelectedTeamId={props.setSelectedTeamId}
+                            clubSeasons={props.clubSeasons!}
+                            setTeamSeasons={props.setTeamSeasons}
+                        />
+                    )
+                }
+                <SeasonFilter
+                    selectedSeason={props.selectedSeason}
+                    setSelectedSeason={props.setSelectedSeason}
+                    seasonOptions={getSeasons()}
+                />
+                {
+                    props.matches && (
+                        <PlayerFilter
+                            playerIdFilter={props.playerIdFilter}
+                            setPlayerIdFilter={props.setPlayerIdFilter}
+                            playerFilterOptions={props.playerFilterOptions}
+                        />
+                    )
+                }
+                {
+                    (props.selectedSplitBy == SPLIT_BY_TYPE.OPPOSITION) && (
+                        <OppositionFilter
+                            selectedOpposition={props.selectedOpposition}
+                            setSelectedOpposition={props.setSelectedOpposition}
+                            oppositionOptions={props.oppositionOptions}
+                        />
+                    )
+                }
+                {
+                    (props.perGame) && (
+                        <MinAppsFilter
+                            minApps={props.minApps}
+                            setMinApps={props.setMinApps}
+                        />
+                    )
+                }
+            </div>
         </div>
     );
 }
