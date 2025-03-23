@@ -2,20 +2,6 @@ better metric than biggest losses
 
 fix permissions expired workflow
 
-Do some logging
-
-get_team_matches for manual entry team - ??
-
-Handle situation where user tries to scrape matches for unavailable team e.g. U12s
-
-Make sure all necessary endpoints need a user
-
-Club Overview -> Matches -> should load automatically
-
-Maybe combine backend calls for team and club overview pages
-
-Better description of how to use the Update Data page
-
 
 alembic init alembic
 alembic revision --autogenerate -m "initial commit"

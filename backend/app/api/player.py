@@ -2,6 +2,7 @@ import traceback
 from uuid import UUID
 from flask import Blueprint, jsonify, request
 from flask.config import T
+import flask_praetorian
 from app import db
 from app.data_handlers.LeaderboardDataHandler import LeaderboardDataHandler
 from app.data_handlers.PlayerDataHandler import PlayerDataHandler
@@ -51,6 +52,7 @@ def get_player_info(player_id):
         return do_error_handling(e)
 
 @player_bp.route("/update-better-player-name", methods=['POST'])
+@flask_praetorian.auth_required
 def update_better_player_name():
     try:
         data = request.get_json()

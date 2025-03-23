@@ -2,6 +2,7 @@ import asyncio
 import traceback
 from uuid import UUID
 from flask import Blueprint, jsonify, request
+import flask_praetorian
 from app import db
 from app.api import team
 from app.data_handlers.MatchesFilterDataHandler import MatchesFilterDataHandler
@@ -43,6 +44,7 @@ def get_club_seasons(club_id):
         return do_error_handling(e)
 
 @season_bp.route("/update-seasons", methods=['POST'])
+@flask_praetorian.auth_required
 def update_seasons():
     try:
         req = request.get_json(force=True)
@@ -114,6 +116,7 @@ def update_seasons():
         return do_error_handling(e)
     
 @season_bp.route("/create-new-league-and-season", methods=['POST'])
+@flask_praetorian.auth_required
 def create_new_league_and_season():
     try:
         req = request.get_json(force=True)
@@ -150,6 +153,7 @@ def create_new_league_and_season():
         return do_error_handling(e)
 
 @season_bp.route("/create-new-season", methods=['POST'])
+@flask_praetorian.auth_required
 def create_new_season():
     try:
         req = request.get_json(force=True)

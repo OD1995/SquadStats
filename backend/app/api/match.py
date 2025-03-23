@@ -3,6 +3,7 @@ from datetime import datetime
 import traceback
 from uuid import UUID
 from flask import Blueprint, jsonify, request
+import flask_praetorian
 from sqlalchemy import and_, or_
 from app import db
 from app.data_handlers.MatchInfoDataHandler import MatchInfoDataHandler
@@ -30,6 +31,7 @@ match_bp = Blueprint(
 )
 
 @match_bp.route("/scrape-matches", methods=['POST'])
+@flask_praetorian.auth_required
 def scrape_matches():
     try:
         data = request.get_json()
@@ -184,6 +186,7 @@ def scrape_matches():
         return do_error_handling(e)
 
 @match_bp.route("/get-current-matches/<team_id>/<league_season_id>", methods=['GET']) #
+@flask_praetorian.auth_required
 def get_current_matches(team_id, league_season_id):
     try:
         current_matches = db.session.query(Match) \
@@ -201,6 +204,7 @@ def get_current_matches(team_id, league_season_id):
     
 
 @match_bp.route("/update-matches", methods=['POST'])
+@flask_praetorian.auth_required
 def update_matches():
     try:
         req = request.get_json()
@@ -303,6 +307,7 @@ def get_matches_data():
         return do_error_handling(e)
     
 @match_bp.route("/get-match-edit-update-data-info/<league_season_id>/<team_id>/<match_id>", methods=['GET'])
+@flask_praetorian.auth_required
 def get_match_edit_update(league_season_id, team_id, match_id):
     try:
         match_info_data_handler = MatchInfoDataHandler(match_id)
@@ -311,6 +316,7 @@ def get_match_edit_update(league_season_id, team_id, match_id):
         return do_error_handling(e)
 
 @match_bp.route("/create", methods=['POST'])
+@flask_praetorian.auth_required
 def create_match():
     try:
         req = request.get_json()

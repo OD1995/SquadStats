@@ -77,6 +77,7 @@ def get_team_names(team_id):
         return do_error_handling(e)
 
 @team_bp.route("/save-team-names", methods=['POST'])
+@flask_praetorian.auth_accepted
 def save_team_names():
     try:
         req = request.get_json(force=True)
