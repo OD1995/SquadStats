@@ -1,3 +1,7 @@
+NEXT: go through every page on a desktop and mobile and make sure they both look ok
+
+maybe add part to the about page about what users can and can't do
+
 better metric than biggest losses
 
 fix permissions expired workflow
