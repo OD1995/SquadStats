@@ -16,14 +16,21 @@ export const OtherMatchInfo = (props:OwnProps) => {
             if (!props.time) {
                 return <p>{props.date}</p>
             }
-            return <p>{props.time + " - " + props.date}</p>
+            return <p>{formatTime(props.time) + " - " + props.date}</p>
         }
         return (
             <div id='date-time-div'>
-                <i>{props.time}</i>
+                <i>{formatTime(props.time)}</i>
                 <i>{props.date}</i>
             </div>
         )
+    }
+
+    const formatTime = (time:string) => {
+        const [hours, minutes] = time.split(':').map(Number);
+        const period = hours < 12 ? 'am' : 'pm';
+        const formattedHours = hours % 12 === 0 ? 12 : hours % 12;
+        return minutes === 0 ? `${formattedHours}${period}` : `${formattedHours}.${minutes}${period}`;
     }
 
     return (

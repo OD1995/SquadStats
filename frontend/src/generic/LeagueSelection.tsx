@@ -25,7 +25,7 @@ export const LeagueSelection = (props:OwnProps) => {
 
     return (
         <div
-            id='team-scrape-season-div'
+            className='team-scrape-season-div'
             style={{
                 flexDirection: props.flexDirection,
                 justifyContent: props.justifyContent

@@ -18,6 +18,7 @@ import { Loading } from "../../../generic/Loading";
 import { v4 as uuidv4 } from "uuid";
 import { MatchSelection } from "../../../generic/MatchSelection";
 import { Match } from "../../../types/Match";
+import { isWiderThanHigher } from "../../../helpers/windowDimensions";
 
 interface OwnProps {
     team:Team
@@ -42,6 +43,7 @@ export const ManualDataEntry = (props:OwnProps) => {
     const [backendResponseColour, setBackendResponseColour] = useState<string>("");
     const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
 
+    const isDesktop = isWiderThanHigher();
     const user = getUserLS();
     let { teamId } = useParams();
     const navigate = useNavigate();
@@ -198,7 +200,7 @@ export const ManualDataEntry = (props:OwnProps) => {
 
     const newLeagueNameInput = (
         <input
-            className='new-mde-name-input'
+            className={'new-mde-name-input ' + (isDesktop ? "desktop" : "mobile") + "-new-mde-name-input"}
             placeholder="Enter new league name"
             value={newLeagueName}
             onChange={onChangeLeagueText}
@@ -207,7 +209,7 @@ export const ManualDataEntry = (props:OwnProps) => {
 
     const newSeasonNameInput = (
         <input
-            className='new-mde-name-input'
+            className={'new-mde-name-input ' + (isDesktop ? "desktop" : "mobile") + "-new-mde-name-input"}
             placeholder="Enter new season name"
             value={newSeasonName}
             onChange={onChangeSeasonText}
@@ -220,17 +222,7 @@ export const ManualDataEntry = (props:OwnProps) => {
             selectedLeague={props.selectedLeague}
             setSelectedLeague={props.setSelectedLeague}
             flexDirection="row"
-            justifyContent="space-around"
-        />
-    )
-
-    const seasonSelector = (
-        <SeasonSelection
-            seasons={Object.values(props.seasons)}
-            selectedSeason={props.selectedLeagueSeason}
-            setSelectedSeason={props.setSelectedLeagueSeason}
-            flexDirection="row"
-            justifyContent="space-around"
+            justifyContent={isDesktop ? "space-evenly" : "space-around"}
         />
     )
 
@@ -240,7 +232,7 @@ export const ManualDataEntry = (props:OwnProps) => {
             selectedMatch={props.selectedMatch}
             setSelectedMatch={props.setSelectedMatch}
             flexDirection="row"
-            justifyContent="space-around"
+            justifyContent={isDesktop ? "space-evenly" : "space-around"}
         />
     )
 
@@ -254,9 +246,15 @@ export const ManualDataEntry = (props:OwnProps) => {
             />
             {
                 (props.allLoaded) ? (
-                <div id='manual-data-entry-type-option'>
+                <div id={(isDesktop ? 'desktop' : 'mobile') + '-manual-data-entry-type-option'}>
                     <FormControl>
-                        <FormLabel disabled={true}>
+                        <FormLabel
+                            disabled={true}
+                            sx={{
+                                marginTop: isDesktop ? "5vh" : "0",
+                                marginBottom: isDesktop ? "5vh" : "0",
+                            }}
+                        >
                             What do you want to do?
                         </FormLabel>
                         <RadioGroup
@@ -300,7 +298,14 @@ export const ManualDataEntry = (props:OwnProps) => {
                 (manualDataEntryActionType == MANUAL_DATA_ENTRY_ACTION_TYPE.ADD_NEW_MATCH) && (
                     <div className='new-mde-input'>
                         {leagueSelector}
-                        {seasonSelector}
+                        <SeasonSelection
+                            seasons={Object.values(props.seasons)}
+                            selectedSeason={props.selectedLeagueSeason}
+                            setSelectedSeason={props.setSelectedLeagueSeason}
+                            flexDirection="row"
+                            justifyContent={isDesktop ? "space-evenly" : "space-around"}
+                            showAllSeasons
+                        />
                         <ButtonDiv
                             buttonText="Submit"
                             onClickFunction={handleNewMatchButtonClick}
@@ -313,7 +318,13 @@ export const ManualDataEntry = (props:OwnProps) => {
                 (manualDataEntryActionType == MANUAL_DATA_ENTRY_ACTION_TYPE.EDIT_MATCH) && (
                     <div className='new-mde-input'>
                         {leagueSelector}
-                        {seasonSelector}
+                        <SeasonSelection
+                            seasons={Object.values(props.seasons)}
+                            selectedSeason={props.selectedLeagueSeason}
+                            setSelectedSeason={props.setSelectedLeagueSeason}
+                            flexDirection="row"
+                            justifyContent={isDesktop ? "space-evenly" : "space-around"}
+                        />
                         {matchSelector}
                         <ButtonDiv
                             buttonText="Submit"

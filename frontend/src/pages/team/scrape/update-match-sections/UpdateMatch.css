@@ -42,7 +42,7 @@
 }
 
 #match-info-input-labels {
-    width: 40vw;
+    /* width: 40vw; */
 }
 
 #match-info-input {
@@ -94,6 +94,8 @@
     display: flex;
     flex-direction: column;
     text-align: center;
+    margin-left: 2px;
+    margin-right: 2px;
 }
 
 .player-list {
@@ -162,4 +164,17 @@
 
 .unchangeable-mii-label {
     font-style: italic;
+}
+
+.generic-section-parent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#desktop-generic-section {
+    width: 70vw;
+}
+
+.generic-section {
 }

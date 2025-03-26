@@ -8,6 +8,7 @@ interface OwnProps {
     flexDirection:'row'|'column'
     justifyContent?:string
     teamScrape?:boolean
+    showAllSeasons?:boolean
 }
 
 export const SeasonSelection = (props:OwnProps) => {
@@ -34,7 +35,7 @@ export const SeasonSelection = (props:OwnProps) => {
 
     return (
         <div
-            id='team-scrape-season-div'
+            className='team-scrape-season-div'
             // style={{
             //     flexDirection: props.flexDirection,
             //     justifyContent: props.justifyContent
@@ -53,7 +54,8 @@ export const SeasonSelection = (props:OwnProps) => {
                     {
                         props.seasons.filter(
                             (lgSsn:LeagueSeason) => (
-                                props.teamScrape ? true : lgSsn.team_season.matches.length > 0
+                                (props.teamScrape || props.showAllSeasons) ? 
+                                    true : lgSsn.team_season.matches.length > 0
                             )
                         ).sort(
                             (a:LeagueSeason, b:LeagueSeason) => a.season_name.localeCompare(b.season_name)

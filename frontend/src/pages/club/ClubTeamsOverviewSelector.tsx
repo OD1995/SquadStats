@@ -9,6 +9,7 @@ import ClubService from "../../services/ClubService";
 import { BackendResponse } from "../../types/BackendResponse";
 import { Club } from "../../types/Club";
 import { Team } from "../../types/Team";
+import { isWiderThanHigher } from "../../helpers/windowDimensions";
 
 export const ClubTeamsOverviewSelector = () => {
     
@@ -18,6 +19,8 @@ export const ClubTeamsOverviewSelector = () => {
     const [teamOptions, setTeamOptions] = useState<OverviewOption[]>([]);
     const [club, setClub] = useState<Club>();
     const [link, setLink] = useState<string>("");
+
+    const isDesktop = isWiderThanHigher();
 
     let { clubId } = useParams();
     const user = getUserLS();
@@ -90,7 +93,10 @@ export const ClubTeamsOverviewSelector = () => {
                     />
                 )
             }
-            <div id='add-new-team-div'>
+            <div
+                id={(isDesktop ? "desktop" : "mobile") + "-add-new-team"}
+                className='add-new-team-div'
+            >
                 <Link to={`/club/${clubId}/add-team`}>
                     Add new team
                 </Link>

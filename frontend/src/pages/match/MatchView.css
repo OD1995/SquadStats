@@ -16,6 +16,14 @@
     text-align: center;
 }
 
+.desktop-team-names {
+    width: 15vw;
+}
+
+.mobile-team-names {
+    width: 15vw;
+}
+
 #match-info-section {
     display: flex;
     flex-direction: row;

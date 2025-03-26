@@ -5,6 +5,7 @@ import { Player } from "../../../../types/Player";
 import { Modal } from "../../../../generic/Modal";
 import { ButtonDiv } from "../../../../generic/ButtonDiv";
 import { AddCircle, RemoveCircle } from "@mui/icons-material";
+import { isWiderThanHigher } from "../../../../helpers/windowDimensions";
 
 interface OwnProps {
     subsubtitle:PLAYER_LIST_TYPE
@@ -18,14 +19,17 @@ export const MatchPlayerList = (props:OwnProps) => {
     const [showModal, setShowModal] = useState<boolean>(false);
     const [newPlayerName, setNewPlayerName] = useState<string>("");
 
-    const getPlayerNameDiv = (player:Player) => {
+    const isDesktop = isWiderThanHigher();
+
+    const getPlayerNameDiv = (player:Player, isDesktop:boolean) => {
         const playerName = player.better_player_name ?? player.player_name;
         var val = 1;
-        const max_chars = 16
-        if (playerName.length > max_chars) {
-            val -= (playerName.length - max_chars) * 0.0455
+        if (!isDesktop) {
+            const max_chars = 16
+            if (playerName.length > max_chars) {
+                val -= (playerName.length - max_chars) * 0.0455
+            }            
         }
-        val = Math.min(val, 2);
         return (
             <div
                 style={{fontSize: `${val}rem`}}
@@ -122,7 +126,7 @@ export const MatchPlayerList = (props:OwnProps) => {
                                 className="mpl-row"
                             >
                                 {createButton(player)}
-                                {getPlayerNameDiv(player)}
+                                {getPlayerNameDiv(player, isDesktop)}
                             </div>   
                         )
                     )
@@ -135,7 +139,10 @@ export const MatchPlayerList = (props:OwnProps) => {
                             Player Count: {props.players.length}
                         </b>
                     ) : (
-                        <a onClick={() => setShowModal(true)}>
+                        <a
+                            style={{cursor:"pointer"}}
+                            onClick={() => setShowModal(true)}
+                        >
                             Add New Player
                         </a>
                     )

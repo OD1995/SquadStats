@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { isWiderThanHigher } from "../../helpers/windowDimensions"
 
 interface OwnProps {
     teamName:string
@@ -19,6 +20,8 @@ export const MatchScore = (props:OwnProps) => {
     const [homePens, setHomePens] = useState<number|null>(null);
     const [awayPens, setAwayPens] = useState<number|null>(null);
     const [showPens, setShowPens] = useState<boolean>(false);
+
+    const isDesktop = isWiderThanHigher();
     
     useEffect(
         () => {
@@ -48,9 +51,21 @@ export const MatchScore = (props:OwnProps) => {
             <table>
                 <tbody>
                     <tr>
-                        <td><b>{homeTeam}</b></td>
+                        <td
+                            className={(isDesktop ? "desktop" : "mobile") + "-team-names"}
+                        >
+                            <b>
+                                {homeTeam}
+                            </b>
+                        </td>
                         {showPens && <td></td>}
-                        <td><b>{awayTeam}</b></td>
+                        <td
+                            className={(isDesktop ? "desktop" : "mobile") + "-team-names"}
+                        >
+                            <b>
+                                {awayTeam}
+                            </b>
+                        </td>
                     </tr>
                     <tr>
                         <td className="goals-text">{homeScore}</td>

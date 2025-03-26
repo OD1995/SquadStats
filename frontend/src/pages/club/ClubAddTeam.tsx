@@ -7,12 +7,14 @@ import { ClubLinkBar } from "./generic/ClubLinkBar";
 import { DATA_SOURCE } from "../../types/enums";
 import "./ClubAddTeam.css"
 import { NewClubOrTeamSubmit } from "../../generic/club-or-team/NewClubOrTeamSubmit";
+import { isWiderThanHigher } from "../../helpers/windowDimensions";
 
 export const ClubAddTeam = () => {
 
     const [club, setClub] = useState<Club>();
     const [anyNonManualTeams, setAnyNonManualTeams] = useState<boolean>(false);
 
+    const isDesktop = isWiderThanHigher();
     let { clubId } = useParams();
     const user = getUserLS();
     const navigate = useNavigate();
@@ -44,7 +46,10 @@ export const ClubAddTeam = () => {
             <ClubLinkBar
                 isClubAdmin={getIsClubAdmin(user, clubId!)}
             />
-            <div id='club-add-team-content'>
+            <div
+                id={(isDesktop ? "desktop" : "mobile") + "-club-add-team"}
+                className='club-add-team-content'
+            >
                 {
                     anyNonManualTeams && (
                         <>
@@ -57,7 +62,10 @@ export const ClubAddTeam = () => {
                         </>
                     )
                 }
-                <div id='add-new-team-subtitle-div'>
+                <div
+                    id={(isDesktop ? "desktop" : "mobile") + "-add-new-team-subtitle"}
+                    className='add-new-team-subtitle-div'
+                >
                     <b id='add-new-team-text'>
                         Add a new manual entry team
                     </b>

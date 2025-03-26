@@ -11,6 +11,11 @@
     container-name: cot-link-bar-container;
 }
 
+.desktop-cot-link-bar {
+    padding-top: 0.2vw;
+    padding-bottom: 0.2vw;
+}
+
 .mobile-cot-link-bar {
     padding-top: 2vw;
     padding-bottom: 2vw;

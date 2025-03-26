@@ -18,7 +18,7 @@ export const MatchSelection = (props:OwnProps) => {
 
     return (
         <div
-            id='team-scrape-season-div'
+            className='team-scrape-season-div'
             style={{
                 flexDirection: props.flexDirection,
                 justifyContent: props.justifyContent
@@ -36,7 +36,7 @@ export const MatchSelection = (props:OwnProps) => {
                     {
                         props.matches.map(
                             (match:Match) => {
-                                const matchName = `${match.opposition_team_name} (${match.home_away_neutral}) ${match.date}`;
+                                const matchName = `${match.opposition_team_name} (${match.home_away_neutral}) - ${match.date}`;
                                 return (
                                     <MenuItem
                                         key={match.match_id}

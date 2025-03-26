@@ -110,6 +110,7 @@ export const BetterTable = (props:OwnProps) => {
         <Box
             sx={{
                 width: '100%',
+                maxWidth: '1000px',
                 paddingBottom: '2vh'
             }}
         >

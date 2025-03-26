@@ -25,7 +25,9 @@ export const LinkBar = (props:OwnProps) => {
     }
 
     return (
-        <div className={'cot-link-bar' + (isDesktop ? "" : " mobile-cot-link-bar")}>
+        <div
+            className={'cot-link-bar ' + (isDesktop ? "desktop" : "mobile") + "-cot-link-bar"}
+        >
             {
                 props.links.map(
                     (link:LinkBarInfo) => {

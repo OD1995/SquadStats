@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import "./AdviceBar.css"
 import { Club } from "../types/Club";
 import { Team } from "../types/Team";
+import { isWiderThanHigher } from "../helpers/windowDimensions";
 
 interface OwnProps {
     noLinkedTeams?:boolean
@@ -12,6 +13,8 @@ interface OwnProps {
 }
 
 export const AdviceBar = (props:OwnProps) => {
+
+    const isDesktop = isWiderThanHigher();
 
     const [content, setContent] = useState<ReactNode>(null);
     
@@ -51,7 +54,10 @@ export const AdviceBar = (props:OwnProps) => {
     )
 
     return (
-        <div id='advice-bar-parent'>
+        <div
+            id={(isDesktop ? "desktop" : "mobile") + "-advice-bar"}
+            className='advice-bar-parent'
+        >
             <div id='advice-bar'>
                 {content}
             </div>

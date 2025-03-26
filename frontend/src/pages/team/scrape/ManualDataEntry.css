@@ -1,12 +1,23 @@
-#manual-data-entry-type-option {
+#mobile-manual-data-entry-type-option {
     margin-left: 5vw;
 }
 
+#desktop-manual-data-entry-type-option {
+    margin-left: 10vw;
+}
+
 .new-mde-name-input {
-    margin-left: 5vw;
     margin-top: 3vh;
     width: 250px;
     font-size: 16px;
+}
+
+.desktop-new-mde-name-input {
+    margin-left: 10vw;
+}
+
+.mobile-new-mde-name-input {
+    margin-left: 5vw;
 }
 
 .new-mde-input {

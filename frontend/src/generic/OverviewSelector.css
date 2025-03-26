@@ -22,9 +22,16 @@
     margin-top: 10vh;
 }
 
-#add-new-team-div {
-    width: 100vw;
+.add-new-team-div {
     display: flex;
     justify-content: center;
-    margin-top: 5vh;
+    margin-top: 10vh;
+}
+
+#desktop-add-new-team {
+    width: 90vw;
+}
+
+#mobile-add-new-team {
+    width: 100vw;
 }

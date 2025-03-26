@@ -1,5 +1,12 @@
-#advice-bar-parent {
-    width: 100vw;
+#desktop-advice-bar {
+    width: 90vw;
+}
+
+#mobile-advice-bar {
+    width: 100vw;    
+}
+
+.advice-bar-parent {
     display: flex;
     text-align: center;
     justify-content: center;

@@ -1,3 +1,4 @@
+import { isWiderThanHigher } from "../../../../helpers/windowDimensions";
 import { Match } from "../../../../types/Match";
 import { SubtitleAndButtons } from "./SubtitleAndButtons";
 
@@ -17,22 +18,33 @@ interface OwnProps {
 }
 
 export const GenericSection = (props:OwnProps) => {
+
+    const isDesktop = isWiderThanHigher();
+
     return (
-        <div>
-            <SubtitleAndButtons
-                subtitle={props.subtitle}
-                forwardText={props.nextSubtitle}
-                backText={props.previousSubtitle}
-                setSectionIndex={props.setSectionIndex}
-                match={props.match}
-                setErrorMessage={props.setErrorMessage}
-                potm={props.potm}
-                saveMatch={props.saveMatch}
-                newCompName={props.newCompName}
-                newCompAcronym={props.newCompAcronym}
-                newLocation={props.newLocation}
-            />
-            {props.sectionContent}
+        <div
+            id={(isDesktop ? "desktop" : "mobile") + "-generic-section-parent"}
+            className="generic-section-parent"
+        >
+            <div
+                id={(isDesktop ? "desktop" : "mobile") + "-generic-section"}
+                className="generic-section"
+            >
+                <SubtitleAndButtons
+                    subtitle={props.subtitle}
+                    forwardText={props.nextSubtitle}
+                    backText={props.previousSubtitle}
+                    setSectionIndex={props.setSectionIndex}
+                    match={props.match}
+                    setErrorMessage={props.setErrorMessage}
+                    potm={props.potm}
+                    saveMatch={props.saveMatch}
+                    newCompName={props.newCompName}
+                    newCompAcronym={props.newCompAcronym}
+                    newLocation={props.newLocation}
+                />
+                {props.sectionContent}                
+            </div>
         </div>
     );
 }

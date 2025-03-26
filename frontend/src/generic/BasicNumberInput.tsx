@@ -24,7 +24,8 @@ export const BasicNumberInput = (props: OwnProps) => {
             />
             <input
                 className="bni-input input-padder"
-                type="number"
+                // type="number"
+                inputMode="numeric"
                 value={props.value ?? 0}
                 onChange={onChangeVal}
             />
