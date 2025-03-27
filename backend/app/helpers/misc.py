@@ -51,6 +51,13 @@ def get_goal_metrics():
     ]
     return [m.value for m in mets]
 
+def get_potm_metrics():
+    mets = [
+        Metric.POTM,
+        Metric.PLAYER_OF_MATCH
+    ]
+    return [m.value for m in mets]
+
 def none_of_list1_in_list2(list1,list2):
     for el in list1:
         if el in list2:

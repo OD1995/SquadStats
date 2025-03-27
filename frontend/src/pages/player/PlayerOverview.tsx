@@ -20,6 +20,7 @@ export const PlayerOverview = () => {
     const [tableDataArray, setTableDataArray] = useState<GenericTableData[]>([]);
     const [appearances, setAppearances] = useState<number>();
     const [goals, setGoals] = useState<number>();
+    const [potms, setPotms] = useState<number>();
 
     const user = getUserLS();
     let { playerId } = useParams();
@@ -38,6 +39,7 @@ export const PlayerOverview = () => {
                         setTableDataArray(res.data.tables);
                         setAppearances(res.data.player_stats.appearances);
                         setGoals(res.data.player_stats.goals);
+                        setPotms(res.data.player_stats.potms);
                     } else {
                         setErrorMessage(res.data.message);
                     }
@@ -71,19 +73,28 @@ export const PlayerOverview = () => {
                     <h5>Goals</h5>
                     <h3>{goals}</h3>
                 </div>
+                <div className="basic-player-stat">
+                    <h5>POTMs</h5>
+                    <h3>{potms}</h3>
+                </div>
             </div>
-            {
-                tableDataArray.map(
-                    (data:GenericTableData) => (
-                        <BetterTable
-                            key={generateId()}
-                            {...data}
-                            rowsPerPage={2}
-                            titleClassName="small-caps-subtitle  sortable-table-title"
-                        />
+            <div className="player-overview-tables">
+                {
+                    tableDataArray.map(
+                        (data:GenericTableData) => (
+                            <div className="player-overview-table">
+                                <BetterTable
+                                    key={generateId()}
+                                    {...data}
+                                    rowsPerPage={2}
+                                    titleClassName="small-caps-subtitle  sortable-table-title"
+                                />
+                            </div>
+                                
+                        )
                     )
-                )
-            }
+                }
+            </div>
         </div>
     );
 }

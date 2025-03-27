@@ -34,7 +34,8 @@ export const BetterTable = (props:OwnProps) => {
     const getBetterTableFontSize = () => {
         var val = 1.15;
         val -= (0.1 * props.column_headers.length);
-        val = Math.max(val, 0.6);
+        // val = Math.max(val, 0.6);
+        val = Math.max(val, 0.8);
         val = Math.round(val * 100) / 100
         return val;
     }

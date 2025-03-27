@@ -275,7 +275,7 @@ export const UpdateMatch = () => {
         ).then(
             (res:BackendResponse) => {
                 if (res.success) {
-                    navigate(`/match/${match.match_id}`);
+                    navigate(`/team/${teamId}/match/${match.match_id}`);
                 } else {
                     setErrorMessage(res.data.message);
                 }

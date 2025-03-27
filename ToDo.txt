@@ -14,8 +14,6 @@ check why lots of competition duplication
 
 add team link bar to match view
 
-work out why my goals value is 28 not 54
-
 alembic init alembic
 alembic revision --autogenerate -m "initial commit"
 alembic upgrade head

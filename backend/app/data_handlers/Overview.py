@@ -25,7 +25,7 @@ class Overview:
             cells = {
                 'Opposition' : GenericTableCell(
                     value=f"{match.opposition_team_name} ({match.home_away_neutral.value[0]})",
-                    link=f"/match/{match.match_id}"
+                    link=f"/team/{match.team_season.team_id}/match/{match.match_id}"
                 ),
                 'Result' : GenericTableCell(
                     value=f"{match.goals_for}-{match.goals_against}"

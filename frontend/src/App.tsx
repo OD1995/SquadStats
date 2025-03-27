@@ -68,7 +68,7 @@ const App = () => {
 						<Route path='/team/:teamId/players-leaderboards' element={<TeamPlayers/>}/>
 						<Route path='/team/:teamId/players' element={<TeamPlayersOverviewSelector/>}/>
 						<Route path='/team/:teamId/team-names' element={<TeamNames/>}/>
-						<Route path='/match/:matchId' element={<MatchView/>}/>
+						<Route path='/team/:teamId/match/:matchId' element={<MatchView/>}/>
 						<Route path='/player/:playerId/overview' element={<PlayerOverview/>}/>
 						<Route path='/player/:playerId/teams' element={<PlayerTeamsOverviewSelector/>}/>
 						<Route path='/player/:playerId/edit-name' element={<EditPlayerName/>}/>

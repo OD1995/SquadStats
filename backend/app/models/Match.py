@@ -122,7 +122,7 @@ class Match(Base):
         )
         row.set_cell_link(
             column_name='Opposition',
-            link=f"/match/{self.match_id}"
+            link=f"/team/{self.team_season.team_id}/match/{self.match_id}"
         )
         if format_score & score_formattable:
             if self.goal_difference > 0:

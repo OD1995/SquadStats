@@ -265,7 +265,8 @@ class DataHandler:
             title=title,
             is_ranked=is_table_ranked,
             sort_by=self.PPG,
-            sort_direction='desc'
+            sort_direction='desc',
+            not_sortable=len(aggregate_data) <= 2
         )
 
     def get_split_by_cols(

@@ -2,7 +2,7 @@ from typing import List
 from uuid import UUID
 from app.data_handlers.DataHandler import DataHandler
 from app import db
-from app.helpers.misc import get_goal_metrics, get_unappearance_metrics
+from app.helpers.misc import get_goal_metrics, get_potm_metrics, get_unappearance_metrics
 from app.models.Match import Match
 from app.models.Metric import Metric
 from app.models.Player import Player
@@ -46,14 +46,19 @@ class PlayerDataHandler(DataHandler):
     ):
         goals = 0
         goal_mets = get_goal_metrics()
+        potms = 0
+        potm_mets = get_potm_metrics()
         for match in player_matches:
             pmps_by_player_id, _ = match.get_pmps_by_player_id()
             for metric_name, metric_val in pmps_by_player_id[str(self.player_id)].items():
                 if metric_name in goal_mets:
-                    goals += 1
+                    goals += metric_val
+                if metric_name in potm_mets:
+                    potms += 1
         return {
             'appearances' : len(player_matches),
-            'goals' : goals
+            'goals' : goals,
+            'potms' : potms
         }
     
     def get_player(self):
