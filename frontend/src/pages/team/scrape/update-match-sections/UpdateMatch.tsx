@@ -17,6 +17,10 @@ import { Competition } from "../../../../types/Competition";
 import { Loading } from "../../../../generic/Loading";
 import { ExtraMatchInfo } from "../../../../types/ExtraMatchInfo";
 import "./UpdateMatch.css"
+import { MatchReportUpload } from "./MatchReportUpload";
+import { UploadedImage } from "../../../../types/UploadedImage";
+import ImageService from "../../../../services/ImageService";
+import { v4 as uuidv4 } from "uuid";
 
 interface SectionInfo {
     subtitle:string
@@ -48,6 +52,7 @@ export const UpdateMatch = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [dataLoaded, setDataLoaded] = useState<boolean>(false);
     const [showPens, setShowPens] = useState<boolean>(false);
+    const [images, setImages] = useState<UploadedImage[]>([]);
 
     const user = getUserLS();
     let { teamId, leagueSeasonId, matchId } = useParams();
@@ -76,6 +81,17 @@ export const UpdateMatch = () => {
                     showPens={showPens}
                     setShowPens={setShowPens}
                     extraMatchInfo={extraMatchInfo}
+                />
+            )
+        },
+        {
+            subtitle: UPDATE_MATCH_SECTIONS.MATCH_REPORT,
+            sectionContent: (
+                <MatchReportUpload
+                    match={match}
+                    setMatch={setMatch}
+                    images={images}
+                    setImages={setImages}
                 />
             )
         },
@@ -260,8 +276,15 @@ export const UpdateMatch = () => {
     //     [goals, potm]
     // )
 
-    const saveMatch = () => {
+    const saveMatch = async () => {
         setLoading(true);
+        var imageIds = [];
+        for (const image of images) {
+            const id = uuidv4();
+            const res = await ImageService.uploadImage(image.file, id);
+            const imageId = `v${res.data.version}/${res.data.public_id}.${res.data.format}`;
+            imageIds.push(imageId);
+        }
         MatchService.createMatch(
             match,
             activePlayers,
@@ -271,7 +294,8 @@ export const UpdateMatch = () => {
             newCompAcronym,
             teamId!,
             leagueSeasonId!,
-            newLocation
+            newLocation,
+            imageIds
         ).then(
             (res:BackendResponse) => {
                 if (res.success) {

@@ -82,7 +82,10 @@ export const PlayerOverview = () => {
                 {
                     tableDataArray.map(
                         (data:GenericTableData) => (
-                            <div className="player-overview-table">
+                            <div
+                                key={generateId()}
+                                className="player-overview-table"
+                            >
                                 <BetterTable
                                     key={generateId()}
                                     {...data}

@@ -52,10 +52,18 @@ export enum MATCH_COMPETITION_TYPE {
 export enum UPDATE_MATCH_SECTIONS {
     MATCH_INFO = 'Match Info',
     PLAYERS = 'Players',
-    GOALS_AND_POTM = 'Goals & POTM'
+    GOALS_AND_POTM = 'Goals & POTM',
+    MATCH_REPORT = 'Match Report'
 }
 
 export enum PLAYER_LIST_TYPE {
     ALL_PLAYERS = 'All Club Players',
     ACTIVE_PLAYERS = 'Active Players'
+}
+
+export enum MATCH_REPORT_TYPES {
+    NO_ALREADY_EXISTS = "No, I'm happy with the already uploaded match report image(s)",
+    YES_TEXT = 'Yes, in text form',
+    YES_IMAGE = 'Yes, in image form',
+    NO = 'No'
 }

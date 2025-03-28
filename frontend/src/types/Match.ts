@@ -21,4 +21,7 @@ export interface Match {
     match_errors:MatchError[]
     player_info_scraped:boolean,
     notes:string
+    match_report_text?:string
+    match_report_image_ids?:string[]
+    match_report_id:string|null
 }

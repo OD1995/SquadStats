@@ -175,17 +175,34 @@ class DataHandler:
         return matches_query.all()
     
     def get_filters(self):
+        # filters = []
+        # ## Team/Club filtering
+        # filters.extend(self.get_team_or_club_filter())
+        # ## Season filtering
+        # filters.append(self.get_season_filter())
+        # ## Opposition filtering
+        # filters.append(self.get_opposition_filter())
+        # ## Player filtering
+        # filters.append(self.get_player_filter())
+        # return filters
+        F = [
+            ## Team/Club filtering
+            self.get_team_or_club_filter(),
+            ## Season filtering
+            self.get_season_filter(),
+            ## Opposition filtering
+            self.get_opposition_filter(),
+            ## Player filtering
+            self.get_player_filter()
+        ]
         filters = []
-        ## Team/Club filtering
-        filters.extend(self.get_team_or_club_filter())
-        ## Season filtering
-        filters.append(self.get_season_filter())
-        ## Opposition filtering
-        filters.append(self.get_opposition_filter())
-        ## Player filtering
-        filters.append(self.get_player_filter())
+        for f in F:
+            if (f is not None):
+                if (isinstance(f, list)):
+                    filters.extend(f)
+                else:
+                    filters.append(f)
         return filters
-    
     def get_player_filter(self):
         if self.player_id_filter not in [None, '']:
             return PlayerMatchPerformance.player_id == UUID(self.player_id_filter)

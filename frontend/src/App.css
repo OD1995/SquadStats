@@ -164,3 +164,7 @@
 	/* background-color: #ebebeb; */
 	border: 1px solid #a7a5a5;
 }
+
+.image-preview {
+	width: 30vh;
+}

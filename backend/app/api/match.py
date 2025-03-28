@@ -16,6 +16,7 @@ from app.models.League import League
 from app.models.LeagueSeason import LeagueSeason
 from app.models.Match import Match
 from app.models.MatchError import MatchError
+from app.models.MatchReport import MatchReport
 from app.models.Metric import Metric
 from app.models.Player import Player
 from app.models.PlayerMatchPerformance import PlayerMatchPerformance
@@ -328,6 +329,8 @@ def create_match():
         new_comp_acronym = req.get('newCompAcronym', None)
         team_id = UUID(req['teamId'])
         league_season_id = UUID(req['leagueSeasonId'])
+        match_report_image_ids = req.get('imageIds', [])
+        match_report_text = match_js.get('match_report_text', None)
 
         match_comp_id = match_js.get('competition_id', None)
         league_season = db.session.query(LeagueSeason) \
@@ -351,6 +354,21 @@ def create_match():
             competition_id = new_comp.competition_id
         else:
             competition_id = UUID(match_comp_id)
+        match_report_id = match_js.get('match_report_id', None)
+        if match_report_id is not None:
+            match_report_id = UUID(match_report_id)
+        delete_old_match_report = False
+        if (len(match_report_image_ids) != 0) or (match_report_text is not None):
+            new_match_report = MatchReport(
+                image_ids=match_report_image_ids,
+                text=match_report_text
+            )
+            if match_report_id is not None:
+                delete_old_match_report = True
+                old_match_report_id = match_report_id
+            match_report_id = new_match_report.match_report_id
+            db.session.add(new_match_report)
+
         goals_for = match_js['goals_for']
         goals_against = match_js['goals_against']
         goal_diff = goals_for - goals_against
@@ -372,7 +390,8 @@ def create_match():
             time=datetime.strptime(match_js['time'],"%H:%M").time(),
             location=match_js['location'],
             home_away_neutral=HomeAwayNeutral(match_js['home_away_neutral']),
-            notes=None
+            notes=None,
+            match_report_id=match_report_id
         )
         mig = MetricIdGetter(
             metric_list=[
@@ -471,6 +490,10 @@ def create_match():
             db.session.merge(np)
         for pmp in pmps:
             db.session.merge(pmp)
+        if delete_old_match_report:
+            db.session.query(MatchReport) \
+                .filter_by(match_report_id=old_match_report_id) \
+                .delete()
         db.session.commit()
         return jsonify(success=True)
     except Exception as e:

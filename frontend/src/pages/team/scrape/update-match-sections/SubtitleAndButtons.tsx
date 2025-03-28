@@ -54,6 +54,8 @@ export const SubtitleAndButtons = (props:OwnProps) => {
                 props.setErrorMessage(txt);
                 advance = false;
             } 
+        // } else if (props.subtitle == UPDATE_MATCH_SECTIONS.MATCH_REPORT) {
+
         } else if (props.subtitle == UPDATE_MATCH_SECTIONS.GOALS_AND_POTM) {
             if (props.potm == "") {
                 const txt = "Set a POTM before saving";

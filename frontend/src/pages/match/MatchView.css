@@ -68,3 +68,25 @@
 .pens-text {
     font-size: small;
 }
+
+.match-view-link {
+    margin-top: 2vh;
+    margin-bottom: 2vh;
+}
+
+.match-view-link:hover {
+    cursor: pointer;
+}
+
+#match-view-links {
+    display: flex;
+    flex-direction: row;
+    width: 90vw;
+    max-width: 800px;
+    justify-content: space-evenly;
+}
+
+#match-report-images-viewer {
+    display: flex;
+    flex-direction: row-reverse;
+}

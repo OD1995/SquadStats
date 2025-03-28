@@ -41,10 +41,6 @@
     text-align: center;
 }
 
-#match-info-input-labels {
-    /* width: 40vw; */
-}
-
 #match-info-input {
     display: flex;
     flex-direction: row;
@@ -176,5 +172,33 @@
     width: 70vw;
 }
 
-.generic-section {
+.match-report-image-preview-div {
+    display: flex;
+    flex-direction: row;
+    margin-top: 1vh;
+    margin-bottom: 1vh;
+}
+
+#image-previews {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    margin-top: 3vh;
+}
+
+.image-remove-button {
+    color: red;
+    background-color: white;
+}
+
+#match-report-uploader {
+    margin-top: 3vh;
+    display: flex;
+    flex-direction: column;
+}
+
+#match-report-text-input {
+    width: 70vw;
+    height: 30vh;
+    /* text-align: center; */
 }

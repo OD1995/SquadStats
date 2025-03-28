@@ -11,6 +11,7 @@ from app.models.Competition import Competition
 from app.models.MatchError import MatchError
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from app.models.MatchReport import MatchReport
 from app.models.PlayerMatchPerformance import PlayerMatchPerformance
 from app.models.TeamSeason import TeamSeason
 from app.types.GenericTableRow import GenericTableRow
@@ -50,10 +51,17 @@ class Match(Base):
         nullable=True
     )
     notes: Mapped[str] = mapped_column(String(100), nullable=True)
+    match_report_id: Mapped[UUID] = mapped_column(
+        ForeignKey("match_reports.match_report_id", name="match_reports_match_report_id"),
+        index=True,
+        nullable=True
+    )
+
     match_errors: Mapped[List["MatchError"]] = relationship(lazy='joined')
     team_season: Mapped[TeamSeason] = relationship(back_populates='matches')
     player_match_performances: Mapped[List[PlayerMatchPerformance]] = relationship(lazy='joined')
     competition: Mapped[Competition] = relationship(lazy='joined')
+    match_report: Mapped[MatchReport] = relationship(lazy='joined')
 
     def __init__(
         self,
@@ -73,6 +81,7 @@ class Match(Base):
         home_away_neutral:HomeAwayNeutral,
         notes:str,
         match_id:UUID|None=None,
+        match_report_id:UUID|None=None
     ):
         self.match_id = match_id or uuid4()
         self.data_source_match_id = data_source_match_id
@@ -90,6 +99,7 @@ class Match(Base):
         self.location = location
         self.home_away_neutral = home_away_neutral
         self.notes = notes
+        self.match_report_id = match_report_id
 
     def get_pmp(self):
         return [
@@ -201,7 +211,7 @@ class Match(Base):
         self,
         include_player_stats:bool=False
     ):
-        return {
+        data = {
             'match_id' : self.match_id,
             'data_source_match_id' : self.data_source_match_id,
             'team_season_id' : self.team_season_id,
@@ -222,5 +232,12 @@ class Match(Base):
             'match_errors' : self.match_errors,
             'player_info_scraped' : self.get_player_info_scraped(),
             'player_performance_data' : self.get_pmp() if include_player_stats else [],
-            'notes' : self.notes
+            'notes' : self.notes,
+            'match_report_id' : self.match_report_id
         }
+        if self.match_report_id is not None:
+            if self.match_report.text is not None:
+                data['match_report_text'] = self.match_report.text
+            else:
+                data['match_report_image_ids'] = self.match_report.image_ids.split(",")
+        return data

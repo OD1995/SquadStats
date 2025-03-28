@@ -12,6 +12,8 @@ import { Team } from "../../types/Team";
 import { getBigTitle, getIsClubAdmin } from "../../helpers/other";
 import { DATA_SOURCE } from "../../types/enums";
 import { TeamLinkBar } from "../team/generic/TeamLinkBar";
+import { Modal } from "../../generic/Modal";
+import { MatchReportContent } from "./MatchReportContent";
 
 export const MatchView = () => {
 
@@ -23,6 +25,8 @@ export const MatchView = () => {
     const [isEditable, setIsEditable] = useState<boolean>(false);
     const [isClubAdmin, setIsClubAdmin] = useState<boolean>(false);
     const [clubId, setClubId] = useState<string>();
+    const [hasMatchReport, setHasMatchReport] = useState<boolean>(false);
+    const [showMatchReport, setShowMatchReport] = useState<boolean>(false);
 
     let { teamId, matchId } = useParams();
     const user = getUserLS();
@@ -40,10 +44,11 @@ export const MatchView = () => {
                         setIsClubAdmin(ica);
                         setClubId(md.team.club_id);
                         setTeam(md.team);
-                        if (
-                            ica && (md.team.data_source_id == DATA_SOURCE.MANUAL)
-                        ) {
+                        if (ica && (md.team.data_source_id == DATA_SOURCE.MANUAL)) {
                             setIsEditable(true);
+                        }
+                        if (md.match_info.match_report_image_ids || md.match_info.match_report_text) {
+                            setHasMatchReport(true);
                         }
                     } else {
                         setErrorMessage(res.data.message);
@@ -82,24 +87,46 @@ export const MatchView = () => {
                         teamName={matchData.team_name}
                         competitionFullName={matchData.competition_full_name}
                     />
-                    {
-                        isEditable && (
-                            <Link
-                                style={{
-                                    marginTop: "2vh",
-                                    marginBottom: "2vh"
-                                }}
-                                to={`/team/${matchData.team?.team_id}/update-match/${matchData.league_season_id}/${matchId}`}
-                            >
-                                Edit
-                            </Link>
-                        )
-                    }
+                    <div id='match-view-links'>
+                        {
+                            isEditable && (
+                                <Link
+                                    className="match-view-link"
+                                    to={`/team/${matchData.team?.team_id}/update-match/${matchData.league_season_id}/${matchId}`}
+                                >
+                                    Edit
+                                </Link>
+                            )
+                        }
+                        {
+                            hasMatchReport && (
+                                <a
+                                    className="match-view-link"
+                                    onClick={() => setShowMatchReport(true)}
+                                >
+                                    View Match Report
+                                </a>
+                            )
+                        }
+
+                    </div>
                     <BetterTable
                         {...matchData.player_data}
                         rowsPerPage={1000}
                     />
                 </div>
+                {
+                    showMatchReport && (
+                        <Modal
+                            content={
+                                <MatchReportContent
+                                    matchData={matchData}
+                                />
+                            }
+                            handleModalClose={() => setShowMatchReport(false)}
+                        />
+                    )
+                }
             </div>
         )
     }

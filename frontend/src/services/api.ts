@@ -137,3 +137,27 @@ export async function makePostRequest(
     }
     return backendResponse;
 }
+
+export async function makeFormDataPostRequest(
+    url: string,
+    data: FormData
+) {
+    var backendResponse: BackendResponse;
+    try {
+        const response = await instance.post(
+            url,
+            data,
+        );
+        backendResponse = {
+            success: true,
+            data: response.data
+        }
+    } catch (err:any) {
+        const errorMessage = err?.response?.data?.message ?? err.message;
+        backendResponse = {
+            success: false,
+            data: { message: errorMessage }
+        }
+    }
+    return backendResponse;
+}

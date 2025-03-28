@@ -32,7 +32,7 @@ export const TeamLinkBar = (props:OwnProps) => {
         if (props.isClubAdmin) {
             links.push(
                 {
-                    label: 'Update Data',
+                    label: 'Update Matches',
                     to: `/team/${teamId}/update-data`,
                     adminRequired: true
                 }

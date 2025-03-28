@@ -35,14 +35,14 @@ export const AdviceBar = (props:OwnProps) => {
                     _content_ = (
                         <>
                             Your team has no match data, you can change
-                            that on the <Link to={linkUrl}>Update Data</Link> page
+                            that on the <Link to={linkUrl}>Update Matches</Link> page
                         </>
                     )
                 } else if (props.club) {
                     _content_ = (
                         <>
                             None of the teams linked to your club have any match data,
-                            you can change that in the Update Data page of each team
+                            you can change that in the Update Matches page of each team
                         </>
                     )
                 }

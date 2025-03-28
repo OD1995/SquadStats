@@ -29,6 +29,8 @@ import { ResetPassword } from './pages/login/ResetPassword';
 import { UpdateData } from './pages/team/scrape/UpdateData';
 import { UpdateMatch } from './pages/team/scrape/update-match-sections/UpdateMatch';
 import { ShareId } from './pages/club/ShareId';
+import { TeamPlayerLeaderboards } from './pages/team/TeamPlayerLeaderboards';
+import { Test } from './pages/Test';
 
 
 const App = () => {
@@ -69,9 +71,13 @@ const App = () => {
 						<Route path='/team/:teamId/players' element={<TeamPlayersOverviewSelector/>}/>
 						<Route path='/team/:teamId/team-names' element={<TeamNames/>}/>
 						<Route path='/team/:teamId/match/:matchId' element={<MatchView/>}/>
+						<Route path='/team/:teamId/player-leaderboards' element={<TeamPlayerLeaderboards/>}/>
 						<Route path='/player/:playerId/overview' element={<PlayerOverview/>}/>
 						<Route path='/player/:playerId/teams' element={<PlayerTeamsOverviewSelector/>}/>
 						<Route path='/player/:playerId/edit-name' element={<EditPlayerName/>}/>
+
+						<Route path='/test' element={<Test/>}/>
+
 						<Route path="*" element={<Navigate to="/about" replace/>}/>
 					</Routes>
 				</div>

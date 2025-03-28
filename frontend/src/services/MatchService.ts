@@ -80,7 +80,8 @@ class MatchService {
         newCompAcronym:string,
         teamId:string,
         leagueSeasonId:string,
-        newLocation:string
+        newLocation:string,
+        imageIds:string[]
     ) {
         if (newLocation != "") {
             match.location = newLocation;
@@ -100,7 +101,7 @@ class MatchService {
                 newCompAcronym,
                 teamId,
                 leagueSeasonId,
-                // newLocation
+                imageIds
             }
         )
     }

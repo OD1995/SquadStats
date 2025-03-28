@@ -4,7 +4,7 @@ import { Club } from "../../types/Club";
 import { Team } from "../../types/Team";
 import "./ClubOrTeamMatchesOrPlayers.css";
 import { GenericTableData } from "../../types/GenericTableTypes";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BetterTable } from "../BetterTable";
 import { Loading } from "../Loading";
 import { generateId, getBigTitle } from "../../helpers/other";
@@ -17,6 +17,8 @@ interface OwnProps {
     isClubAdmin:boolean
     matches?:boolean
     players?:boolean
+    errorMsg?:string
+    isLoadng?:boolean
 }
 
 export const ClubOrTeamMatchesOrPlayers = (props:OwnProps) => {
@@ -25,11 +27,20 @@ export const ClubOrTeamMatchesOrPlayers = (props:OwnProps) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [errorMessage, setErrorMessage] = useState<string>("");
 
+    useEffect(
+        () => {
+            if (props.errorMsg) {
+                setErrorMessage(props.errorMsg);                
+            }
+            if (props.isLoadng) {
+                setIsLoading(props.isLoadng);
+            }
+        },
+        []
+    )
+
     return (
         <div id='cot-mop-parent' className="page-parent">
-            {/* <h1 className="big-h1-title">
-                {props.team?.team_name ?? props.club?.club_name}
-            </h1> */}
             {getBigTitle(props.team?.team_name ?? props.club?.club_name)}
             <div id='cot-mop-content'>
                 {

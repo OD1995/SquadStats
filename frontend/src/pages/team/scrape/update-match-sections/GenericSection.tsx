@@ -43,7 +43,9 @@ export const GenericSection = (props:OwnProps) => {
                     newCompAcronym={props.newCompAcronym}
                     newLocation={props.newLocation}
                 />
-                {props.sectionContent}                
+                <div style={{width: "95vw"}}>
+                    {props.sectionContent}
+                </div>
             </div>
         </div>
     );
