@@ -10,17 +10,12 @@ add upcoming milestones to club/team overview
 
 add something to say you can tweet me if any issues
 
-check why lots of competition duplication
+check why lots of competition rows duplication
 
 make sure important stuff is viewable without being logged in
 
 add season and player filter
 
-work out why join isn't working properly for per games
-
-deal with image reuploads, maybe fourth radio button
-
-do better with integer seasons
 
 alembic init alembic
 alembic revision --autogenerate -m "initial commit"

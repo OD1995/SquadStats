@@ -87,14 +87,14 @@ class MatchesFilterDataHandler:
     def get_team_seasons(self, team:Team|None):
         if team is None:
             return []
-        return [
+        team_seasons = [
             ts.league_season.get_league_season_info()
-            for ts in sorted(
-                team.team_seasons,
-                key=lambda ts: ts.league_season.data_source_season_name,
-                reverse=True
-            )
+            for ts in team.team_seasons
         ]
+        return sorted(
+            team_seasons,
+            key=lambda x: x['season_name']
+        )
     
     def get_team_leagues_and_seasons(self):
         if self.team_id is None:

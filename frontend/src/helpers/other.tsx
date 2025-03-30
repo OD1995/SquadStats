@@ -185,3 +185,16 @@ export function getStringUpToChar(str:string, char:string) {
     const index = str.indexOf(char);
     return index !== -1 ? str.slice(0, index) : str;
 }
+
+export const getImageSource = (imageId:string) => {
+    const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+    return `https://res.cloudinary.com/${cloudName}/image/upload/${imageId}`
+}
+
+export const improveSeasonName = (seasonName:string) => {
+    return isNumeric(seasonName) ? `Season ${seasonName}` : seasonName;
+}
+
+export const isNumeric = (val: string) : boolean => {
+    return !isNaN(Number(val));
+}

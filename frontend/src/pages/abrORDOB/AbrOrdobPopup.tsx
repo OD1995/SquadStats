@@ -1,7 +1,9 @@
+import { getImageSource } from '../../helpers/other';
 import './AbrOrdobPopup.css';
 
 interface AbrOrdobPopupProps {
-    markerId: string
+    // markerId: string
+    imageId: string
     text: string
     handlePopupClose: Function
 }
@@ -46,7 +48,7 @@ export const AbrOrdobPopup = (props:AbrOrdobPopupProps) => {
                     >
                         <img
                             id='abrordob-popup-img'
-                            src={"/abrORDOB/" + props.markerId + ".jpeg"}
+                            src={getImageSource(props.imageId)}
                         />
                     </div>
                     <div

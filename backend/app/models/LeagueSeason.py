@@ -37,7 +37,9 @@ class LeagueSeason(Base):
 
     def get_league_season_info(self, include_team_season=False):
         return_dict = {
-            'season_name' : self.data_source_season_name,
+            'season_name' : int(self.data_source_season_name)
+                if self.data_source_season_name.isdigit() else 
+                self.data_source_season_name,
             'season_id' : self.league_season_id
         }
         if include_team_season and (self.team_season is not None):

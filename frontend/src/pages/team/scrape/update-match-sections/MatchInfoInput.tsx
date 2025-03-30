@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Match } from "../../../../types/Match";
-import { generateId, getFontSize } from "../../../../helpers/other";
+import { generateId, getFontSize, improveSeasonName } from "../../../../helpers/other";
 import { BasicNumberInput } from "../../../../generic/BasicNumberInput";
 import { MATCH_COMPETITION_TYPE, MATCH_LOCATION_TYPE } from "../../../../types/enums";
 import { Loading } from "../../../../generic/Loading";
@@ -196,7 +196,7 @@ export const MatchInfoInput = (props:OwnProps) => {
                 </div>
                 <div className="match-info-input-row">
                     <div className="unchangeable-mii-label">
-                        {getUnchangeableLabel(props.extraMatchInfo.season_name)}
+                        {getUnchangeableLabel(improveSeasonName(props.extraMatchInfo.season_name))}
                     </div>
                 </div>
                 <div className="match-info-input-row">

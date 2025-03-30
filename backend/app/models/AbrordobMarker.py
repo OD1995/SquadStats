@@ -15,3 +15,4 @@ class AbrordobMarker(Base):
     longitude: Mapped[float]
     text: Mapped[str] = mapped_column(String(16383))
     date_time: Mapped[datetime]
+    image_url_id: Mapped[str] = mapped_column(String(100))

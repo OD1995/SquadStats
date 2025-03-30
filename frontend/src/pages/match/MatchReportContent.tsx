@@ -1,4 +1,4 @@
-import { generateId } from "../../helpers/other";
+import { generateId, getImageSource } from "../../helpers/other";
 import { MatchData } from "../../types/MatchData";
 import Zoom from 'react-medium-image-zoom'
 import 'react-medium-image-zoom/dist/styles.css'
@@ -10,11 +10,6 @@ interface OwnProps {
 
 export const MatchReportContent = (props:OwnProps) => {
 
-    const getMatchReportImageSource = (imageId:string) => {
-        const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
-        return `https://res.cloudinary.com/${cloudName}/image/upload/${imageId}`
-    }
-
     const createImageViewers = (imageIds:string[]) => {
         const width = (85 / imageIds.length) - 4;
         var imgs = [];
@@ -25,7 +20,7 @@ export const MatchReportContent = (props:OwnProps) => {
                 >
                     
                     <img
-                        src={getMatchReportImageSource(imageId)}
+                        src={getImageSource(imageId)}
                         style={{
                             width: `${width}vw`,
                             marginLeft: '4vw',

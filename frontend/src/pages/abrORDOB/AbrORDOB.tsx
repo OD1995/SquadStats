@@ -15,6 +15,8 @@ export const AbrORDOB = () => {
     const [showPopup, setShowPopup] = useState(false);
     const [popupMarkerId, setPopupMarkerId] = useState("");
     const [popupText, setPopupText] = useState("");
+    const [popupImageId, setPopupImageId] = useState("");
+    const [dataLoaded, setDataLoaded] = useState<boolean>(false);
 
     const { hash } = useLocation();
     const navigate = useNavigate();
@@ -43,9 +45,10 @@ export const AbrORDOB = () => {
                         console.error("getAbrodobMarkers failure")
                         console.error(res.data);
                     }
+                    setDataLoaded(true);
                 }
             )
-            if (hash != "") {
+            if (dataLoaded && (hash != "")) {
                 handleClick(hash.substring(1));
             }
         },
@@ -55,7 +58,8 @@ export const AbrORDOB = () => {
     const handleClick = (markerId:string) => {
         navigate(`#${markerId}`)
         setShowPopup(true);
-        setPopupMarkerId(markerId);
+        // setPopupMarkerId(markerId);
+        setPopupImageId(markerDataDict[markerId]?.image_url_id);
         setPopupText(markerDataDict[markerId]?.text)
     }
 
@@ -63,6 +67,7 @@ export const AbrORDOB = () => {
         navigate("");
         setShowPopup(false);
         setPopupMarkerId("");
+        setPopupImageId("");
         setPopupText("");
     }
 
@@ -125,7 +130,8 @@ export const AbrORDOB = () => {
                 showPopup && (
                     <AbrOrdobPopup
                         key='popup'
-                        markerId={popupMarkerId}
+                        // markerId={popupMarkerId}
+                        imageId={popupImageId}
                         text={popupText}
                         handlePopupClose={handlePopupClose}
                     />

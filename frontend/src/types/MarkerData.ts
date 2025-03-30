@@ -5,4 +5,5 @@ export interface MarkerData {
     longitude: number
     text: string
     date_time: string
+    image_url_id: string
 }

@@ -1,9 +1,13 @@
 from random import randint
 import traceback
-from flask import Blueprint, jsonify
+from uuid import UUID
+from flask import Blueprint, jsonify, request
 from app import db
 from app.helpers.misc import do_error_handling
 from app.models.AbrordobMarker import AbrordobMarker
+from app.models.Match import Match
+from app.models.MatchReport import MatchReport
+from datetime import datetime
 
 other_bp = Blueprint(
     "other",
@@ -62,3 +66,45 @@ def random():
             for j in range(50)
         ]
     }
+
+@other_bp.route("/set-match-report", methods=['POST'])
+def set_match_report():
+    req = request.get_json()
+    match_id = UUID(req['match_id'])
+    time_str = req['time']
+    time = datetime.strptime(time_str, "%H:%M").time()
+    match_report_image_ids = req['image_ids']
+    match_report_obj = MatchReport(
+        image_ids=match_report_image_ids,
+        text=None
+    )
+    match_obj = db.session.query(Match) \
+        .filter_by(match_id=match_id) \
+        .first()
+    match_obj.time = time
+    match_obj.match_report_id = match_report_obj.match_report_id
+    db.session.add(match_report_obj)
+    db.session.merge(match_obj)
+    db.session.commit()
+    return jsonify({"success":True})
+
+@other_bp.route("/set-text-match-report", methods=['POST'])
+def set_text_match_report():
+    req = request.get_json()
+    match_id = UUID(req['match_id'])
+    time_str = req['time']
+    time = datetime.strptime(time_str, "%H:%M").time()
+    match_report_text = req['text']
+    match_report_obj = MatchReport(
+        image_ids=[],
+        text=match_report_text
+    )
+    match_obj = db.session.query(Match) \
+        .filter_by(match_id=match_id) \
+        .first()
+    match_obj.time = time
+    match_obj.match_report_id = match_report_obj.match_report_id
+    db.session.add(match_report_obj)
+    db.session.merge(match_obj)
+    db.session.commit()
+    return jsonify({"success":True})

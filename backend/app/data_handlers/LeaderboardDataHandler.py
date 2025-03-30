@@ -1,9 +1,5 @@
-from typing import List
-from uuid import UUID
-
-from sqlalchemy import column, func
+from sqlalchemy import column, func, and_
 from app.data_handlers.DataHandler import DataHandler
-from app.helpers.QueryBuilder import QueryBuilder
 from app import db
 from app.helpers.misc import get_goal_metrics
 from app.helpers.validators import is_valid_uuid
@@ -136,11 +132,19 @@ class LeaderboardDataHandler(DataHandler):
                 havings=[func.sum(PlayerMatchPerformance.value) >= self.min_apps] if self.min_apps else [],
                 return_all=False
             )
+            combined_joins = [
+                player_performances.c.player_id == player_appearances.c.player_id
+            ]
+
+            if self.query_split_by is not None:
+                split_col_name = self.query_split_by.name 
+                combined_joins.append(
+                    player_performances.c[split_col_name] == player_appearances.c[split_col_name]
+                )
+
             combined_results = db.session.query(player_performances, player_appearances) \
-                .join(
-                    player_performances,
-                    player_performances.c.player_id == player_appearances.c.player_id
-                ).all()
+                .join(player_appearances, and_(*combined_joins)) \
+                .all()
             rows = []
             for res in combined_results:
                 res_dict = res._mapping
