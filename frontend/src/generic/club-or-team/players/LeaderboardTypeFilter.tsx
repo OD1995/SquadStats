@@ -15,7 +15,8 @@ interface OwnProps {
 export const LeaderboardTypeFilter = (props:OwnProps) => {
 
     const perGameMetrics = [
-        METRIC.GOALS
+        METRIC.GOALS,
+        METRIC.HATTRICKS
     ].map(
         (met:METRIC) => met.valueOf()
     );

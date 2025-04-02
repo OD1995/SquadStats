@@ -12,7 +12,7 @@ import TeamService from "../../services/TeamService";
 
 export const TeamPlayersOverviewSelector = () => {
     
-    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [playerId, setPlayerId] = useState<string>("");
     const [errorMessage, setErrorMessage] = useState("");
     const [playerOptions, setPlayerOptions] = useState<OverviewOption[]>([]);
@@ -30,6 +30,7 @@ export const TeamPlayersOverviewSelector = () => {
                 setTeam(_team_);
                 setClubId(_team_.club_id);
             }
+            setIsLoading(true);
             TeamService.getTeamPlayerInformation(
                 teamId!
             ).then(
@@ -75,7 +76,7 @@ export const TeamPlayersOverviewSelector = () => {
                 team={team!}
             />
             {
-                isLoading ? (
+                !isLoading ? (
                     <>
                         <div className="error-message">
                             {errorMessage}

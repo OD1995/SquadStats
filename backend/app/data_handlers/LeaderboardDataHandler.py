@@ -79,16 +79,25 @@ class LeaderboardDataHandler(DataHandler):
         self.PER_GAME = 'Per Game'
 
         self.metric_lookup = {
-            MetricEnum.GOALS : get_goal_metrics()
+            MetricEnum.GOALS : get_goal_metrics(),
+            MetricEnum.HATTRICKS : get_goal_metrics(),
         }
 
     def get_result(self):
-        if self.metric in [
-            MetricEnum.APPEARANCES,
-            MetricEnum.GOALS
-        ]:
-            return self.get_standard_metric_result()
+        # if self.metric in [
+        #     MetricEnum.APPEARANCES,
+        #     MetricEnum.GOALS
+        # ]:
+        #     return self.get_standard_metric_result()
+        # if 
+        match self.metric:
+            case MetricEnum.APPEARANCES | MetricEnum.GOALS | MetricEnum.HATTRICKS:
+                return self.get_standard_metric_result()
         raise Exception('Unexpected metric')
+    
+    # def get_hattricks(self):
+    #     hattrick_data = db.session.query(PlayerMatchPerformance) \
+    #         .filter(*self.get_filters())
     
     def get_query_split_by(self):
         split_by_lookup = {
@@ -104,6 +113,13 @@ class LeaderboardDataHandler(DataHandler):
             column_headers.append(self.split_by)
         important_metric = f"{self.metric} {self.PER_GAME}" if self.per_game else self.metric
         column_headers.append(important_metric)
+        metric_filters = [
+            Metric.metric_name.in_(self.metric_lookup.get(self.metric, [self.metric]))
+        ] + self.get_filters()
+        agg = func.sum
+        if self.metric == MetricEnum.HATTRICKS:
+            metric_filters.append(PlayerMatchPerformance.value >= 3)
+            agg = func.count
         if self.per_game:
             column_headers.append(MetricEnum.APPEARANCES)
             query_selectors = [Player]
@@ -111,14 +127,12 @@ class LeaderboardDataHandler(DataHandler):
             if self.query_split_by is not None:
                 query_selectors.append(self.query_split_by)
                 group_by_list.append(self.query_split_by)
-            perf_col = func.sum(PlayerMatchPerformance.value).label(self.metric)
+            perf_col = agg(PlayerMatchPerformance.value).label(self.metric)
             app_col = func.sum(PlayerMatchPerformance.value).label(MetricEnum.APPEARANCES)
 
             player_performances = self.get_complicated_player_performances(
                 query_selectors=query_selectors + [perf_col],
-                filters=[
-                    Metric.metric_name.in_(self.metric_lookup.get(self.metric, [self.metric]))
-                ] + self.get_filters(),
+                filters=metric_filters,
                 order_by_list=[],
                 group_by_list=group_by_list,
                 return_all=False
@@ -170,11 +184,10 @@ class LeaderboardDataHandler(DataHandler):
                 rows.append(GenericTableRow(row_data=row_data))
         else:
             player_performances = self.get_player_performances(
-                filters=[
-                    Metric.metric_name.in_(self.metric_lookup.get(self.metric, [self.metric]))
-                ] + self.get_filters(),
+                filters=metric_filters,
                 split_by=self.query_split_by,
-                sort_value_desc=True
+                sort_value_desc=True,
+                aggregator=agg
             )
             rows = self.get_rows(player_performances,column_headers)
         return [

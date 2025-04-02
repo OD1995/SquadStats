@@ -38,3 +38,6 @@ class QueryBuilder:
 
     def all(self):
         return self.query.all()
+    
+    def get_sql(self):
+        return str(self.query)

@@ -14,7 +14,8 @@ export const MetricFilter = (props:OwnProps) => {
 
     const options = [
         METRIC.APPEARANCES,
-        METRIC.GOALS
+        METRIC.GOALS,
+        METRIC.HATTRICKS,
     ];
 
     return (

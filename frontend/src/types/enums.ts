@@ -21,17 +21,18 @@ export enum SPLIT_BY_TYPE {
     YEAR = 'Year'
 }
 
-export enum LEADERBOARD_TYPE {
-    APPEARANCES = 'Appearances',
-    APPEARANCES_BY_SEASON = 'Appearances By Season',
-    APPEARANCES_BY_YEAR = 'Appearances By Year',
-    GOALS = 'Goals',
-    GOALS_PER_GAME = 'Goals Per Game'
-}
+// export enum LEADERBOARD_TYPE {
+//     APPEARANCES = 'Appearances',
+//     APPEARANCES_BY_SEASON = 'Appearances By Season',
+//     APPEARANCES_BY_YEAR = 'Appearances By Year',
+//     GOALS = 'Goals',
+//     GOALS_PER_GAME = 'Goals Per Game'
+// }
 
 export enum METRIC {
     APPEARANCES = 'Appearances',
-    GOALS = 'Goals'
+    GOALS = 'Goals',
+    HATTRICKS = 'Hattricks',
 }
 
 export enum MANUAL_DATA_ENTRY_ACTION_TYPE {

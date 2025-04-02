@@ -100,14 +100,16 @@ class DataHandler:
         filters=[],
         sort_value_desc=True,
         limit=None,
-        split_by=None
+        split_by=None,
+        aggregator=func.sum
     ):
         query_selectors = [Player]
         group_by_list = [Player]
         if split_by is not None:
             query_selectors.append(split_by)
             group_by_list.append(split_by)
-        query_selectors.append(func.sum(PlayerMatchPerformance.value))
+        # query_selectors.append(func.sum(PlayerMatchPerformance.value))
+        query_selectors.append(aggregator(PlayerMatchPerformance.value))
         query = QueryBuilder(
             db.session.query(
                 # Player,
