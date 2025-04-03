@@ -13,6 +13,7 @@ from app.models.Player import Player
 from app.models.PlayerMatchPerformance import PlayerMatchPerformance
 from app.models.Team import Team
 from app.models.TeamSeason import TeamSeason
+from app.types.GenericTableCell import GenericTableCell
 from app.types.GenericTableData import GenericTableData
 from app.types.GenericTableRow import GenericTableRow
 from app.types.enums import SplitByType
@@ -344,3 +345,12 @@ class DataHandler:
         }
         dicto[self.split_column_dict[split_by]] = aggregate_data_key
         return deepcopy(GenericTableRow(init=dicto))
+    
+    def create_player_cell(
+        self,
+        player:Player
+    ):
+        return GenericTableCell(
+            value=player.get_best_name(),
+            link=f"/player/{player.player_id}/overview"
+        )

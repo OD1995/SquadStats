@@ -33,6 +33,8 @@ export enum METRIC {
     APPEARANCES = 'Appearances',
     GOALS = 'Goals',
     HATTRICKS = 'Hattricks',
+    POTM = 'POTM',
+    CONSECUTIVE_APPS = 'Consecutive Matches Played',
 }
 
 export enum MANUAL_DATA_ENTRY_ACTION_TYPE {

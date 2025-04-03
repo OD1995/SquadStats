@@ -16,6 +16,8 @@ export const MetricFilter = (props:OwnProps) => {
         METRIC.APPEARANCES,
         METRIC.GOALS,
         METRIC.HATTRICKS,
+        METRIC.POTM,
+        METRIC.CONSECUTIVE_APPS,
     ];
 
     return (

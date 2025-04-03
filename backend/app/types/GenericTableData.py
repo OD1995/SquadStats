@@ -13,7 +13,8 @@ class GenericTableData:
         is_ranked:bool=False,
         not_sortable:bool=False,
         sort_by:str=None,
-        sort_direction:str=None
+        sort_direction:str=None,
+        column_ratio:List[float]|None=None
     ):
         self.column_headers = column_headers
         self.rows = rows
@@ -22,6 +23,7 @@ class GenericTableData:
         self.not_sortable = not_sortable
         self.sort_by = sort_by
         self.sort_direction = sort_direction
+        self.column_ratio = column_ratio
 
     def to_dict(self):
         return {
@@ -34,5 +36,6 @@ class GenericTableData:
             "is_ranked" : self.is_ranked,
             'not_sortable' : self.not_sortable,
             'sort_by' : self.sort_by,
-            'sort_direction' : self.sort_direction
+            'sort_direction' : self.sort_direction,
+            'column_ratio' : self.column_ratio
         }

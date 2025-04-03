@@ -16,7 +16,8 @@ export const LeaderboardTypeFilter = (props:OwnProps) => {
 
     const perGameMetrics = [
         METRIC.GOALS,
-        METRIC.HATTRICKS
+        METRIC.HATTRICKS,
+        METRIC.POTM,
     ].map(
         (met:METRIC) => met.valueOf()
     );

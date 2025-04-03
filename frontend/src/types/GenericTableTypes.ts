@@ -6,6 +6,7 @@ export interface GenericTableData {
     sort_by?:string
     sort_direction?:"asc"|"desc"
     not_sortable:boolean
+    column_ratio:number[]|null
 }
 
 export interface GenericTableRow extends Record<string, GenericTableCell> {

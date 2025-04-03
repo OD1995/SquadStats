@@ -133,7 +133,7 @@ export const BetterTable = (props:OwnProps) => {
                         <TableRow>
                             {
                                 (props.is_ranked ? [""].concat(props.column_headers) : props.column_headers).map(
-                                    (colHeader:string) => {
+                                    (colHeader:string, ix:number) => {
                                         const fs1 = getBetterTableFontSize();
                                         const fs2 = getFontSize(
                                             colHeader,
@@ -141,14 +141,18 @@ export const BetterTable = (props:OwnProps) => {
                                             10,
                                             0.01
                                         );
+                                        var styles = {
+                                            fontWeight: "bold",
+                                            padding: "0",
+                                            fontSize: fs2,
+                                        } as Record<string, string>;
+                                        if (props.column_ratio) {
+                                            styles["width"] = `${props.column_ratio[ix]}vw`
+                                        }
                                         return (
                                             <TableCell
                                                 key={colHeader}
-                                                sx={{
-                                                    fontWeight: "bold",
-                                                    padding: "0",
-                                                    fontSize: fs2,
-                                                }}
+                                                sx={styles}
                                                 align="center"
                                                 sortDirection={sortDirection}
                                             >
