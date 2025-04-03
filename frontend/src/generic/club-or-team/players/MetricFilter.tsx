@@ -19,6 +19,7 @@ export const MetricFilter = (props:OwnProps) => {
         METRIC.POTM,
         METRIC.CONSECUTIVE_APPS,
         METRIC.CONSECUTIVE_WINS,
+        METRIC.CONSECUTIVE_GOALSCORING_MATCHES,
     ];
 
     return (

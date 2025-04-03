@@ -33,6 +33,7 @@ class Metric(str, Enum):
     HATTRICKS: str = 'Hattricks'
     CONSECUTIVE_APPS: str = 'Consecutive Matches Played'
     CONSECUTIVE_WINS: str = 'Consecutive Wins'
+    CONSECUTIVE_GOALSCORING_MATCHES: str = 'Consecutive Goalscoring Matches'
 
 class SplitByType(str, Enum):
     NA: str = 'N/A'

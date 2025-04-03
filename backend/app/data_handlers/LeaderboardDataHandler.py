@@ -82,6 +82,7 @@ class LeaderboardDataHandler(DataHandler):
         self.CONSECUTIVE_MATCHES = 'Streak Length'
         self.FIRST_MATCH_DATE = "Streak Start"
         self.LAST_MATCH_DATE = "Streak End"
+        self.GOALS_IN_STREAK = 'Goals In Streak'
 
         self.metric_lookup = {
             MetricEnum.GOALS : get_goal_metrics(),
@@ -97,8 +98,65 @@ class LeaderboardDataHandler(DataHandler):
                 return self.get_consecutive_apps_result()
             case MetricEnum.CONSECUTIVE_WINS:
                 return self.get_consecutive_wins_result()
+            case MetricEnum.CONSECUTIVE_GOALSCORING_MATCHES:
+                return self.get_consecutive_goalscoring_matches_result()
+
         raise Exception('Unexpected metric')
     
+    def get_consecutive_goalscoring_matches_result(self):
+        ## Get data
+        (
+            match_id_list,
+            matches_by_id,
+            pmps_by_player_id
+        ) = self.get_consecutive_data()
+        all_streaks = []
+        involved_player_id_list = []
+        ## Do logic
+        for player_id, matches in pmps_by_player_id.items():
+            streaks = []
+            current_streak = {
+                'streak_length' : 0,
+                'first_game_date' : None,
+                'last_game_date' : None,
+                'player_id' : player_id,
+                'goals_in_streak' : 0
+            }
+            for match_id in match_id_list:
+                match_id = str(match_id)
+                if (match_id in matches):
+                    goals_scored = matches[match_id]
+                    if (goals_scored >= 1):
+                        match = matches_by_id[match_id]
+                        current_streak['streak_length'] += 1
+                        current_streak['goals_in_streak'] += goals_scored
+                        current_streak['last_game_date'] = match.date
+                        if current_streak['first_game_date'] is None:
+                            current_streak['first_game_date'] = match.date
+                    else:
+                        if current_streak['streak_length'] >= 2:
+                            streaks.append(current_streak)
+                        current_streak = {
+                            'streak_length' : 0,
+                            'first_game_date' : None,
+                            'last_game_date' : None,
+                            'player_id' : player_id,
+                            'goals_in_streak' : 0
+                        }
+            if current_streak['streak_length'] >= 2:
+                current_streak['last_game_date'] = None
+                streaks.append(current_streak)
+            if len(streaks) > 0:
+                involved_player_id_list.append(UUID(player_id))
+                all_streaks.extend(streaks)
+        ## Return data
+        return self.return_consecutive_table(
+            involved_player_id_list,
+            all_streaks,
+            MetricEnum.CONSECUTIVE_GOALSCORING_MATCHES,
+            goals=True
+        )
+
     def get_consecutive_wins_result(self):
         ## Get data
         (
@@ -167,21 +225,25 @@ class LeaderboardDataHandler(DataHandler):
                 continue
             match_id_list.append(match.match_id)
             matches_by_id[str(match.match_id)] = match
+        goal_metrics = get_goal_metrics()
         pmp_list = db.session.query(PlayerMatchPerformance) \
             .join(Metric) \
             .filter(
                 PlayerMatchPerformance.match_id.in_(match_id_list),
-                Metric.metric_name == MetricEnum.APPEARANCES
+                Metric.metric_name.in_([MetricEnum.APPEARANCES] + goal_metrics)
             ) \
             .all()
         pmps_by_player_id = {}
         for pmp in pmp_list:
             player_id = str(pmp.player_id)
             match_id = str(pmp.match_id)
+            val = 0 if pmp.metric.metric_name not in goal_metrics else pmp.value
             if player_id not in pmps_by_player_id:
                 pmps_by_player_id[player_id] = {}
             if match_id not in pmps_by_player_id[player_id]:
-                pmps_by_player_id[player_id][match_id] = 1
+                pmps_by_player_id[player_id][match_id] = val
+            else:
+                pmps_by_player_id[player_id][match_id] += val
         return (
             match_id_list,
             matches_by_id,
@@ -192,7 +254,8 @@ class LeaderboardDataHandler(DataHandler):
         self,
         involved_player_id_list,
         all_streaks,
-        metric
+        metric,
+        goals=False
     ):
         player_list = db.session.query(Player) \
             .filter(Player.player_id.in_(involved_player_id_list)) \
@@ -210,6 +273,8 @@ class LeaderboardDataHandler(DataHandler):
                 self.LAST_MATCH_DATE : GenericTableCell(value="present" if streak['last_game_date'] is None else 
                     streak['last_game_date'].strftime("%d %b %y")),
             }
+            if goals:
+                row_data[self.GOALS_IN_STREAK] = GenericTableCell(value=streak['goals_in_streak'])
             rows.append(GenericTableRow(row_data=row_data))
 
         column_headers = [
@@ -218,6 +283,8 @@ class LeaderboardDataHandler(DataHandler):
             self.FIRST_MATCH_DATE,
             self.LAST_MATCH_DATE
         ]
+        if goals:
+            column_headers.insert(2,self.GOALS_IN_STREAK)
         return [
             GenericTableData(
                 column_headers=column_headers,
@@ -226,7 +293,7 @@ class LeaderboardDataHandler(DataHandler):
                 is_ranked=True,
                 sort_by=self.CONSECUTIVE_MATCHES,
                 sort_direction='desc',
-                column_ratio=[1,36,20,21.5,21.5]
+                column_ratio=[1,33,15,20,21,21] if goals else [1,36,20,21.5,21.5]
             ).to_dict()
         ]
 

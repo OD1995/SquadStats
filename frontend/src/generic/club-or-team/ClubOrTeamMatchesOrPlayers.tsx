@@ -93,7 +93,7 @@ export const ClubOrTeamMatchesOrPlayers = (props:OwnProps) => {
                                         key={generateId()}
                                         rowsPerPage={10}
                                         {...data}
-                                        // column_ratio={[1,36,20,21.5,21.5]}
+                                        column_ratio={[1,31,15,15,19,19]}
                                         titleClassName="small-caps-subtitle  sortable-table-title"
                                     />
                                 )

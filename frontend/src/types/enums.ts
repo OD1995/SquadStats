@@ -36,6 +36,7 @@ export enum METRIC {
     POTM = 'POTM',
     CONSECUTIVE_APPS = 'Consecutive Matches Played',
     CONSECUTIVE_WINS = 'Consecutive Wins',
+    CONSECUTIVE_GOALSCORING_MATCHES = 'Consecutive Goalscoring Matches'
 }
 
 export enum MANUAL_DATA_ENTRY_ACTION_TYPE {
