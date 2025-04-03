@@ -20,6 +20,7 @@ export const MetricFilter = (props:OwnProps) => {
         METRIC.CONSECUTIVE_APPS,
         METRIC.CONSECUTIVE_WINS,
         METRIC.CONSECUTIVE_GOALSCORING_MATCHES,
+        METRIC.CONSECUTIVE_HATTRICKS
     ];
 
     return (
