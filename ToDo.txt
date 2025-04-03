@@ -16,6 +16,8 @@ make sure important stuff is viewable without being logged in
 
 add season and player filter
 
+see what happens when all the metrics are used on club level rather than team level
+
 
 alembic init alembic
 alembic revision --autogenerate -m "initial commit"

@@ -4,6 +4,7 @@ import { Team } from "../types/Team";
 import { User } from "../types/User";
 import { TableCellValue } from "../types/TableCellValue";
 import { GenericTableData } from "../types/GenericTableTypes";
+import { METRIC } from "../types/enums";
 
 export const getTeam = (user:User|null, teamId:string|undefined) : Team|null => {
     if (user == null) {
@@ -197,4 +198,19 @@ export const improveSeasonName = (seasonName:string) => {
 
 export const isNumeric = (val: string) : boolean => {
     return !isNaN(Number(val));
+}
+
+export const minAppsRelevant = (perGame:any, metric:any) => {
+    if (perGame) {
+        return true;
+    }   
+    const minAppsMetrics = [
+        METRIC.POINTS_PER_GAME,
+        METRIC.GOALS_SCORED,
+        METRIC.GOALS_CONCEDED,
+        METRIC.GOAL_DIFFERENCE
+    ].map(
+        (met:METRIC) => met.valueOf()
+    );
+    return minAppsMetrics.includes(metric);
 }

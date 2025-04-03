@@ -38,7 +38,10 @@ export enum METRIC {
     CONSECUTIVE_WINS = 'Consecutive Wins',
     CONSECUTIVE_GOALSCORING_MATCHES = 'Consecutive Goalscoring Matches',
     CONSECUTIVE_HATTRICKS = 'Consecutive Hattricks',
-    POINTS_PER_GAME = 'Points Per Game',
+    POINTS_PER_GAME = 'Player Impact - Points Per Game',
+    GOALS_SCORED = 'Player Impact - Goals Scored',
+    GOALS_CONCEDED = 'Player Impact - Goals Conceded',
+    GOAL_DIFFERENCE = 'Player Impact - Goal Difference',
 }
 
 export enum MANUAL_DATA_ENTRY_ACTION_TYPE {

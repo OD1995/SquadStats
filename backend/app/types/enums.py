@@ -35,7 +35,10 @@ class Metric(str, Enum):
     CONSECUTIVE_WINS: str = 'Consecutive Wins'
     CONSECUTIVE_GOALSCORING_MATCHES: str = 'Consecutive Goalscoring Matches'
     CONSECUTIVE_HATTRICKS: str = 'Consecutive Hattricks'
-    POINTS_PER_GAME: str = 'Points Per Game'
+    POINTS_PER_GAME: str = 'Player Impact - Points Per Game'
+    GOALS_SCORED: str = 'Player Impact - Goals Scored'
+    GOALS_CONCEDED: str = 'Player Impact - Goals Conceded'
+    GOAL_DIFFERENCE: str = 'Player Impact - Goal Difference'
 
 class SplitByType(str, Enum):
     NA: str = 'N/A'

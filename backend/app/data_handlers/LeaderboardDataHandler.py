@@ -2,7 +2,7 @@ from uuid import UUID
 from sqlalchemy import column, func, and_
 from app.data_handlers.DataHandler import DataHandler
 from app import db
-from app.helpers.misc import get_goal_metrics, get_potm_metrics
+from app.helpers.misc import get_goal_metrics, get_potm_metrics, normal_round
 from app.helpers.validators import is_valid_uuid
 from app.models.LeagueSeason import LeagueSeason
 from app.models.Match import Match
@@ -103,12 +103,95 @@ class LeaderboardDataHandler(DataHandler):
             case MetricEnum.CONSECUTIVE_HATTRICKS:
                 return self.get_consecutive_hattricks_result()
             case MetricEnum.POINTS_PER_GAME:
-                return self.get_ppg_result()
+                return self.get_player_impact_result(
+                    metric=MetricEnum.POINTS_PER_GAME,
+                    value_callback=lambda match : match.get_points_earned()
+                )
+            case MetricEnum.GOALS_SCORED:
+                return self.get_player_impact_result(
+                    metric=MetricEnum.GOALS_SCORED,
+                    value_callback=lambda match : match.goals_for
+                )
+            case MetricEnum.GOALS_CONCEDED:
+                return self.get_player_impact_result(
+                    metric=MetricEnum.GOALS_CONCEDED,
+                    value_callback=lambda match : match.goals_against
+                )
+            case MetricEnum.GOAL_DIFFERENCE:
+                return self.get_player_impact_result(
+                    metric=MetricEnum.GOAL_DIFFERENCE,
+                    value_callback=lambda match : match.goal_difference
+                )
 
         raise Exception('Unexpected metric')
     
-    def get_ppg_result(self):
-        pass
+    def get_player_impact_result(
+        self,
+        metric,
+        value_callback
+    ):
+        better_cols = {
+            MetricEnum.POINTS_PER_GAME : "PPG",
+            MetricEnum.GOALS_SCORED : "Avg Goals Scored",
+            MetricEnum.GOALS_CONCEDED : "Avg Goals Conceded",
+            MetricEnum.GOAL_DIFFERENCE : "Avg Goal Difference"
+        }
+        col = better_cols.get(metric, metric)
+        team_obj = db.session.query(Team) \
+            .filter_by(team_id=UUID(self.team_id)) \
+            .first()
+        team_name = team_obj.get_default_team_name()
+        match_id_list, matches_by_id = self.get_match_data()
+        result_by_player = {
+            team_name : {'score' : 0, 'matches' : 0}
+        }
+        players_by_id = {}
+        for match_id in match_id_list:
+            match = matches_by_id[str(match_id)]
+            active_player_dict = match.get_active_player_dict()
+            players_by_id = {**players_by_id, **active_player_dict}
+            player_id_list = list(active_player_dict.keys()) + [team_name]
+            score = value_callback(match)
+            for player_id in player_id_list:
+                if player_id not in result_by_player:
+                    result_by_player[player_id] = {'score' : 0, 'matches' : 0}
+                result_by_player[player_id]['score'] += score
+                result_by_player[player_id]['matches'] += 1
+        rows = []
+        for player_id, result in result_by_player.items():
+            if result['matches'] < (self.min_apps or 0):
+                continue
+            player_cell = self.create_player_cell(players_by_id[player_id]) \
+                if player_id in players_by_id else \
+                GenericTableCell(value=player_id)
+            val = normal_round(result['score'] / result['matches'], decimals=2)
+            row_data = {
+                self.PLAYER : player_cell,
+                col : GenericTableCell(value=val),
+                MetricEnum.APPEARANCES : GenericTableCell(value=result['matches'])
+            }
+            rows.append(GenericTableRow(row_data=row_data))
+        column_headers = [
+            self.PLAYER,
+            col,
+            MetricEnum.APPEARANCES
+        ]
+        return [
+            GenericTableData(
+                column_headers=column_headers,
+                rows=rows,
+                title=metric.upper(),
+                is_ranked=True,
+                sort_by=col,
+                sort_direction='asc' if metric == MetricEnum.GOALS_CONCEDED else'desc',
+                column_ratio=[1,40,20,20]
+            ).to_dict()
+        ]
+        
+
+    # def get_player_impact_data(self):
+
+    #     match_list = self.get_match_data()
     
     def get_consecutive_hattricks_result(self):
         ## Get data
@@ -263,7 +346,10 @@ class LeaderboardDataHandler(DataHandler):
         ## Return data
         return self.return_consecutive_table(involved_player_id_list, all_streaks, MetricEnum.CONSECUTIVE_WINS)
 
-    def get_match_data(self,skip_walkovers):
+    def get_match_data(
+        self,
+        skip_walkovers=True
+    ):
         ## Get all matches, given the filters
         match_list = db.session.query(Match) \
             .join(TeamSeason) \

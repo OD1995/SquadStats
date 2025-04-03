@@ -10,6 +10,7 @@ import { BackendResponse } from "../../../types/BackendResponse";
 import { MatchesOrPlayersFilterOptional } from "./MatchesOrPlayersFilterOptional";
 import { SPLIT_BY_TYPE } from "../../../types/enums";
 import { Player } from "../../../types/Player";
+import { minAppsRelevant } from "../../../helpers/other";
 
 
 interface OwnProps {
@@ -123,7 +124,8 @@ export const MatchesOrPlayersFilter = (props:OwnProps) => {
         }
         if (props.players) {
             params['perGame'] = props.perGame ? "True" : "False";
-            if (props.perGame) {
+            // if (props.perGame) {
+            if (minAppsRelevant(props.perGame, props.metric)) {
                 params['minApps'] = props.minApps!.toString();
             } else {
                 delete params['minApps'];
@@ -184,6 +186,7 @@ export const MatchesOrPlayersFilter = (props:OwnProps) => {
                 playerIdFilter={playerIdFilter}
                 setPlayerIdFilter={setPlayerIdFilter}
                 playerFilterOptions={playerFilterOptions}
+                metric={props.metric}
             />
             <div id='mop-filter-button-div'>
                 <button

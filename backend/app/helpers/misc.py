@@ -2,7 +2,7 @@ import colorsys
 import traceback
 from sentry_sdk import capture_message
 from app.types.enums import Metric
-
+import math
 
 def build_url_using_params(
     url:str,
@@ -73,3 +73,9 @@ def do_error_handling(e):
     return {
         'message' : error_message
     }, 400
+
+def normal_round(n, decimals=0):
+    expoN = n * 10 ** decimals
+    if abs(expoN) - abs(math.floor(expoN)) < 0.5:
+        return math.floor(expoN) / 10 ** decimals
+    return math.ceil(expoN) / 10 ** decimals

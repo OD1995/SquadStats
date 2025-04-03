@@ -1,6 +1,7 @@
+import { minAppsRelevant } from "../../../helpers/other";
 import { isWiderThanHigher } from "../../../helpers/windowDimensions";
 import { Club } from "../../../types/Club";
-import { SPLIT_BY_TYPE } from "../../../types/enums";
+import { METRIC, SPLIT_BY_TYPE } from "../../../types/enums";
 import { Player } from "../../../types/Player";
 import { LeagueSeason } from "../../../types/Season";
 import { Team } from "../../../types/Team";
@@ -32,6 +33,7 @@ interface OwnProps {
     playerIdFilter:string
     setPlayerIdFilter:Function
     playerFilterOptions:Player[]
+    metric?:string
 }
 
 export const MatchesOrPlayersFilterOptional = (props:OwnProps) => {
@@ -89,7 +91,8 @@ export const MatchesOrPlayersFilterOptional = (props:OwnProps) => {
                     )
                 }
                 {
-                    (props.perGame) && (
+                    // (props.perGame || (props.metric && (minAppsMetrics.includes(props.metric)))) && (
+                    minAppsRelevant(props.perGame, props.metric) && (
                         <MinAppsFilter
                             minApps={props.minApps}
                             setMinApps={props.setMinApps}
