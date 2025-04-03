@@ -14,7 +14,7 @@ from app.models.TeamSeason import TeamSeason
 from app.types.GenericTableCell import GenericTableCell
 from app.types.GenericTableData import GenericTableData
 from app.types.GenericTableRow import GenericTableRow
-from app.types.enums import Metric as MetricEnum, SplitByType
+from app.types.enums import Metric as MetricEnum, Result, SplitByType
 
 class LeaderboardDataHandler(DataHandler):
 
@@ -94,10 +94,58 @@ class LeaderboardDataHandler(DataHandler):
             case MetricEnum.APPEARANCES | MetricEnum.GOALS | MetricEnum.HATTRICKS | MetricEnum.POTM:
                 return self.get_standard_metric_result()
             case MetricEnum.CONSECUTIVE_APPS:
-                return self.get_consecutive_apps()
+                return self.get_consecutive_apps_result()
+            case MetricEnum.CONSECUTIVE_WINS:
+                return self.get_consecutive_wins_result()
         raise Exception('Unexpected metric')
     
-    def get_consecutive_apps(self):
+    def get_consecutive_wins_result(self):
+        ## Get data
+        (
+            match_id_list,
+            matches_by_id,
+            pmps_by_player_id
+        ) = self.get_consecutive_data()
+        all_streaks = []
+        involved_player_id_list = []
+        ## Do logic
+        for player_id, matches in pmps_by_player_id.items():
+            streaks = []
+            current_streak = {
+                'streak_length' : 0,
+                'first_game_date' : None,
+                'last_game_date' : None,
+                'player_id' : player_id,
+            }
+            for match_id in match_id_list:
+                match_id = str(match_id)
+                if (match_id in matches):
+                    if (matches_by_id[match_id].result == Result.WIN):
+                        match = matches_by_id[match_id]
+                        current_streak['streak_length'] += 1
+                        current_streak['last_game_date'] = match.date
+                        if current_streak['first_game_date'] is None:
+                            current_streak['first_game_date'] = match.date
+                    else:
+                        if current_streak['streak_length'] >= 2:
+                            streaks.append(current_streak)
+                        current_streak = {
+                            'streak_length' : 0,
+                            'first_game_date' : None,
+                            'last_game_date' : None,
+                            'player_id' : player_id,
+                        }
+            if current_streak['streak_length'] >= 2:
+                current_streak['last_game_date'] = None
+                streaks.append(current_streak)
+            if len(streaks) > 0:
+                involved_player_id_list.append(UUID(player_id))
+                all_streaks.extend(streaks)
+        ## Return data
+        return self.return_consecutive_table(involved_player_id_list, all_streaks, MetricEnum.CONSECUTIVE_WINS)
+
+    
+    def get_consecutive_data(self):
         ## Get all matches, given the filters
         match_list = db.session.query(Match) \
             .join(TeamSeason) \
@@ -105,11 +153,11 @@ class LeaderboardDataHandler(DataHandler):
             .filter(*self.get_filters()) \
             .order_by(Match.date) \
             .all()
-        ## Get all players involved in those matches
         match_id_list = [
             m.match_id
             for m in match_list
         ]
+        ## Get all players involved in those matches
         match_id_list = []
         matches_by_id = {}
         for match in match_list:
@@ -134,11 +182,63 @@ class LeaderboardDataHandler(DataHandler):
                 pmps_by_player_id[player_id] = {}
             if match_id not in pmps_by_player_id[player_id]:
                 pmps_by_player_id[player_id][match_id] = 1
+        return (
+            match_id_list,
+            matches_by_id,
+            pmps_by_player_id
+        )
+    
+    def return_consecutive_table(
+        self,
+        involved_player_id_list,
+        all_streaks,
+        metric
+    ):
+        player_list = db.session.query(Player) \
+            .filter(Player.player_id.in_(involved_player_id_list)) \
+            .all()
+        players_by_player_id = {
+            str(p.player_id) : p
+            for p in player_list
+        }
+        rows = []
+        for streak in all_streaks:
+            row_data = {
+                self.PLAYER : self.create_player_cell(players_by_player_id[streak['player_id']]),
+                self.CONSECUTIVE_MATCHES : GenericTableCell(value=streak['streak_length']),
+                self.FIRST_MATCH_DATE : GenericTableCell(value=streak['first_game_date'].strftime("%d %b %y")),
+                self.LAST_MATCH_DATE : GenericTableCell(value="present" if streak['last_game_date'] is None else 
+                    streak['last_game_date'].strftime("%d %b %y")),
+            }
+            rows.append(GenericTableRow(row_data=row_data))
+
+        column_headers = [
+            self.PLAYER,
+            self.CONSECUTIVE_MATCHES,
+            self.FIRST_MATCH_DATE,
+            self.LAST_MATCH_DATE
+        ]
+        return [
+            GenericTableData(
+                column_headers=column_headers,
+                rows=rows,
+                title=metric.upper(),
+                is_ranked=True,
+                sort_by=self.CONSECUTIVE_MATCHES,
+                sort_direction='desc',
+                column_ratio=[1,36,20,21.5,21.5]
+            ).to_dict()
+        ]
+
+    def get_consecutive_apps_result(self):
+        (
+            match_id_list,
+            matches_by_id,
+            pmps_by_player_id
+        ) = self.get_consecutive_data()     
         involved_player_id_list = []
         all_streaks = []
         for player_id, matches in pmps_by_player_id.items():
-            if player_id == 'e6d5cb25-e36b-400f-91e7-8b0b42d20293':
-                a=1
             streaks = []
             current_streak = {
                 'streak_length' : 0,
@@ -168,41 +268,7 @@ class LeaderboardDataHandler(DataHandler):
             if len(streaks) > 0:
                 involved_player_id_list.append(UUID(player_id))
                 all_streaks.extend(streaks)
-        player_list = db.session.query(Player) \
-            .filter(Player.player_id.in_(involved_player_id_list)) \
-            .all()
-        players_by_player_id = {
-            str(p.player_id) : p
-            for p in player_list
-        }
-        rows = []
-        for streak in all_streaks:#sorted(all_streaks, key=lambda x: x['streak_length']):
-            row_data = {
-                self.PLAYER : self.create_player_cell(players_by_player_id[streak['player_id']]),
-                self.CONSECUTIVE_MATCHES : GenericTableCell(value=streak['streak_length']),
-                self.FIRST_MATCH_DATE : GenericTableCell(value=streak['first_game_date'].strftime("%d %b %y")),
-                self.LAST_MATCH_DATE : GenericTableCell(value="present" if streak['last_game_date'] is None else 
-                    streak['last_game_date'].strftime("%d %b %y")),
-            }
-            rows.append(GenericTableRow(row_data=row_data))
-
-        column_headers = [
-            self.PLAYER,
-            self.CONSECUTIVE_MATCHES,
-            self.FIRST_MATCH_DATE,
-            self.LAST_MATCH_DATE
-        ]
-        return [
-            GenericTableData(
-                column_headers=column_headers,
-                rows=rows,
-                title=MetricEnum.CONSECUTIVE_APPS.upper(),
-                is_ranked=True,
-                sort_by=self.CONSECUTIVE_MATCHES,
-                sort_direction='desc',
-                column_ratio=[1,36,20,21.5,21.5]
-            ).to_dict()
-        ]
+        return self.return_consecutive_table(involved_player_id_list, all_streaks, MetricEnum.CONSECUTIVE_APPS)
         
     def get_query_split_by(self):
         split_by_lookup = {
