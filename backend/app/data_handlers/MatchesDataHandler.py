@@ -15,7 +15,9 @@ class MatchesDataHandler(DataHandler):
         season_filter:str|None,
         opposition_filter:str|None,
         team_id_filter:str|None,
-        player_id_filter:str|None
+        player_id_filter:str|None,
+        year_filter:str|None,
+        month_filter:str|None,
     ):
         """
         split_by - should be one of SplitByType options
@@ -25,6 +27,8 @@ class MatchesDataHandler(DataHandler):
         opposition_filter - None or str (opposition_team_name)
         team_id_filter - '' or uuid
         player_id_filter - '' or uuid
+        year_filter = None or int
+        month_filter = None or str
         """
         DataHandler.__init__(self)
         self.split_by = split_by
@@ -34,7 +38,8 @@ class MatchesDataHandler(DataHandler):
         self.opposition_filter = opposition_filter
         self.team_id_filter = team_id_filter
         self.player_id_filter = player_id_filter
-
+        self.year_filter = year_filter
+        self.month_filter = month_filter
 
     def get_result(self):
         if self.split_by == SplitByType.NA:
@@ -42,7 +47,9 @@ class MatchesDataHandler(DataHandler):
         if self.split_by in [
             SplitByType.OPPOSITION,
             SplitByType.PLAYER_COUNT,
-            SplitByType.SEASON
+            SplitByType.SEASON,
+            SplitByType.MONTH,
+            SplitByType.YEAR
         ]:
             return self.get_split_by_result(
                 matches=self._get_matches()
@@ -66,10 +73,14 @@ class MatchesDataHandler(DataHandler):
         matches:List[Match]
     ):
         oppo_filter_exists = self.opposition_filter not in [None, '']
+        month_filter_exists = self.month_filter not in [None, '']
+        year_filter_exists = self.year_filter not in [None, '']
         is_table_ranked = True
         double_oppo = (self.split_by == SplitByType.OPPOSITION) & oppo_filter_exists
         double_season = (self.split_by == SplitByType.SEASON) & (self.season_filter not in [None, ''])
-        if double_oppo | double_season:
+        double_year = (self.split_by == SplitByType.YEAR) & year_filter_exists
+        double_month = (self.split_by == SplitByType.MONTH) & month_filter_exists
+        if double_oppo | double_season | double_year | double_month:
             is_table_ranked = False
         return_me = []
         return_me.append(
@@ -79,7 +90,7 @@ class MatchesDataHandler(DataHandler):
                 is_table_ranked=is_table_ranked
             )
         )
-        if oppo_filter_exists:
+        if oppo_filter_exists | month_filter_exists | year_filter_exists:
             return_me.append(self.get_matches_table(matches))
         return [
             r.to_dict()

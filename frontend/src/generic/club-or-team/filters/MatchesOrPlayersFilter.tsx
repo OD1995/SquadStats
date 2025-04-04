@@ -53,11 +53,15 @@ export const MatchesOrPlayersFilter = (props:OwnProps) => {
     const [seasonFilter, setSeasonFilter] = useState("");
     const [selectedOpposition, setSelectedOpposition] = useState<string>("");
     const [playerIdFilter, setPlayerIdFilter] = useState<string>("");
+    const [selectedYear, setSelectedYear] = useState<string>("");
+    const [selectedMonth, setSelectedMonth] = useState<string>("");
     
     const [clubSeasons, setClubSeasons] = useState<Record<string,LeagueSeason[]>>();
     const [teamSeasons, setTeamSeasons] = useState<LeagueSeason[]>([]);
     const [oppositionOptions, setOppositionOptions] = useState<string[]>([]);
     const [playerFilterOptions, setPlayerFilterOptions] = useState<Player[]>([]);
+    const [yearOptions, setYearOptions] = useState<string[]>([]);
+    const [monthOptions, setMonthOptions] = useState<string[]>([]);
     
     const [searchParams, _] = useSearchParams();
     const navigate = useNavigate();
@@ -87,6 +91,8 @@ export const MatchesOrPlayersFilter = (props:OwnProps) => {
                         setTeamSeasons(tmSsns);
                         setOppositionOptions(res.data.oppositions);
                         setPlayerFilterOptions(res.data.players);
+                        setYearOptions(res.data.years);
+                        setMonthOptions(res.data.months);
                     } else {
                         props.setErrorMessage(res.data.message);
                     }
@@ -103,6 +109,12 @@ export const MatchesOrPlayersFilter = (props:OwnProps) => {
             }
             if (searchParams.get("playerIdFilter")) {
                 setPlayerIdFilter(searchParams.get("playerIdFilter")!);
+            }
+            if (searchParams.get("yearFilter")) {
+                setSelectedYear(searchParams.get("yearFilter")!);
+            }
+            if (searchParams.get("monthFilter")) {
+                setSelectedMonth(searchParams.get("monthFilter")!);
             }
         },
         []
@@ -154,6 +166,12 @@ export const MatchesOrPlayersFilter = (props:OwnProps) => {
         if (selectedOpposition) {
             params['oppositionFilter'] = selectedOpposition;
         }
+        if (selectedYear) {
+            params['yearFilter'] = selectedYear;
+        }
+        if (selectedMonth) {
+            params['monthFilter'] = selectedMonth;
+        }
         const newSearchParams = createSearchParams(params);
         const options = {
             search: `?${newSearchParams}`,
@@ -190,6 +208,12 @@ export const MatchesOrPlayersFilter = (props:OwnProps) => {
                 setPlayerIdFilter={setPlayerIdFilter}
                 playerFilterOptions={playerFilterOptions}
                 metric={props.metric}
+                yearOptions={yearOptions}
+                setSelectedYear={setSelectedYear}
+                selectedYear={selectedYear}
+                monthOptions={monthOptions}
+                setSelectedMonth={setSelectedMonth}
+                selectedMonth={selectedMonth}
             />
             <div id='mop-filter-button-div'>
                 <button

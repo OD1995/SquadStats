@@ -300,7 +300,9 @@ def get_matches_data():
             team_id_filter=request.args.get("teamIdFilter"),
             season_filter=request.args.get("seasonFilter"),
             opposition_filter=request.args.get("oppositionFilter"),    
-            player_id_filter=request.args.get("playerIdFilter"), 
+            player_id_filter=request.args.get("playerIdFilter"),
+            year_filter=request.args.get("yearFilter"),
+            month_filter=request.args.get("monthFilter"),
         )
         result = matches_data_handler.get_result()
         return jsonify(result)

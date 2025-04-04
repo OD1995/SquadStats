@@ -6,7 +6,7 @@ import {
 } from "@mui/material";
 import { GenericTableData, GenericTableRow } from "../types/GenericTableTypes";
 import "./BetterTable.css"
-import { getFontSize } from "../helpers/other";
+import { getFontSize, isNumeric } from "../helpers/other";
 
 interface OwnProps extends GenericTableData {
     rowsPerPage:number
@@ -56,8 +56,12 @@ export const BetterTable = (props:OwnProps) => {
         if (!sortBy) {
             return 1;
         }
-        const aVal = a[sortBy].value;
-        const bVal = b[sortBy].value;
+        var aVal = a[sortBy].value;
+        var bVal = b[sortBy].value;
+        if (isNumeric(aVal) && isNumeric(bVal)) {
+            aVal = Number(aVal);
+            bVal = Number(bVal);
+        }
         if (bVal < aVal) {
             return -1;
         }

@@ -35,13 +35,9 @@ export const TeamFilter = (props:OwnProps) => {
                 Team
             </strong>
             <FormControl>
-                {/* <InputLabel>
-                    Team
-                </InputLabel> */}
                 <Select
                     value={props.selectedTeamId}
                     onChange={handleTeamSelect}
-                    // label='Team'
                     input={<OutlinedInput sx={{fontSize: '0.8rem'}} />}
                     className="filter-select"
                 >

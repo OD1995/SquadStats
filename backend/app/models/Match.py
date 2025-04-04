@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from typing import List
 from uuid import UUID, uuid4
 from datetime import date as dateDT, time as timeDT
-from sqlalchemy import Enum, ForeignKey, String
+from sqlalchemy import Enum, ForeignKey, String, extract
 from app.helpers.misc import get_unappearance_metrics, is_other_result_type, none_of_list1_in_list2
 from app.models import Base
 from app.models.Competition import Competition
@@ -196,6 +196,10 @@ class Match(Base):
                 return self.team_season.league_season.data_source_season_name
             case SplitByType.WITH_OR_WITHOUT:
                 return self.get_with_or_without(player_id)
+            case SplitByType.MONTH:
+                return self.date.strftime("%b")
+            case SplitByType.YEAR:
+                return self.date.year
             case None:
                 return ""
             case _:

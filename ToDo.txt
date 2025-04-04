@@ -1,12 +1,12 @@
 NEXT: go through every page on a desktop and mobile and make sure they both look ok
 
-maybe add part to the about page about what users can and can't do
+add part to the "about" page about what users can and can't do
 
 better metric than biggest losses
 
 fix permissions expired workflow
 
-add upcoming milestones to club/team overview
+add upcoming milestones & "on this day" to club/team overview
 
 add something to say you can tweet me if any issues
 
@@ -14,11 +14,8 @@ check why lots of competition rows duplication
 
 make sure important stuff is viewable without being logged in
 
-add season and player filter
-
 see what happens when all the metrics are used on club level rather than team level
 
-work out why season filter doesn't work on clean sheets per game
 
 alembic init alembic
 alembic revision --autogenerate -m "initial commit"

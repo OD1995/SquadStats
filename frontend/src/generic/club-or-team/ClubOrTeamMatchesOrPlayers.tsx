@@ -91,7 +91,7 @@ export const ClubOrTeamMatchesOrPlayers = (props:OwnProps) => {
                                 return (
                                     <BetterTable
                                         key={generateId()}
-                                        rowsPerPage={10}
+                                        rowsPerPage={15}
                                         {...data}
                                         // column_ratio={[1,31,15,15,19,19]}
                                         titleClassName="small-caps-subtitle  sortable-table-title"

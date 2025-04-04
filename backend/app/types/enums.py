@@ -48,6 +48,7 @@ class SplitByType(str, Enum):
     PLAYER_COUNT: str = 'Player Count'
     SEASON: str = 'Season'
     YEAR: str = 'Year'
+    MONTH: str = 'Month'
     WITH_OR_WITHOUT: str = ''
 
 class LeaderboardType(str, Enum):    

@@ -31,7 +31,8 @@ export const LeaderboardTypeFilter = (props:OwnProps) => {
     const splitByOptions = [
         SPLIT_BY_TYPE.NA,
         SPLIT_BY_TYPE.SEASON,
-        SPLIT_BY_TYPE.YEAR
+        SPLIT_BY_TYPE.YEAR,
+        SPLIT_BY_TYPE.MONTH,
     ];
 
     return (

@@ -196,7 +196,10 @@ export const improveSeasonName = (seasonName:string) => {
     return isNumeric(seasonName) ? `Season ${seasonName}` : seasonName;
 }
 
-export const isNumeric = (val: string) : boolean => {
+export const isNumeric = (val: string|number) : boolean => {
+    if (typeof val == "number") {
+        return true;
+    }
     return !isNaN(Number(val));
 }
 

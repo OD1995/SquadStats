@@ -9,7 +9,7 @@ export const About = () => {
             <div id='about-content'>
                 <div id='about-text'>
                     <p>
-                        Squad Stats allows you to track your club's match data over time.
+                        <i>Squad Stats</i> allows you to track your club's match data over time.
                         To do so, either enter your match data manually or link your club to one on the
                         <a href="https://fulltime.thefa.com/home/index.html"> FA's website </a>
                         to import it automatically.
@@ -28,10 +28,10 @@ export const About = () => {
                             <b>Team A</b> e.g. Exeter City 1st Team
                         </li>
                         <li style={{listStyle:"circle", marginLeft:"5vw"}}>
-                            <b>Team B</b> e.g. Exeter City U18s
+                            <b>Team B</b> e.g. Exeter City U21s
                         </li>
                         <li style={{listStyle:"circle", marginLeft:"5vw"}}>
-                            <b>Team C</b> e.g. Exeter City Women
+                            <b>Team C</b> e.g. Exeter City U18s
                         </li>
                     </ul>
                     <h3>

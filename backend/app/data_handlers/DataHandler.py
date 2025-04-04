@@ -1,8 +1,9 @@
+from datetime import datetime
 from typing import List
 from uuid import UUID
 from xmlrpc.client import boolean
 
-from sqlalchemy import func
+from sqlalchemy import extract, func
 from app.helpers.QueryBuilder import QueryBuilder
 from app.helpers.misc import get_colour
 from app.helpers.validators import is_valid_uuid
@@ -48,10 +49,11 @@ class DataHandler:
         ]
 
         self.split_column_dict = {
-            SplitByType.OPPOSITION : self.OPPO,
-            SplitByType.PLAYER_COUNT : self.PLAYER_COUNT,
-            SplitByType.SEASON : self.SEASON,
+            # SplitByType.OPPOSITION : self.OPPO,
+            # SplitByType.PLAYER_COUNT : self.PLAYER_COUNT,
+            # SplitByType.SEASON : self.SEASON,
             SplitByType.WITH_OR_WITHOUT : "",
+            # SplitByType.MONTH : SplitByType.
             None : ""
         }
         # print(q.statement.compile(compile_kwargs={"literal_binds": True}))
@@ -186,7 +188,9 @@ class DataHandler:
             ## Opposition filtering
             self.get_opposition_filter(),
             ## Player filtering
-            self.get_player_filter()
+            self.get_player_filter(),
+            ## Date filtering
+            self.get_date_filter(),
         ]
         filters = []
         for f in F:
@@ -196,6 +200,16 @@ class DataHandler:
                 else:
                     filters.append(f)
         return filters
+    
+    def get_date_filter(self):
+        filters = []
+        if self.year_filter not in [None, '']:
+            filters.append(extract("year", Match.date) == self.year_filter)
+        if self.month_filter not in [None, '']:
+            numeric_month = datetime.strptime(self.month_filter, "%b").month
+            filters.append(extract("month", Match.date) == numeric_month)
+        return filters if len(filters) > 0 else None
+
     def get_player_filter(self):
         if self.player_id_filter not in [None, '']:
             return PlayerMatchPerformance.player_id == UUID(self.player_id_filter)
@@ -205,7 +219,6 @@ class DataHandler:
         if self.opposition_filter not in [None, '']:
             return Match.opposition_team_name == self.opposition_filter
         return None
-
     
     def get_team_or_club_filter(self):
         filters = []
@@ -224,10 +237,8 @@ class DataHandler:
                 return LeagueSeason.league_season_id == UUID(self.season_filter)
             else:
                 return LeagueSeason.data_source_season_name == self.season_filter
-        return None
-    
-    
-    
+        return None   
+        
     def get_split_by_table(
         self,
         matches:List[Match],
@@ -283,7 +294,7 @@ class DataHandler:
         self,
         split_by:str
     ):
-        split_column = self.split_column_dict[split_by]
+        split_column = self.split_column_dict.get(split_by, split_by)
         return [split_column] + self.GENERIC_COLUMNS
     
     def calculate_aggregate_info(
@@ -333,7 +344,7 @@ class DataHandler:
             cn : 0
             for cn in self.get_split_by_cols(split_by)
         }
-        dicto[self.split_column_dict[split_by]] = aggregate_data_key
+        dicto[self.split_column_dict.get(split_by, split_by)] = aggregate_data_key
         return deepcopy(GenericTableRow(init=dicto))
     
     def create_player_cell(

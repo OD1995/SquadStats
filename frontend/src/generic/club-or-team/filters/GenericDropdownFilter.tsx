@@ -1,49 +1,45 @@
 import { FormControl, MenuItem, OutlinedInput, Select, SelectChangeEvent } from "@mui/material";
-import { Player } from "../../../types/Player";
+import { GenericOption } from "../../../types/GenericOption";
 
 interface OwnProps {
-    playerIdFilter:string
-    setPlayerIdFilter:Function
-    playerFilterOptions:Player[]
+    options:GenericOption[]
+    title:string
+    selectedOption:string
+    setSelectedOption:Function
 }
 
-export const PlayerFilter = (props:OwnProps) => {
+export const GenericDropdownFilter = (props:OwnProps) => {
 
     const handleSelect = (event:SelectChangeEvent) => {
-        props.setPlayerIdFilter(event.target.value as string);
+        props.setSelectedOption(event.target.value as string);
     }
 
-    const options = [
-        {
-            player_id: "",
-            player_name: ""
-        } as Player
-    ].concat(props.playerFilterOptions);
-
     return (
-        <div
-            id="player-filter"
-            className="match-filter"
-        >
+        <div className="match-filter">
             <strong className="filter-select-title">
-                Player
+                {props.title}
             </strong>
             <FormControl>
                 <Select
-                    value={props.playerIdFilter}
+                    value={props.selectedOption}
                     onChange={handleSelect}
                     input={<OutlinedInput sx={{fontSize: '0.8rem'}} />}
                     className="filter-select"
                 >
                     {
-                        options.map(
-                            (player:Player) => {
+                        [
+                            {
+                                label: "",
+                                value: ""
+                            } as GenericOption
+                        ].concat(props.options).map(
+                            (option:GenericOption) => {
                                 return (
                                     <MenuItem
-                                        key={player.player_id}
-                                        value={player.player_id}
+                                        key={option.value}
+                                        value={option.value}
                                     >
-                                        {player.player_name}
+                                        {option.label}
                                     </MenuItem>
                                 )
                             }

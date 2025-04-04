@@ -1,4 +1,7 @@
+from datetime import date
 from uuid import UUID
+
+from sqlalchemy import extract
 from app import db
 from operator import itemgetter
 
@@ -35,9 +38,47 @@ class MatchesFilterDataHandler:
             'club_seasons' : self.get_club_seasons(),
             'team_seasons' : self.get_team_seasons(self.team),
             'oppositions' : self.get_oppositions(),
-            'players' : self.get_players()
+            'players' : self.get_players(),
+            'years' : self.get_date_options('year'),
+            'months' : self.get_date_options('month'),
         }
     
+    def get_date_options(self, date_type):
+        query = QueryBuilder(
+            db.session.query(extract(date_type, Match.date).label(date_type)) \
+            .join(TeamSeason) \
+            .join(Team) \
+            .distinct() \
+            .order_by(date_type)
+        )
+        if self.club_id is not None:
+            query.join(Club)
+            query.add_filter(Club.club_id == UUID(self.club_id))
+        else:
+            query.add_filter(Team.team_id == UUID(self.team_id))
+        return [
+            str(row[0]) if date_type == 'year' else date(month=row[0],year=1,day=1).strftime("%b")
+            for row in query.all()
+        ]
+    
+    # def get_years(self):
+    #     years_query = QueryBuilder(
+    #         db.session.query(extract("year", Match.date).label('year')) \
+    #         .join(TeamSeason) \
+    #         .join(Team) \
+    #         .distinct() \
+    #         .order_by("year")
+    #     )
+    #     if self.club_id is not None:
+    #         years_query.join(Club)
+    #         years_query.add_filter(Club.club_id == UUID(self.club_id))
+    #     else:
+    #         years_query.add_filter(Team.team_id == UUID(self.team_id))
+    #     return [
+    #         str(row[0])
+    #         for row in years_query.all()
+    #     ]
+
     def get_players(self):
         if self.is_players:
             return []
@@ -49,16 +90,13 @@ class MatchesFilterDataHandler:
             .join(Team)
         )
         if self.club_id is not None:
+            players_query.join(Club)
             players_query.add_filter(Club.club_id == UUID(self.club_id))
-                # .filter()
         else:
             players_query.add_filter(Team.team_id == UUID(self.team_id))
-            # players_query = players_query \
-            #     .filter(Team.team_id == UUID(self.team_id))
-        A = players_query.all()
         return [
             p.to_dict()
-            for p in sorted(A, key=lambda x: x.get_best_name())
+            for p in sorted(players_query.all(), key=lambda x: x.get_best_name())
         ]
 
     def get_club_seasons(self):

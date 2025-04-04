@@ -35,6 +35,8 @@ def get_leaderboard_data():
             per_game=request.args.get("perGame"),
             min_apps=request.args.get("minApps"),
             player_id_filter=request.args.get("playeridFilter"),
+            year_filter=request.args.get("yearFilter"),
+            month_filter=request.args.get("monthFilter"),
         )
         result = matches_data_handler.get_result()
         return jsonify(result)

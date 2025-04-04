@@ -19,31 +19,6 @@ from app.types.enums import Metric as MetricEnum, Result, SplitByType
 
 class LeaderboardDataHandler(DataHandler):
 
-#     Appearances
-# Appearances
-# Appearances By Season
-
-# Goals
-# Goals
-# Goals Per Game
-# Goals By Season
-# Hattricks
-
-# MOTMs
-# MOTMs
-# MOTMs Per Game
-
-# Streaks
-# Consecutive Games Played
-# Consecutive Wins
-# Consecutive Goalscoring Games
-
-# Player Impact (Min 10 Apps)
-# Points Per Game
-# Goals Scored
-# Goals Conceded
-# Goal Difference
-
     def __init__(
         self,
         metric:str,
@@ -55,7 +30,9 @@ class LeaderboardDataHandler(DataHandler):
         team_id_filter:str|None,
         player_id_filter:str|None,
         per_game:bool|None,
-        min_apps:int|None
+        min_apps:int|None,
+        year_filter:int|None,
+        month_filter:str|None,
     ):
         """
         metric - should be one of Metric options
@@ -64,6 +41,8 @@ class LeaderboardDataHandler(DataHandler):
         season_filter - '' or uuid (league_season_id) or str (data_source_season_name, if focus is on all club matches)
         opposition_filter - None or str (opposition_team_name)
         team_id_filter - '' or uuid
+        year_filter = None or int
+        month_filter = None or str
         """
         DataHandler.__init__(self)
         self.metric = metric
@@ -74,6 +53,9 @@ class LeaderboardDataHandler(DataHandler):
         self.team_id_filter = team_id_filter
         self.split_by = split_by
         self.player_id_filter = player_id_filter
+        self.year_filter = year_filter
+        self.month_filter = month_filter
+
         self.query_split_by = self.get_query_split_by()
         self.per_game = False if ((per_game == "False") or (per_game is None)) else True
         self.min_apps = None if (min_apps is None) else int(min_apps)
@@ -451,12 +433,16 @@ class LeaderboardDataHandler(DataHandler):
         skip_walkovers=True
     ):
         ## Get all matches, given the filters
-        match_list = db.session.query(Match) \
-            .join(TeamSeason) \
-            .join(Team) \
-            .filter(*self.get_filters()) \
-            .order_by(Match.date) \
-            .all()
+        match_query = QueryBuilder(
+            db.session.query(Match) \
+                .join(TeamSeason) \
+                .join(Team)
+        )
+        match_query.add_filters(self.get_filters())
+        if self.season_filter not in [None, ""]:
+            match_query.add_join(LeagueSeason)
+        match_query.order_by([Match.date])
+        match_list = match_query.all()
         match_id_list = [
             m.match_id
             for m in match_list

@@ -18,7 +18,8 @@ export enum SPLIT_BY_TYPE {
     OPPOSITION = 'Opposition',
     PLAYER_COUNT = 'Player Count',
     SEASON = 'Season',
-    YEAR = 'Year'
+    YEAR = 'Year',
+    MONTH = 'Month'
 }
 
 // export enum LEADERBOARD_TYPE {

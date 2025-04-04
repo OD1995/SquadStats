@@ -22,6 +22,14 @@ class QueryBuilder:
     ):
         self.query = self.query.filter(filter)
 
+    def add_filters(
+        self,
+        filter_list
+    ):
+        for filter in filter_list:
+            if filter is not None:
+                self.add_filter(filter)
+
     def limit(
         self,
         limit

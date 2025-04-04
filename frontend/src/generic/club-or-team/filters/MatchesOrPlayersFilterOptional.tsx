@@ -1,15 +1,14 @@
 import { minAppsRelevant } from "../../../helpers/other";
 import { isWiderThanHigher } from "../../../helpers/windowDimensions";
 import { Club } from "../../../types/Club";
-import { METRIC, SPLIT_BY_TYPE } from "../../../types/enums";
+import { SPLIT_BY_TYPE } from "../../../types/enums";
+import { GenericOption } from "../../../types/GenericOption";
 import { Player } from "../../../types/Player";
 import { LeagueSeason } from "../../../types/Season";
 import { Team } from "../../../types/Team";
-import { OppositionFilter } from "../matches/OppositionFilter";
-import { PlayerFilter } from "../matches/PlayerFilter";
-import { SeasonFilter } from "../matches/SeasonFilter";
 import { TeamFilter } from "../matches/TeamFilter";
 import { MinAppsFilter } from "../players/MinAppsFilter";
+import { GenericDropdownFilter } from "./GenericDropdownFilter";
 
 interface OwnProps {
     club?:Club
@@ -34,6 +33,12 @@ interface OwnProps {
     setPlayerIdFilter:Function
     playerFilterOptions:Player[]
     metric?:string
+    yearOptions:string[]
+    selectedYear:string
+    setSelectedYear:Function
+    monthOptions:string[]
+    selectedMonth:string
+    setSelectedMonth:Function
 }
 
 export const MatchesOrPlayersFilterOptional = (props:OwnProps) => {
@@ -48,6 +53,13 @@ export const MatchesOrPlayersFilterOptional = (props:OwnProps) => {
             return props.clubSeasons[props.selectedTeamId];
         }
         return []
+    }
+
+    const stringMapper = (option:string) => {
+        return {
+            label: option,
+            value: option
+        } as GenericOption
     }
     
     return (
@@ -67,31 +79,47 @@ export const MatchesOrPlayersFilterOptional = (props:OwnProps) => {
                         />
                     )
                 }
-                <SeasonFilter
-                    selectedSeason={props.selectedSeason}
-                    setSelectedSeason={props.setSelectedSeason}
-                    seasonOptions={getSeasons()}
+                <GenericDropdownFilter
+                    title='Season'
+                    selectedOption={props.selectedSeason}
+                    setSelectedOption={props.setSelectedSeason}
+                    options={getSeasons().map(
+                        (leagueSeason:LeagueSeason) => (
+                            {
+                                label: leagueSeason.season_name,
+                                value: leagueSeason.season_id
+                            } as GenericOption
+                        )
+                    )}
                 />
                 {
                     props.matches && (
-                        <PlayerFilter
-                            playerIdFilter={props.playerIdFilter}
-                            setPlayerIdFilter={props.setPlayerIdFilter}
-                            playerFilterOptions={props.playerFilterOptions}
+                        <GenericDropdownFilter
+                            title="Player"
+                            options={props.playerFilterOptions.map(
+                                (player:Player) => (
+                                    {
+                                        value:player.player_id,
+                                        label:player.better_player_name ?? player.player_name
+                                    } as GenericOption
+                                ))
+                            }
+                            setSelectedOption={props.setPlayerIdFilter}
+                            selectedOption={props.playerIdFilter}
                         />
                     )
                 }
                 {
-                    (props.selectedSplitBy == SPLIT_BY_TYPE.OPPOSITION) && (
-                        <OppositionFilter
-                            selectedOpposition={props.selectedOpposition}
-                            setSelectedOpposition={props.setSelectedOpposition}
-                            oppositionOptions={props.oppositionOptions}
+                    ((props.selectedSplitBy == SPLIT_BY_TYPE.OPPOSITION) || (props.players)) && (
+                        <GenericDropdownFilter
+                            title="Opposition"
+                            selectedOption={props.selectedOpposition}
+                            setSelectedOption={props.setSelectedOpposition}
+                            options={props.oppositionOptions.map(stringMapper)}
                         />
                     )
                 }
                 {
-                    // (props.perGame || (props.metric && (minAppsMetrics.includes(props.metric)))) && (
                     minAppsRelevant(props.perGame, props.metric) && (
                         <MinAppsFilter
                             minApps={props.minApps}
@@ -99,6 +127,18 @@ export const MatchesOrPlayersFilterOptional = (props:OwnProps) => {
                         />
                     )
                 }
+                <GenericDropdownFilter
+                    title='Year'
+                    selectedOption={props.selectedYear}
+                    options={props.yearOptions.map(stringMapper)}
+                    setSelectedOption={props.setSelectedYear}
+                />
+                <GenericDropdownFilter
+                    title='Month'
+                    selectedOption={props.selectedMonth}
+                    options={props.monthOptions.map(stringMapper)}
+                    setSelectedOption={props.setSelectedMonth}
+                />
             </div>
         </div>
     );

@@ -20,12 +20,12 @@ interface OwnProps {
 export const MatchesFilter = (props:OwnProps) => {
     // const [isExpanded, setIsExpanded] = useState<boolean>(false);
     const [matchesSplitBy, setMatchesSplitBy] = useState<string>(SPLIT_BY_TYPE.NA);
-    const [selectedTeamId, setSelectedTeamId] = useState<string>("");
-    const [selectedSeason, setSelectedSeason] = useState("");
-    const [selectedOpposition, setSelectedOpposition] = useState<string>("");
+    // const [selectedTeamId, setSelectedTeamId] = useState<string>("");
+    // const [selectedSeason, setSelectedSeason] = useState("");
+    // const [selectedOpposition, setSelectedOpposition] = useState<string>("");
     
 
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
 
 
@@ -38,34 +38,6 @@ export const MatchesFilter = (props:OwnProps) => {
         },
         []
     )
-
-    // const handleSubmitClick = () => {
-    //     setFiltersErrorMessage("");
-    //     const params = {} as Record<string,string>;
-    //     if (selectedSplitBy) {
-    //         params['splitBy'] = selectedSplitBy;
-    //     } else {
-    //         setFiltersErrorMessage("You must select a value for 'Type'");
-    //         return;
-    //     }
-    //     if (selectedTeamId) {
-    //         params['selectedTeamId'] = selectedTeamId;
-    //     }
-    //     if (selectedSeason) {
-    //         params['selectedSeason'] = selectedSeason;
-    //     }
-    //     if (selectedOpposition) {
-    //         params['selectedOpposition'] = selectedOpposition;
-    //     }
-    //     const newSearchParams = createSearchParams(params);
-    //     const options = {
-    //         search: `?${newSearchParams}`,
-    //     };
-    //     navigate(options, { replace: true });
-    //     setIsExpanded(false);
-    //     props.setTableData([]);
-    //     retrieveData(newSearchParams.toString())
-    // }
 
     const retrieveData = (searchParams:string) => {
         props.setIsLoading(true);
@@ -90,7 +62,9 @@ export const MatchesFilter = (props:OwnProps) => {
         SPLIT_BY_TYPE.NA,
         SPLIT_BY_TYPE.OPPOSITION,
         SPLIT_BY_TYPE.PLAYER_COUNT,
-        SPLIT_BY_TYPE.SEASON
+        SPLIT_BY_TYPE.SEASON,
+        SPLIT_BY_TYPE.MONTH,
+        SPLIT_BY_TYPE.YEAR,
     ];
 
     const firstSelector = (
@@ -105,15 +79,8 @@ export const MatchesFilter = (props:OwnProps) => {
         <MatchesOrPlayersFilter
             {...props}
             filterTitle="MATCHES"
-            // handleSubmitClick={handleSubmitClick}
-            // isExpanded={isExpanded}
-            // setIsExpanded={setIsExpanded}
             firstSelector={firstSelector}
-            // filtersErrorMessage={filtersErrorMessage}
             selectedSplitBy={matchesSplitBy}
-            // setSelectedSplitBy={setSelectedSplitBy}
-            // selectedSeason={selectedSeason}
-            // setSelectedSeason={}
             retrieveData={retrieveData}
             matches
         />
