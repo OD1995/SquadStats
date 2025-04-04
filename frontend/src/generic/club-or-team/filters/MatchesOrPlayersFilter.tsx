@@ -64,10 +64,13 @@ export const MatchesOrPlayersFilter = (props:OwnProps) => {
 
     useEffect(
         () => {
-            const params = {
-                teamId: props.team?.team_id,
-                clubId: props.club?.club_id
-            } as Record<string,string>;
+            const params = {} as Record<string,string>;
+            if (props.team?.team_id) {
+                params["teamId"] = props.team.team_id;
+            }
+            if (props.club?.club_id) {
+                params["clubId"] = props.club.club_id;
+            }
             ComboService.getMatchesOrPlayersFilterData(
                 createSearchParams(params).toString(),
                 props.players ? "True" : "False"

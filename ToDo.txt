@@ -18,6 +18,7 @@ add season and player filter
 
 see what happens when all the metrics are used on club level rather than team level
 
+work out why season filter doesn't work on clean sheets per game
 
 alembic init alembic
 alembic revision --autogenerate -m "initial commit"

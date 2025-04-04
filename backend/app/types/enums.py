@@ -39,6 +39,8 @@ class Metric(str, Enum):
     GOALS_SCORED: str = 'Player Impact - Goals Scored'
     GOALS_CONCEDED: str = 'Player Impact - Goals Conceded'
     GOAL_DIFFERENCE: str = 'Player Impact - Goal Difference'
+    CLEAN_SHEETS: str = 'Clean Sheets'
+    X_SHREK: str = 'xShrek'
 
 class SplitByType(str, Enum):
     NA: str = 'N/A'

@@ -17,6 +17,7 @@ export const MetricFilter = (props:OwnProps) => {
         METRIC.GOALS,
         METRIC.HATTRICKS,
         METRIC.POTM,
+        METRIC.CLEAN_SHEETS,
         METRIC.CONSECUTIVE_APPS,
         METRIC.CONSECUTIVE_WINS,
         METRIC.CONSECUTIVE_GOALSCORING_MATCHES,
@@ -24,7 +25,8 @@ export const MetricFilter = (props:OwnProps) => {
         METRIC.POINTS_PER_GAME,
         METRIC.GOALS_SCORED,
         METRIC.GOALS_CONCEDED,
-        METRIC.GOAL_DIFFERENCE
+        METRIC.GOAL_DIFFERENCE,
+        METRIC.X_SHREK
     ];
 
     return (

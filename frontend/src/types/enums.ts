@@ -42,6 +42,8 @@ export enum METRIC {
     GOALS_SCORED = 'Player Impact - Goals Scored',
     GOALS_CONCEDED = 'Player Impact - Goals Conceded',
     GOAL_DIFFERENCE = 'Player Impact - Goal Difference',
+    CLEAN_SHEETS = 'Clean Sheets',
+    X_SHREK = 'xShrek',
 }
 
 export enum MANUAL_DATA_ENTRY_ACTION_TYPE {

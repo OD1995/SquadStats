@@ -2,6 +2,7 @@ from uuid import UUID
 from sqlalchemy import column, func, and_
 from app.data_handlers.DataHandler import DataHandler
 from app import db
+from app.helpers.QueryBuilder import QueryBuilder
 from app.helpers.misc import get_goal_metrics, get_potm_metrics, normal_round
 from app.helpers.validators import is_valid_uuid
 from app.models.LeagueSeason import LeagueSeason
@@ -94,6 +95,8 @@ class LeaderboardDataHandler(DataHandler):
         match self.metric:
             case MetricEnum.APPEARANCES | MetricEnum.GOALS | MetricEnum.HATTRICKS | MetricEnum.POTM:
                 return self.get_standard_metric_result()
+            case MetricEnum.CLEAN_SHEETS:
+                return self.get_clean_sheets_result()
             case MetricEnum.CONSECUTIVE_APPS:
                 return self.get_consecutive_apps_result()
             case MetricEnum.CONSECUTIVE_WINS:
@@ -122,9 +125,58 @@ class LeaderboardDataHandler(DataHandler):
                     metric=MetricEnum.GOAL_DIFFERENCE,
                     value_callback=lambda match : match.goal_difference
                 )
+            case MetricEnum.X_SHREK:
+                return self.get_xshrek_result()
 
         raise Exception('Unexpected metric')
     
+    def get_xshrek_result(self):
+        rows = []
+        metric = MetricEnum.X_SHREK + (f" {self.PER_GAME}" if self.per_game else "")
+        column_headers = [
+            self.PLAYER,
+            metric
+        ]
+        sam_sholli = db.session.query(Player) \
+            .filter_by(data_source_player_name="Sam Sholli") \
+            .first()
+        val = 1_000_000
+        self.player_id_filter = str(sam_sholli.player_id)
+        if self.per_game:
+            matches_query = QueryBuilder(
+                db.session.query(Match) \
+                    .join(PlayerMatchPerformance) \
+                    .join(Player)
+            )
+            if self.season_filter not in [None, '']:
+                matches_query.add_join(TeamSeason)
+                matches_query.add_join(LeagueSeason)
+            for filter in self.get_filters():
+                if filter is not None:
+                    matches_query.add_filter(filter)
+            match_list = matches_query.all()
+            apps = len(match_list)
+            val = normal_round(val / apps, 2)
+        row_data = {
+            self.PLAYER : self.create_player_cell(sam_sholli),
+            metric : GenericTableCell(value=f'{val:,}')
+        }
+        if self.per_game:
+            row_data[MetricEnum.APPEARANCES] = GenericTableCell(value=apps)
+            column_headers.append(MetricEnum.APPEARANCES)
+        rows.append(GenericTableRow(row_data=row_data))
+        return [
+            GenericTableData(
+                column_headers=column_headers,
+                rows=rows,
+                title=metric.upper(),
+                is_ranked=True,
+                sort_by=metric,
+                sort_direction='desc',
+                # column_ratio=[1,40,20,20]
+            ).to_dict()
+        ]
+
     def get_player_impact_result(
         self,
         metric,
@@ -188,11 +240,59 @@ class LeaderboardDataHandler(DataHandler):
             ).to_dict()
         ]
         
+    def get_clean_sheets_result(self):
+        match_id_list, matches_by_id = self.get_match_data()
+        players_by_id = {}
+        result_by_player = {
+            # team_name : {'score' : 0, 'matches' : 0}
+        }
+        for match_id in match_id_list:
+            match = matches_by_id[str(match_id)]
+            active_player_dict = match.get_active_player_dict()
+            players_by_id = {**players_by_id, **active_player_dict}
+            for player_id in active_player_dict.keys():
+                if player_id not in result_by_player:
+                    result_by_player[player_id] = {'clean_sheets' : 0, 'matches' : 0}
+                result_by_player[player_id]['matches'] += 1
+                if match.goals_against == 0:
+                    result_by_player[player_id]['clean_sheets'] += 1
+        metric = MetricEnum.CLEAN_SHEETS + (f" {self.PER_GAME}" if self.per_game else "")
+        rows = []
+        for player_id, result in result_by_player.items():
+            clean_sheets = result['clean_sheets']
+            matches = result['matches']
+            if (self.min_apps is not None) and (self.min_apps > matches):
+                continue
+            val = normal_round(clean_sheets / matches, 2) \
+                if self.per_game else clean_sheets
+            if val == 0:
+                continue
+            row_data = {
+                self.PLAYER : self.create_player_cell(players_by_id[player_id]),
+                metric : GenericTableCell(value=val)
+            }
+            if self.per_game:
+                row_data[MetricEnum.APPEARANCES] = GenericTableCell(value=result['matches'])
+            rows.append(GenericTableRow(row_data=row_data))
 
-    # def get_player_impact_data(self):
+        column_headers = [
+            self.PLAYER,
+            metric,
+        ]
+        if self.per_game:
+            column_headers.append(MetricEnum.APPEARANCES)
+        return [
+            GenericTableData(
+                column_headers=column_headers,
+                rows=rows,
+                title=metric.upper(),
+                is_ranked=True,
+                sort_by=metric,
+                sort_direction='desc',
+                # column_ratio=[1,33,15,20,21,21] if goals else [1,36,20,21.5,21.5]
+            ).to_dict()
+        ]
 
-    #     match_list = self.get_match_data()
-    
     def get_consecutive_hattricks_result(self):
         ## Get data
         (

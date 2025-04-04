@@ -1,4 +1,6 @@
+import { Club } from "../../../types/Club";
 import { METRIC, SPLIT_BY_TYPE } from "../../../types/enums";
+import { Team } from "../../../types/Team";
 import { SplitByFilter } from "../filters/SplitByFilter";
 import { CheckboxFilter } from "./CheckboxFilter";
 import { MetricFilter } from "./MetricFilter";
@@ -10,6 +12,8 @@ interface OwnProps {
     setPerGame:Function
     splitBy:string
     setSplitBy:Function
+    team?:Team
+    club?:Club
 }
 
 export const LeaderboardTypeFilter = (props:OwnProps) => {
@@ -18,6 +22,8 @@ export const LeaderboardTypeFilter = (props:OwnProps) => {
         METRIC.GOALS,
         METRIC.HATTRICKS,
         METRIC.POTM,
+        METRIC.CLEAN_SHEETS,
+        ...((props.team?.team_id == import.meta.env.VITE_ORDOB_TEAM_ID) ? [METRIC.X_SHREK] : [])
     ].map(
         (met:METRIC) => met.valueOf()
     );

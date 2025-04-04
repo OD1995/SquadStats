@@ -76,6 +76,8 @@ export const PlayersFilter = (props:OwnProps) => {
             setPerGame={setPerGame}
             splitBy={playersSplitBy}
             setSplitBy={setPlayersSplitBy}
+            team={props.team}
+            club={props.club}
         />
     )
 
