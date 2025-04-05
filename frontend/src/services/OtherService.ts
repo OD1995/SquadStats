@@ -15,6 +15,12 @@ class OtherService {
             this.base_url + "/random"
         )
     }
+
+    getChangeLog() {
+        return makeGetRequest(
+            this.base_url + "/get-change-log"
+        )
+    }
 }
 
 export default new OtherService();

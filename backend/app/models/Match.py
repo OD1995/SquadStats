@@ -3,13 +3,12 @@ from dataclasses import dataclass
 from typing import List
 from uuid import UUID, uuid4
 from datetime import date as dateDT, time as timeDT
-from sqlalchemy import Enum, ForeignKey, String, extract
+from sqlalchemy import Enum, ForeignKey, String
 from app.helpers.misc import get_unappearance_metrics, is_other_result_type, none_of_list1_in_list2
 from app.models import Base
 from app.models.Competition import Competition
 from app.models.MatchError import MatchError
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-
 from app.models.MatchReport import MatchReport
 from app.models.PlayerMatchPerformance import PlayerMatchPerformance
 from app.models.TeamSeason import TeamSeason

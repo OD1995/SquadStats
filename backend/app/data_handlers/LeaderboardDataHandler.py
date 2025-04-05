@@ -5,6 +5,7 @@ from app import db
 from app.helpers.QueryBuilder import QueryBuilder
 from app.helpers.misc import get_goal_metrics, get_potm_metrics, normal_round
 from app.helpers.validators import is_valid_uuid
+from app.models.Club import Club
 from app.models.LeagueSeason import LeagueSeason
 from app.models.Match import Match
 from app.models.Metric import Metric
@@ -171,20 +172,28 @@ class LeaderboardDataHandler(DataHandler):
             MetricEnum.GOAL_DIFFERENCE : "Avg Goal Difference"
         }
         col = better_cols.get(metric, metric)
-        team_obj = db.session.query(Team) \
-            .filter_by(team_id=UUID(self.team_id)) \
-            .first()
-        team_name = team_obj.get_default_team_name()
+        if self.team_id is not None:
+            team_obj = db.session.query(Team) \
+                .filter_by(team_id=UUID(self.team_id)) \
+                .first()
+            team_or_club_name = team_obj.get_default_team_name()
+        elif self.club_id is not None:
+            club_obj = db.session.query(Club) \
+                .filter_by(club_id=UUID(self.club_id)) \
+                .first()
+            team_or_club_name = club_obj.club_name
+        else:
+            raise Exception("Neither club_id nor team_id provided")
         match_id_list, matches_by_id = self.get_match_data()
         result_by_player = {
-            team_name : {'score' : 0, 'matches' : 0}
+            team_or_club_name : {'score' : 0, 'matches' : 0}
         }
         players_by_id = {}
         for match_id in match_id_list:
             match = matches_by_id[str(match_id)]
             active_player_dict = match.get_active_player_dict()
             players_by_id = {**players_by_id, **active_player_dict}
-            player_id_list = list(active_player_dict.keys()) + [team_name]
+            player_id_list = list(active_player_dict.keys()) + [team_or_club_name]
             score = value_callback(match)
             for player_id in player_id_list:
                 if player_id not in result_by_player:

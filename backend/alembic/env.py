@@ -23,7 +23,8 @@ from app.models import (
     ClubAdmin,
     League,
     TeamLeague,
-    LeagueSeason
+    LeagueSeason,
+    ChangeLogEntry
 )
 
 # this is the Alembic Config object, which provides

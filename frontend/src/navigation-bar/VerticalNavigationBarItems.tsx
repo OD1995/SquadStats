@@ -42,6 +42,9 @@ export const VerticalNavigationBarItems = (props:VerticalNavigationBarItemsProps
                     </>
                 )
             }
+            <Link onClick={props.handleItemSelection} to="/change-log" className="navigation-bar-link">
+                Change Log
+            </Link>
         </>
     )
 }

@@ -52,7 +52,7 @@ class MatchesFilterDataHandler:
             .order_by(date_type)
         )
         if self.club_id is not None:
-            query.join(Club)
+            query.add_join(Club)
             query.add_filter(Club.club_id == UUID(self.club_id))
         else:
             query.add_filter(Team.team_id == UUID(self.team_id))
@@ -90,7 +90,7 @@ class MatchesFilterDataHandler:
             .join(Team)
         )
         if self.club_id is not None:
-            players_query.join(Club)
+            players_query.add_join(Club)
             players_query.add_filter(Club.club_id == UUID(self.club_id))
         else:
             players_query.add_filter(Team.team_id == UUID(self.team_id))

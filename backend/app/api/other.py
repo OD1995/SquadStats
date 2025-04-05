@@ -5,6 +5,7 @@ from flask import Blueprint, jsonify, request
 from app import db
 from app.helpers.misc import do_error_handling
 from app.models.AbrordobMarker import AbrordobMarker
+from app.models.ChangeLogEntry import ChangeLogEntry
 from app.models.Match import Match
 from app.models.MatchReport import MatchReport
 from datetime import datetime
@@ -108,3 +109,16 @@ def set_text_match_report():
     db.session.merge(match_obj)
     db.session.commit()
     return jsonify({"success":True})
+
+@other_bp.route("/get-change-log", methods=['GET'])
+def get_change_log():    
+    try:
+        change_log_entries = db.session.query(ChangeLogEntry) \
+            .order_by(ChangeLogEntry.date.desc()) \
+            .all()
+        return jsonify([
+            x.to_dict()
+            for x in change_log_entries
+        ])
+    except Exception as e:
+        return do_error_handling(e)
