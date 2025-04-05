@@ -144,6 +144,7 @@ class FootballAssociationTeamScraper(TeamScraper):
                     league_id=league.league_id,
                     competition_acronym=None
                 )
+                competitions_by_name[competition_name] = competition
                 new_competitions[competition.competition_id] = competition
             fa_match_id = match_row.get_fa_match_id()
             if fa_match_id in matches_by_fa_match_id:

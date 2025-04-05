@@ -97,6 +97,7 @@ export const UpdateData = () => {
                     setSeasons={setSeasons}
                     selectedSeason={selectedLeagueSeason}
                     setSelectedSeason={setSelectedLeagueSeason}
+                    allLoaded={allLoaded}
                 />
             )
         }

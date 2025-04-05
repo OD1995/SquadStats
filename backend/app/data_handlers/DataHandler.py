@@ -252,6 +252,8 @@ class DataHandler:
             if match.goals_for is None:
                 continue
             aggregate_data_key = match.get_agg_data_key(split_by, player_id)
+            if (split_by == SplitByType.PLAYER_COUNT) & (aggregate_data_key == 0):
+                continue
             agg_row = aggregate_data.get(
                 aggregate_data_key,
                 self.create_aggregate_row(aggregate_data_key, split_by)

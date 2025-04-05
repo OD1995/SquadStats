@@ -12,6 +12,10 @@
     margin-bottom: 2vh;
 }
 
+#mobile-folded-mop-filter:hover {
+    cursor: pointer;
+}
+
 .expanded-mop-filter {
     display: flex;
     /* flex-direction: column; */
@@ -81,10 +85,19 @@
 }
 
 #desktop-mop-fop-parent {
+    width: 80vw;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
+#desktop-optional-filters-subtitle {
 }
 
 #desktop-mop-fop-filters {
     display: flex;
     flex-direction: row;
+    width: 60vw;
+    flex-wrap: wrap;
 }

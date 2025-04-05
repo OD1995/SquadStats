@@ -39,7 +39,7 @@ export function toEntries<T>(a: T[]) {
 
 export const generateHeaderRow = (cols:string[]) => {
     return (
-        <TableRow className="ss-table-head">
+        <TableRow className="ss-table-head" key={generateId()}>
             {cols.map((col:string) => <TableCell className="ss-table-cell">{col}</TableCell>)}
         </TableRow>
     )
@@ -47,7 +47,7 @@ export const generateHeaderRow = (cols:string[]) => {
 
 export const generateBodyRow = (values:TableCellValue[]) => {
     return (
-        <TableRow>
+        <TableRow key={generateId()}>
             {
                 values.map(
                     (val:TableCellValue) => {
@@ -107,11 +107,14 @@ export const getFontSize = (
     text:string,
     startingVal:number,
     maxChars:number,
-    increment:number
+    increment:number,
+    isDesktop:boolean=false
 ) => {
     var val = startingVal;
-    if (text.length > maxChars) {
-        val -= (text.length - maxChars) * increment
+    if (!isDesktop) {
+        if (text.length > maxChars) {
+            val -= (text.length - maxChars) * increment
+        }
     }
     return `${val}rem`
 }

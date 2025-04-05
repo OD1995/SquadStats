@@ -43,7 +43,7 @@ export const EditTeamNameTableRow = (props:EditTeamNameTableRow) => {
 
     return (
         <TableRow>
-            <TableCell>
+            <TableCell className="teamn-name-cell">
                 {
                     teamNameEditable ? (
                         <>
@@ -51,24 +51,28 @@ export const EditTeamNameTableRow = (props:EditTeamNameTableRow) => {
                                 value={editedText}
                                 onChange={handleTextValueChange}
                             />
-                            <button
-                                className="ss-green-button team-name-edit-button"
-                                onClick={handleUpdateTeamNameClick}
-                            >
-                                Update
-                            </button>                        
+                            <div className="team-name-edit-button-parent">
+                                <button
+                                    className="ss-green-button team-name-edit-button"
+                                    onClick={handleUpdateTeamNameClick}
+                                >
+                                    Update
+                                </button>                        
+                            </div>
                         </>
                     ) : (
                         <>
-                            <>
+                            <div>
                                 {props.team_name}
-                            </>
-                            <button
-                                className="ss-green-button team-name-edit-button"
-                                onClick={makeNameEditable}
-                            >
-                                Edit
-                            </button>
+                            </div>
+                            <div className="team-name-edit-button-parent">
+                                <button
+                                    className="ss-green-button team-name-edit-button"
+                                    onClick={makeNameEditable}
+                                >
+                                    Edit
+                                </button>
+                            </div>
                         </>
                     )
                 }

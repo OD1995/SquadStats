@@ -14,6 +14,10 @@ export const About = () => {
                         <a href="https://fulltime.thefa.com/home/index.html"> FA's website </a>
                         to import it automatically.
                     </p>
+                    <p>
+                        An account is only needed to create new clubs/teams and save/extract match data.
+                        To view match and players stats, a login isn't required.
+                    </p>
                     <h3>
                         Club Hierachy
                     </h3>

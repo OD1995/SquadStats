@@ -42,6 +42,9 @@ class League(Base):
         self.league_name = league_name
         self.data_source_league_id = data_source_league_id
         self.data_source_id = data_source_id
+    
+    def __repr__(self):
+        return f"<League {self.league_id}"
 
     def get_league_info(self, include_team_season=False):
         return {

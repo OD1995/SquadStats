@@ -40,6 +40,7 @@ export const LeaderboardTypeFilter = (props:OwnProps) => {
             <MetricFilter
                 metric={props.metric}
                 setMetric={props.setMetric}
+                team={props.team}
             />
             {
                 (perGameMetrics.includes(props.metric)) && (

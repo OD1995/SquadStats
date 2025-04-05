@@ -118,7 +118,7 @@ class MatchesFilterDataHandler:
         result[''] = sorted(
             unique_season_names.values(),
             key=itemgetter('season_name'),
-            reverse=True
+            # reverse=True
         )
         return result
     
@@ -140,18 +140,21 @@ class MatchesFilterDataHandler:
                 'leagues' : {},
                 'seasons' : []
             }
-        team = db.session.query(Team) \
-            .filter_by(team_id=UUID(self.team_id)) \
-            .first()
-        leagues = {
-            str(tl.league_id) : tl.league.get_league_info(include_team_season=True)
-            for tl in team.team_leagues
-        }
+        # leagues = {
+        #     str(tl.league_id) : tl.league.get_league_info(include_team_season=True)
+        #     for tl in team.team_leagues
+        # }
+        leagues = {}
+        team_leagues = self.team.team_leagues
+        for tl in team_leagues:
+            lg = tl.league
+            leagues[str(tl.league_id)] = lg.get_league_info(include_team_season=True)
+
         seasons = [] \
-            if team.data_source.data_source_id == DataSource.MANUAL else \
+            if self.team.data_source.data_source_id == DataSource.MANUAL else \
             [
                 lg_ssn.get_league_season_info(include_team_season=True)
-                for tm_lg in team.team_leagues
+                for tm_lg in self.team.team_leagues
                 for lg_ssn in tm_lg.league.league_seasons
             ]
         return {

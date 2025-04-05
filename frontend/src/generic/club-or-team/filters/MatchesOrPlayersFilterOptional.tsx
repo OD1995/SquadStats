@@ -64,7 +64,10 @@ export const MatchesOrPlayersFilterOptional = (props:OwnProps) => {
     
     return (
         <div id={(isDesktop ? "desktop" : "mobile") + '-mop-fop-parent'}> 
-            <h4 className="small-caps-subtitle">
+            <h4
+                id={(isDesktop ? "desktop" : "mobile") + '-optional-filters-subtitle'}
+                className="small-caps-subtitle"
+            >
                 OPTIONAL FILTERS
             </h4>
             <div id={(isDesktop ? "desktop" : "mobile") + '-mop-fop-filters'}>

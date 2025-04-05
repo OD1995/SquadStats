@@ -1,4 +1,5 @@
 import asyncio
+from math import lgamma
 from uuid import UUID
 from app import db
 import aiohttp
@@ -67,6 +68,13 @@ class FootballAssociationClubScraper(ClubScraper):
                 team_scrapers=team_scrapers
             )
         )
+        all_league_list = db.session.query(League) \
+            .all()
+        all_leagues = {
+            str(lg.data_source_league_id) : lg
+            for lg in all_league_list
+            if lg.data_source_league_id is not None
+        }
         new_leagues = {}
         new_teams = []
         new_team_names = []
@@ -80,14 +88,15 @@ class FootballAssociationClubScraper(ClubScraper):
         ), is_valid in team_validity.items():
             if not is_valid:
                 continue
-            if fa_league_id not in new_leagues:
+            if fa_league_id not in all_leagues:
                 new_league_obj = League(
                     league_name=league_name,
                     data_source_league_id=fa_league_id,
                     data_source_id=DataSource.FOOTBALL_ASSOCIATION
                 )
                 new_leagues[fa_league_id] = new_league_obj
-            league_id = new_leagues[fa_league_id].league_id
+                all_leagues = {**all_leagues, **new_leagues}
+            league_id = all_leagues[fa_league_id].league_id
             new_team_obj = Team(
                 club_id=ss_club_id,
                 sport_id=Sport.FOOTBALL,

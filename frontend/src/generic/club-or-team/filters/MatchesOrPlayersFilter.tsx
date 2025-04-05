@@ -238,38 +238,27 @@ export const MatchesOrPlayersFilter = (props:OwnProps) => {
         }
     }
 
-    if (!isDesktop) {
-        if (isExpanded) {
-            return (
-                <Modal
-                    handleModalClose={handleModalClose}
-                    content={
-                        <div 
-                            id='mobile-expanded-mop-filter'
-                            className='expanded-mop-filter'
-                        >
-                            {content}
-                        </div>
-                    }
-                />
-            );
-        } else {
-            return (
-                <div 
-                    id='mobile-folded-mop-filter'
-                    className="folded-mop-filter"
-                    onClick={() => setIsExpanded(true)}>
-                    {props.filterTitle +  " FILTERS"}
-                </div>
-            )
-        }
+    if (isExpanded) {
+        return (
+            <Modal
+                handleModalClose={handleModalClose}
+                content={
+                    <div 
+                        id='mobile-expanded-mop-filter'
+                        className='expanded-mop-filter'
+                    >
+                        {content}
+                    </div>
+                }
+            />
+        );
     } else {
         return (
             <div 
-                id='desktop-expanded-mop-filter'
-                className='expanded-mop-filter'
-            >
-                {content}
+                id='mobile-folded-mop-filter'
+                className="folded-mop-filter"
+                onClick={() => setIsExpanded(true)}>
+                {props.filterTitle +  " FILTERS"}
             </div>
         )
     }

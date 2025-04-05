@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getBigTitle, getTeam } from "../../../helpers/other";
+import { getBigTitle, getIsClubAdmin, getTeam } from "../../../helpers/other";
 import { Team } from "../../../types/Team";
 import TeamService from "../../../services/TeamService";
 import { BackendResponse } from "../../../types/BackendResponse";
@@ -10,6 +10,7 @@ import { TeamName } from "../../../types/TeamName";
 import { EditTeamNameTable } from "./EditTeamNameTable";
 import "./TeamNames.css";
 import { getUserLS } from "../../../authentication/auth";
+import { TeamLinkBar } from "../generic/TeamLinkBar";
 
 export const TeamNames = () => {
     
@@ -83,8 +84,13 @@ export const TeamNames = () => {
     }
 
     return (
-        <div id='club-overview-parent-div'>
+        <div id='club-overview-parent-div' className="page-parent">
             {getBigTitle(team?.team_name)}
+            <TeamLinkBar
+                isClubAdmin={getIsClubAdmin(user, teamId!)}
+                team={team!}
+                clubId={team?.club_id!}
+            />
             <div id='club-overview-content'>
                 <div className="error-message">
                     {errorMessage}

@@ -55,11 +55,11 @@ class Match(Base):
         nullable=True
     )
 
-    match_errors: Mapped[List["MatchError"]] = relationship(lazy='select')
-    team_season: Mapped[TeamSeason] = relationship(back_populates='matches', lazy='select')
+    match_errors: Mapped[List["MatchError"]] = relationship(lazy='joined')
+    team_season: Mapped[TeamSeason] = relationship(back_populates='matches', lazy='joined')
     player_match_performances: Mapped[List[PlayerMatchPerformance]] = relationship(lazy='joined')
-    competition: Mapped[Competition] = relationship(lazy='select')
-    match_report: Mapped[MatchReport] = relationship(lazy='select')
+    competition: Mapped[Competition] = relationship(lazy='joined')
+    match_report: Mapped[MatchReport] = relationship(lazy='joined')
 
     def __init__(
         self,
@@ -170,7 +170,11 @@ class Match(Base):
         return pmps_by_player_id, player_by_player_id
     
     def get_player_count(self):
-        return len(self.get_active_player_dict())
+        player_count = 0
+        for player_id, player_obj in self.get_active_player_dict().items():
+            if player_obj.get_best_name() != MiscStrings.OWN_GOALS:
+                player_count += 1
+        return player_count
     
     def get_active_player_dict(self):
         active_player_dict = {}

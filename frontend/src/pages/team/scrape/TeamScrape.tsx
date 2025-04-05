@@ -26,6 +26,7 @@ interface OwnProps {
     setSeasons:Function
     selectedSeason:string
     setSelectedSeason:Function
+    allLoaded:boolean
 }
 
 export const TeamScrape = (props:OwnProps) => {
@@ -262,6 +263,10 @@ export const TeamScrape = (props:OwnProps) => {
         </div>
     )
 
+    if (!props.allLoaded) {
+        return <Loading/>
+    }
+    
     return (
         <div className='page-parent'>
             {getBigTitle(props.team.team_name)}

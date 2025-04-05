@@ -17,21 +17,18 @@ interface OwnProps {
     isClubAdmin:boolean
     matches?:boolean
     players?:boolean
-    errorMsg?:string
     isLoadng?:boolean
+    errorMessage:string
+    setErrorMessage:Function
 }
 
 export const ClubOrTeamMatchesOrPlayers = (props:OwnProps) => {
 
     const [tableData, setTableData] = useState<GenericTableData[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [errorMessage, setErrorMessage] = useState<string>("");
 
     useEffect(
         () => {
-            if (props.errorMsg) {
-                setErrorMessage(props.errorMsg);                
-            }
             if (props.isLoadng) {
                 setIsLoading(props.isLoadng);
             }
@@ -61,7 +58,7 @@ export const ClubOrTeamMatchesOrPlayers = (props:OwnProps) => {
                         <MatchesFilter
                             club={props.club}
                             team={props.team}
-                            setErrorMessage={setErrorMessage}
+                            setErrorMessage={props.setErrorMessage}
                             setTableData={setTableData}
                             setIsLoading={setIsLoading}
                         />
@@ -72,14 +69,14 @@ export const ClubOrTeamMatchesOrPlayers = (props:OwnProps) => {
                         <PlayersFilter
                             club={props.club}
                             team={props.team}
-                            setErrorMessage={setErrorMessage}
+                            setErrorMessage={props.setErrorMessage}
                             setTableData={setTableData}
                             setIsLoading={setIsLoading}
                         />
                     )
                 }
                 <div className="error-message">
-                    {errorMessage}
+                    {props.errorMessage}
                 </div>
                 <div id='cotmop-table-content'>
                     {

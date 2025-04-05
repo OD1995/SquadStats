@@ -6,12 +6,13 @@ import { Team } from "../../types/Team";
 import { getIsClubAdmin, getTeam } from "../../helpers/other";
 import TeamService from "../../services/TeamService";
 import { BackendResponse } from "../../types/BackendResponse";
+import { Loading } from "../../generic/Loading";
 
 export const TeamPlayerLeaderboards = () => {
 
     const [team, setTeam] = useState<Team>();
     const [errorMessage, setErrorMessage] = useState<string>("");
-    // const [teamLoaded, setTeamLoaded] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(true);
 
     const user = getUserLS();
     const { teamId } = useParams();
@@ -25,10 +26,11 @@ export const TeamPlayerLeaderboards = () => {
                 if (tm) {
                     loadTeam = false;
                     setTeam(tm);
+                    setLoading(false);
                 }
             }
             if (loadTeam) {
-                // setLoading(true);
+                setLoading(true);
                 TeamService.getTeamInformation(
                     teamId!
                 ).then(
@@ -38,7 +40,7 @@ export const TeamPlayerLeaderboards = () => {
                         } else {
                             setErrorMessage(res.data.message);
                         }
-                        // setLoading(false);
+                        setLoading(false);
                     }
                 )
             }
@@ -46,14 +48,16 @@ export const TeamPlayerLeaderboards = () => {
         []
     )
 
-    if (team) {
+    if (loading) {
+        return <Loading/>
+    } else {
         return (
             <ClubOrTeamMatchesOrPlayers
                 team={team}
                 isClubAdmin={getIsClubAdmin(user, team?.club_id!)}
                 players
-                errorMsg={errorMessage}
-                // isLoadng={loading}
+                errorMessage={errorMessage}
+                setErrorMessage={setErrorMessage}
             />
         )
     }

@@ -29,14 +29,14 @@ export const PlayerLinkBar = (props:OwnProps) => {
                 label: 'Player Matches',
                 to: `/club/${props.clubId}/matches?splitBy=${SPLIT_BY_TYPE.NA}&playerIdFilter=${props.playerId}`
             },
-            // {
-            //     label: 'Player Leaderboards',
-            //     to: `/club/${clubId}/players`
-            // }
-            {
-                label: 'Edit Name',
-                to: `/player/${props.playerId}/edit-name`
-            }
+            ...(
+                props.isClubAdmin ? [
+                    {
+                        label: 'Edit Name',
+                        to: `/player/${props.playerId}/edit-name`
+                    }
+                ] : []
+            )
         ] as LinkBarInfo[];
         return links;
     }

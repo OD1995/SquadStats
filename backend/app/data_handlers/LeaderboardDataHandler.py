@@ -16,7 +16,7 @@ from app.models.TeamSeason import TeamSeason
 from app.types.GenericTableCell import GenericTableCell
 from app.types.GenericTableData import GenericTableData
 from app.types.GenericTableRow import GenericTableRow
-from app.types.enums import Metric as MetricEnum, Result, SplitByType
+from app.types.enums import Metric as MetricEnum, MiscStrings, Result, SplitByType
 
 class LeaderboardDataHandler(DataHandler):
 
@@ -204,9 +204,15 @@ class LeaderboardDataHandler(DataHandler):
         for player_id, result in result_by_player.items():
             if result['matches'] < (self.min_apps or 0):
                 continue
-            player_cell = self.create_player_cell(players_by_id[player_id]) \
-                if player_id in players_by_id else \
-                GenericTableCell(value=player_id)
+            player_cell = GenericTableCell(value=player_id)
+            if player_id in players_by_id:
+                player = players_by_id[player_id]
+                if player.get_best_name() == MiscStrings.OWN_GOALS:
+                    continue
+                player_cell = self.create_player_cell(player)
+            # player_cell = self.create_player_cell(players_by_id[player_id]) \
+            #     if player_id in players_by_id else \
+            #     GenericTableCell(value=player_id)
             val = normal_round(result['score'] / result['matches'], decimals=2)
             row_data = {
                 self.PLAYER : player_cell,

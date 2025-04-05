@@ -1,9 +1,11 @@
 import { FormControl, MenuItem, OutlinedInput, Select, SelectChangeEvent } from "@mui/material";
 import { METRIC } from "../../../types/enums";
+import { Team } from "../../../types/Team";
 
 interface OwnProps {
     metric:string
     setMetric:Function
+    team?:Team
 }
 
 export const MetricFilter = (props:OwnProps) => {
@@ -26,7 +28,7 @@ export const MetricFilter = (props:OwnProps) => {
         METRIC.GOALS_SCORED,
         METRIC.GOALS_CONCEDED,
         METRIC.GOAL_DIFFERENCE,
-        METRIC.X_SHREK
+        ...((props.team?.team_id == import.meta.env.VITE_ORDOB_TEAM_ID) ? [METRIC.X_SHREK] : [])
     ];
 
     return (

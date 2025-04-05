@@ -1,3 +1,14 @@
 .team-name-edit-button {
     margin-left: 2vw;
 }
+
+.team-name-edit-button-parent {
+    display: flex;
+    align-items: center;
+}
+
+.teamn-name-cell {
+    display: flex !important;
+    flex-direction: row;
+    align-items: center;
+}
