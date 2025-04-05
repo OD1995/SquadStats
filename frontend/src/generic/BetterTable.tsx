@@ -118,10 +118,7 @@ export const BetterTable = (props:OwnProps) => {
     }
 
     return (
-        <div style={{
-            display: 'flex',
-            justifyContent: 'center'
-        }}>
+        <div id='better-table-parent'>
             <Box
                 sx={{
                     width: '100%',

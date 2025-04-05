@@ -19,6 +19,7 @@
 #cot-overview-tables-desktop {
     display: flex;
     justify-content: center;
+    margin-top: 5vh;
 }
 
 .overview-table-div {

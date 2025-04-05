@@ -40,7 +40,8 @@ class Overview:
             rows=rows,
             title=title.upper(),
             is_ranked=True,
-            not_sortable=True
+            not_sortable=True,
+            column_ratio=[4, 41, 20, 35]
         ).to_dict()
             
     def create_table_data_for_player_stats(
@@ -71,5 +72,6 @@ class Overview:
             rows=rows,
             title=title.upper(),
             is_ranked=True,
-            not_sortable=True
+            not_sortable=True,
+            column_ratio=[4, 58, 38]
         ).to_dict()
