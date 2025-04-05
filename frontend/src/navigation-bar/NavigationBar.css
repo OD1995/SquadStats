@@ -60,7 +60,17 @@
     height: 90vh;
     background-color: #f6f6f6;
     z-index: 1;
-    /* border-top: 1px solid #646cff; */
     border-top: 1px solid white;
     padding-top: 5vh;
+}
+
+.vertical-navigation-bar-section {
+    display: flex;
+    flex-direction: column;
+}
+
+#vertical-navigation-bar {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }

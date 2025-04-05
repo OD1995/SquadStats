@@ -1,50 +1,27 @@
-import { Link } from "react-router-dom"
 import { User } from "../types/User"
 import { MouseEventHandler } from "react"
+import { VerticalNavigationBarTopItems } from "./VerticalNavigationBarTopItems"
+import { VerticalNavigationBarBottomItems } from "./VerticalNavigationBarBottomItems"
 
-interface VerticalNavigationBarItemsProps {
+export interface VerticalNavigationBarItemsProps {
     user:User|null
     handleLogoutClick:MouseEventHandler
     handleItemSelection:MouseEventHandler
+    isDesktop?:boolean
 }
 
 export const VerticalNavigationBarItems = (props:VerticalNavigationBarItemsProps) => {
     return (
-        <>
-            <Link onClick={props.handleItemSelection} to="/about" className="navigation-bar-link">
-                About
-            </Link>
-            {
-                (!props.user) ? (
-                    <>
-                        <Link to="/login" onClick={props.handleItemSelection} className="navigation-bar-link">
-                            Login
-                        </Link>
-                        <Link to="/register" onClick={props.handleItemSelection} className="navigation-bar-link">
-                            Register
-                        </Link>
-                    </>
-                ) : (
-                    <>
-                        <Link to="/about" onClick={props.handleLogoutClick}  className="navigation-bar-link">
-                            Logout
-                        </Link>
-                        {
-                            (props.user.clubs.length > 0) && (
-                                <Link to="/my-clubs" onClick={props.handleItemSelection} className="navigation-bar-link">
-                                    My Clubs
-                                </Link>
-                            )
-                        }
-                        <Link to="/add-club" onClick={props.handleItemSelection} className="navigation-bar-link">
-                            Add Club
-                        </Link>
-                    </>
-                )
-            }
-            <Link onClick={props.handleItemSelection} to="/change-log" className="navigation-bar-link">
-                Change Log
-            </Link>
-        </>
+        <div
+            id='vertical-navigation-bar'
+            style={{height: props.isDesktop ? "83vh" : "82vh"}}
+        >
+            <VerticalNavigationBarTopItems
+                {...props}
+            />
+            <VerticalNavigationBarBottomItems
+                {...props}
+            />
+        </div>
     )
 }

@@ -32,6 +32,7 @@ import { ShareId } from './pages/club/ShareId';
 import { TeamPlayerLeaderboards } from './pages/team/TeamPlayerLeaderboards';
 import { Test } from './pages/Test';
 import { ChangeLog } from './pages/change-log/ChangeLog';
+import { Contact } from './pages/contact/Contact';
 
 
 const App = () => {
@@ -77,6 +78,7 @@ const App = () => {
 						<Route path='/player/:playerId/teams' element={<PlayerTeamsOverviewSelector/>}/>
 						<Route path='/player/:playerId/edit-name' element={<EditPlayerName/>}/>
 						<Route path='/change-log' element={<ChangeLog/>}/>
+						<Route path='/contact' element={<Contact/>}/>
 						<Route path='/test' element={<Test/>}/>
 
 						<Route path="*" element={<Navigate to="/about" replace/>}/>

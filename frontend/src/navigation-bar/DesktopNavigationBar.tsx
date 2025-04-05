@@ -22,6 +22,7 @@ export const DesktopNavigationBar = (props:DesktopNavigationBarProps) => {
                 user={props.user}
                 handleLogoutClick={props.handleLogoutClick}
                 handleItemSelection={() => {}}
+                isDesktop={true}
             />
         </div>
     )
