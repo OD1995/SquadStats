@@ -34,5 +34,5 @@ COPY --from=builder /app/.venv .venv/
 # Copy the application files into the container
 COPY . .
 
-# Set the command to run the app using the Flask command
-CMD ["/app/.venv/bin/flask", "run", "--host=0.0.0.0", "--port=8080"]
+# Set the command to run the app using Gunicorn for production
+CMD ["/app/.venv/bin/gunicorn", "main:app", "--bind", "0.0.0.0:8080"]
