@@ -11,7 +11,7 @@ interface OwnProps {
 export const MatchReportContent = (props:OwnProps) => {
 
     const createImageViewers = (imageIds:string[]) => {
-        const width = (85 / imageIds.length) - 4;
+        const width = (75 / imageIds.length) - 4;
         var imgs = [];
         for (const imageId of imageIds) {
             imgs.push(
