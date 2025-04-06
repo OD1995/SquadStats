@@ -3,7 +3,7 @@ name: Deploy to Fly.io
 on:
   push:
     branches:
-      - main  # or your deploy branch
+      - main
 
 jobs:
   deploy:
@@ -13,13 +13,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Configure mise to compile Python from source
+      - name: Install mise
+        uses: jdx/mise-action@v2
+
+      - name: Force mise to compile Python from source
         run: mise settings set python_compile 1
 
-      - name: Set up Python with mise
+      - name: Install Python 3.12 using mise (compiled)
         run: mise use -g python@3.12
 
-      - name: Install dependencies
+      - name: Install pip dependencies
         run: pip install -r requirements.txt
 
       - name: Deploy to Fly
