@@ -21,7 +21,7 @@ export const LoginOrRegister = (props:LoginOrRegisterProps) => {
     const [submitErrorColour, setSubmitErrorColour] = useState("black");
     const [buttonDisabled, setButtonDisabled] = useState(false);
 
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [searchParams, _] = useSearchParams();
     const navigate = useNavigate(); 
     const dispatch = useDispatch();
     const user = getUserLS();

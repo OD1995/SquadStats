@@ -2,13 +2,11 @@ import { useParams } from "react-router-dom";
 import { getUserLS } from "../../authentication/auth";
 import { useEffect, useState } from "react";
 import { Loading } from "../../generic/Loading";
-import { getBigTitle, getClub, getIsClubAdmin } from "../../helpers/other";
+import { getBigTitle, getIsClubAdmin } from "../../helpers/other";
 import { ClubLinkBar } from "./generic/ClubLinkBar";
 import { OverviewOption, OverviewSelector } from "../../generic/OverviewSelector";
 import ClubService from "../../services/ClubService";
 import { BackendResponse } from "../../types/BackendResponse";
-import { Club } from "../../types/Club";
-import { Team } from "../../types/Team";
 import { Player } from "../../types/Player";
 
 export const ClubPlayersOverviewSelector = () => {

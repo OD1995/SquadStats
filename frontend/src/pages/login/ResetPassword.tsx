@@ -5,7 +5,7 @@ import { ForgottenOrResetPassword } from "./ForgottenOrResetPassword";
 
 export const ResetPassword = () => {
 
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [searchParams, _] = useSearchParams();
 
     const handleClick = (
         newPassword:string,

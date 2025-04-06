@@ -30,7 +30,7 @@ import { UpdateData } from './pages/team/scrape/UpdateData';
 import { UpdateMatch } from './pages/team/scrape/update-match-sections/UpdateMatch';
 import { ShareId } from './pages/club/ShareId';
 import { TeamPlayerLeaderboards } from './pages/team/TeamPlayerLeaderboards';
-import { Test } from './pages/Test';
+// import { Test } from './pages/Test';
 import { ChangeLog } from './pages/change-log/ChangeLog';
 import { Contact } from './pages/contact/Contact';
 

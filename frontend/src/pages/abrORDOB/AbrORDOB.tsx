@@ -13,7 +13,7 @@ export const AbrORDOB = () => {
 
     const [markerDataDict, setMarkerDataDict] = useState<Record<string,MarkerData>>({});
     const [showPopup, setShowPopup] = useState(false);
-    const [popupMarkerId, setPopupMarkerId] = useState("");
+    const [_, setPopupMarkerId] = useState("");
     const [popupText, setPopupText] = useState("");
     const [popupImageId, setPopupImageId] = useState("");
     const [dataLoaded, setDataLoaded] = useState<boolean>(false);

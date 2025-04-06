@@ -26,7 +26,7 @@ export const PlayersFilter = (props:OwnProps) => {
     const [perGame, setPerGame] = useState<boolean>(false);
     const [minApps, setMinApps] = useState<number>(10);
 
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [searchParams, _] = useSearchParams();
 
     useEffect(
         () => {

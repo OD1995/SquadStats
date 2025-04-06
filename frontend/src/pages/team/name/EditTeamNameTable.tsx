@@ -34,7 +34,7 @@ export const EditTeamNameTable = (props:EditTeamNameTableProps) => {
             setRows(
                 (oldRows) => {
                     var newRows = [...oldRows];
-                    for (const [idx,tn] of toEntries(newRows)) {
+                    for (const [idx,_] of toEntries(newRows)) {
                         newRows[idx].is_default_name = (idx == ix);
                     }
                     return newRows;
@@ -44,7 +44,7 @@ export const EditTeamNameTable = (props:EditTeamNameTableProps) => {
             setRows(
                 (oldRows) => {
                     var newRows = [...oldRows];
-                    for (const [idx,tn] of toEntries(newRows)) {
+                    for (const [idx,_] of toEntries(newRows)) {
                         newRows[idx].is_default_name = false;
                     }
                     return newRows;

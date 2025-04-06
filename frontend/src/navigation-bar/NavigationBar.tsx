@@ -1,21 +1,17 @@
-import { useDispatch, useSelector } from "react-redux"
-import { refreshSelector, triggerRefresh } from "../store/slices/userSlice"
+import { useDispatch } from "react-redux"
+import { triggerRefresh } from "../store/slices/userSlice"
 import { MobileNavigationBar } from "./MobileNaviationBar"
 import "./NavigationBar.css"
 import { isWiderThanHigher } from "../helpers/windowDimensions"
 import { DesktopNavigationBar } from "./DesktopNavigationBar"
 import { getUserLS, setUserLS } from "../authentication/auth"
 
-interface NavigationBarProps {
-    // isDesktop:boolean
-}
 
-export const NavigationBar = (props:NavigationBarProps) => {
+export const NavigationBar = () => {
 
     // const [refresh, setRefresh] = useState<number>(0);
     const dispatch = useDispatch();
     const user = getUserLS();
-    const refreshCounter = useSelector(refreshSelector);
 
     const handleLogoutClick = () => {
         // dispatch(setUser(null))

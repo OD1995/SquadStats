@@ -3,7 +3,7 @@ import { withStyles } from "@mui/material";
 
 
 export const SSTableHead = withStyles(
-    (theme:any) => (
+    (_:any) => (
         {
             root: {
                 "& .MuiTableCell-head": {

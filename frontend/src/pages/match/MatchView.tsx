@@ -28,7 +28,7 @@ export const MatchView = () => {
     const [hasMatchReport, setHasMatchReport] = useState<boolean>(false);
     const [showMatchReport, setShowMatchReport] = useState<boolean>(false);
 
-    let { teamId, matchId } = useParams();
+    let { matchId } = useParams();
     const user = getUserLS();
 
     useEffect(

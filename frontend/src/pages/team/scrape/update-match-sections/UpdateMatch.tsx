@@ -252,9 +252,9 @@ export const UpdateMatch = () => {
         return sectionArray[sectionIndex + 1].subtitle;
     }
 
-    const serialiseMatch = (match:Match) => {
-        return JSON.stringify(match);
-    }
+    // const serialiseMatch = (match:Match) => {
+    //     return JSON.stringify(match);
+    // }
 
     // const serialiseMatch = (match:Match) => {
     //     return Object.entries(match)

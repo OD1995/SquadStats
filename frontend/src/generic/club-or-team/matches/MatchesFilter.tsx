@@ -2,9 +2,8 @@ import { useEffect, useState } from "react";
 import { Club } from "../../../types/Club";
 import { Team } from "../../../types/Team";
 import { MatchesOrPlayersFilter } from "../filters/MatchesOrPlayersFilter";
-import { LeagueSeason } from "../../../types/Season";
 import { SPLIT_BY_TYPE } from "../../../types/enums";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { BackendResponse } from "../../../types/BackendResponse";
 import { SplitByFilter } from "../filters/SplitByFilter";
 import MatchService from "../../../services/MatchService";
@@ -26,7 +25,7 @@ export const MatchesFilter = (props:OwnProps) => {
     
 
     // const navigate = useNavigate();
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [searchParams, _] = useSearchParams();
 
 
     useEffect(

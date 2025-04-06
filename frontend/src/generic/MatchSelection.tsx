@@ -1,5 +1,4 @@
 import { FormControl, MenuItem, Select, SelectChangeEvent } from "@mui/material"
-import { League } from "../types/League"
 import { Match } from "../types/Match"
 
 interface OwnProps {

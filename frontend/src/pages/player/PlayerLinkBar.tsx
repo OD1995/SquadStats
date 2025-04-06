@@ -1,4 +1,3 @@
-import { SplitByFilter } from "../../generic/club-or-team/filters/SplitByFilter"
 import { LinkBar } from "../../generic/LinkBar"
 import { SPLIT_BY_TYPE } from "../../types/enums"
 import { LinkBarInfo } from "../../types/LinkBarInfo"

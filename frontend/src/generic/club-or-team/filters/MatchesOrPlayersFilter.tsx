@@ -1,4 +1,3 @@
-import { isWiderThanHigher } from "../../../helpers/windowDimensions";
 import { Modal } from "../../Modal";
 import { Club } from "../../../types/Club";
 import { Team } from "../../../types/Team";
@@ -45,7 +44,6 @@ interface OwnProps {
 
 export const MatchesOrPlayersFilter = (props:OwnProps) => {
    
-    const isDesktop = isWiderThanHigher();   
     const [isExpanded, setIsExpanded] = useState<boolean>(false); 
     
     const [filtersErrorMessage, setFiltersErrorMessage] = useState<string>("");

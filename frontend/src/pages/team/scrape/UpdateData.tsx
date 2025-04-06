@@ -10,7 +10,6 @@ import { TeamScrape } from "./TeamScrape";
 import { ManualDataEntry } from "./ManualDataEntry";
 import { LeagueSeason } from "../../../types/Season";
 import { League } from "../../../types/League";
-import { Match } from "../../../types/Match";
 
 export const UpdateData = () => {
 
@@ -62,12 +61,12 @@ export const UpdateData = () => {
         []
     )
 
-    const getFirstLeagueId = (lgs:Record<string, League>) => {
-        for (const lg of Object.values(lgs)) {
-            return lg.league_id
-        }
-        return "";
-    }
+    // const getFirstLeagueId = (lgs:Record<string, League>) => {
+    //     for (const lg of Object.values(lgs)) {
+    //         return lg.league_id
+    //     }
+    //     return "";
+    // }
 
     if (team) {
         if (team?.data_source_id == DATA_SOURCE.MANUAL) {
