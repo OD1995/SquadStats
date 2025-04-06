@@ -28,6 +28,15 @@ export const LeaderboardTypeFilter = (props:OwnProps) => {
         (met:METRIC) => met.valueOf()
     );
 
+    const splitByMetrics = [
+        METRIC.APPEARANCES,
+        METRIC.GOALS,
+        METRIC.HATTRICKS,
+        METRIC.POTM,
+    ].map(
+        (met:METRIC) => met.valueOf()
+    );
+
     const splitByOptions = [
         SPLIT_BY_TYPE.NA,
         SPLIT_BY_TYPE.SEASON,
@@ -41,9 +50,11 @@ export const LeaderboardTypeFilter = (props:OwnProps) => {
                 metric={props.metric}
                 setMetric={props.setMetric}
                 team={props.team}
+                setPerGame={props.setPerGame}
+                setSplitBy={props.setSplitBy}
             />
             {
-                (perGameMetrics.includes(props.metric)) && (
+                perGameMetrics.includes(props.metric) && (
                     <CheckboxFilter
                         isTicked={props.perGame}
                         setIsTicked={props.setPerGame}
@@ -51,11 +62,15 @@ export const LeaderboardTypeFilter = (props:OwnProps) => {
                     />
                 )
             }
-            <SplitByFilter
-                splitBy={props.splitBy}
-                setSplitBy={props.setSplitBy}
-                splitByOptions={splitByOptions}
-            />
+            {
+                splitByMetrics.includes(props.metric) && (
+                    <SplitByFilter
+                        splitBy={props.splitBy}
+                        setSplitBy={props.setSplitBy}
+                        splitByOptions={splitByOptions}
+                    />
+                )
+            }
         </div>
     );
 }

@@ -218,7 +218,7 @@ export const MatchesOrPlayersFilter = (props:OwnProps) => {
             <div id='mop-filter-button-div'>
                 <button
                     className="ss-green-button"
-                    onClick={() => handleSubmitClick()}
+                    onClick={handleSubmitClick}
                 >
                     Submit
                 </button>

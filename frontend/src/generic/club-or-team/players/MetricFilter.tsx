@@ -6,12 +6,16 @@ interface OwnProps {
     metric:string
     setMetric:Function
     team?:Team
+    setPerGame:Function
+    setSplitBy:Function
 }
 
 export const MetricFilter = (props:OwnProps) => {
     
     const handleSelect = (event:SelectChangeEvent) => {
         props.setMetric(event.target.value as string);
+        props.setPerGame(false);
+        props.setSplitBy("");
     }
 
     const options = [
