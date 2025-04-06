@@ -76,16 +76,18 @@ export const PlayerTeamsOverviewSelector = () => {
                 playerId={playerId!}
                 clubId={clubId!}
             />
-            <div className="error-message">
-                {errorMessage}
+            <div className="overview-selector-content">
+                <div className="error-message">
+                    {errorMessage}
+                </div>
+                <OverviewSelector
+                    label="Team"
+                    overviewId={teamId}
+                    setOverviewId={setTeamId}
+                    overviewOptions={teamOptions}
+                    link={link}
+                />
             </div>
-            <OverviewSelector
-                label="Team"
-                overviewId={teamId}
-                setOverviewId={setTeamId}
-                overviewOptions={teamOptions}
-                link={link}
-            />
         </div>
     );
 }

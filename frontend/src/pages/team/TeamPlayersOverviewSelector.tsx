@@ -75,22 +75,24 @@ export const TeamPlayersOverviewSelector = () => {
                 isClubAdmin={getIsClubAdmin(user, clubId!)}
                 team={team!}
             />
-            {
-                !isLoading ? (
-                    <>
-                        <div className="error-message">
-                            {errorMessage}
-                        </div>
-                        <OverviewSelector
-                            label="Player"
-                            overviewId={playerId}
-                            setOverviewId={setPlayerId}
-                            overviewOptions={playerOptions}
-                            link={link}
-                        />                    
-                    </>
-                ) : <Loading/>
-            }
+            <div className="overview-selector-content">
+                {
+                    !isLoading ? (
+                        <>
+                            <div className="error-message">
+                                {errorMessage}
+                            </div>
+                            <OverviewSelector
+                                label="Player"
+                                overviewId={playerId}
+                                setOverviewId={setPlayerId}
+                                overviewOptions={playerOptions}
+                                link={link}
+                            />                    
+                        </>
+                    ) : <Loading/>
+                }
+            </div>
         </div>
     );
 }

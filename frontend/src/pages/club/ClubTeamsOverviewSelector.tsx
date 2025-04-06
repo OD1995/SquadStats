@@ -79,27 +79,29 @@ export const ClubTeamsOverviewSelector = () => {
             <ClubLinkBar
                 isClubAdmin={getIsClubAdmin(user, clubId!)}
             />
-            <div className="error-message">
-                {errorMessage}
-            </div>
-            {
-                (teamOptions.length > 0) && (
-                    <OverviewSelector
-                        label="Team"
-                        overviewId={teamId}
-                        setOverviewId={setTeamId}
-                        overviewOptions={teamOptions}
-                        link={link}
-                    />
-                )
-            }
-            <div
-                id={(isDesktop ? "desktop" : "mobile") + "-add-new-team"}
-                className='add-new-team-div'
-            >
-                <Link to={`/club/${clubId}/add-team`}>
-                    Add new team
-                </Link>
+            <div className="overview-selector-content">
+                <div className="error-message">
+                    {errorMessage}
+                </div>
+                {
+                    (teamOptions.length > 0) && (
+                        <OverviewSelector
+                            label="Team"
+                            overviewId={teamId}
+                            setOverviewId={setTeamId}
+                            overviewOptions={teamOptions}
+                            link={link}
+                        />
+                    )
+                }
+                <div
+                    id={(isDesktop ? "desktop" : "mobile") + "-add-new-team"}
+                    className='add-new-team-div'
+                >
+                    <Link to={`/club/${clubId}/add-team`}>
+                        Add new team
+                    </Link>
+                </div>
             </div>
         </div>
     );

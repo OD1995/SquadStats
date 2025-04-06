@@ -77,16 +77,18 @@ export const ClubPlayersOverviewSelector = () => {
             <ClubLinkBar
                 isClubAdmin={getIsClubAdmin(user, clubId!)}
             />
-            <div className="error-message">
-                {errorMessage}
+            <div className="overview-selector-content">
+                <div className="error-message">
+                    {errorMessage}
+                </div>
+                <OverviewSelector
+                    label="Player"
+                    overviewId={playerId}
+                    setOverviewId={setPlayerId}
+                    overviewOptions={playerOptions}
+                    link={link}
+                />
             </div>
-            <OverviewSelector
-                label="Player"
-                overviewId={playerId}
-                setOverviewId={setPlayerId}
-                overviewOptions={playerOptions}
-                link={link}
-            />
         </div>
     );
 }

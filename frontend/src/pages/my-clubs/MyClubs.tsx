@@ -75,20 +75,22 @@ export const MyClubs = () => {
     return (
         <div className="page-parent">
             {getBigTitle("Overview Selector")}
-            <OverviewSelector
-                label="Club"
-                overviewId={clubId}
-                setOverviewId={setClubId}
-                overviewOptions={clubOptions}
-                link={clubLink}
-            />
-            <OverviewSelector
-                label="Team"
-                overviewId={teamId}
-                setOverviewId={setTeamId}
-                overviewOptions={teamOptions}
-                link={teamLink}
-            />
+            <div className="overview-selector-content">
+                <OverviewSelector
+                    label="Club"
+                    overviewId={clubId}
+                    setOverviewId={setClubId}
+                    overviewOptions={clubOptions}
+                    link={clubLink}
+                />
+                <OverviewSelector
+                    label="Team"
+                    overviewId={teamId}
+                    setOverviewId={setTeamId}
+                    overviewOptions={teamOptions}
+                    link={teamLink}
+                />
+            </div>
         </div>
     );
 }
