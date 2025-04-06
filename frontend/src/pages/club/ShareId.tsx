@@ -6,6 +6,7 @@ import { generateShareId, getBigTitle, getClub, getIsClubAdmin } from "../../hel
 import { ClubLinkBar } from "./generic/ClubLinkBar";
 import "./ShareId.css";
 import { ContentCopy } from "@mui/icons-material";
+import { Tooltip } from "@mui/material";
 
 export const ShareId = () => {
 
@@ -46,9 +47,16 @@ export const ShareId = () => {
                 <b className='share-id-text'>
                     {generateShareId(clubId!)}
                 </b>
-                <ContentCopy
-                    onClick={handleCopyClick}
-                />
+                <Tooltip
+                    title="Copy to clipboard"
+                    sx={{
+                        cursor: "pointer"
+                    }}
+                >
+                    <ContentCopy
+                        onClick={handleCopyClick}
+                    />
+                </Tooltip>
                 <div className='share-id-text' style={{color:"green"}}>
                     {message}
                 </div>
