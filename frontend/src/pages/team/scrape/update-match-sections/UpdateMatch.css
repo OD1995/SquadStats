@@ -182,11 +182,17 @@
     flex-direction: row;
     margin-top: 1vh;
     margin-bottom: 1vh;
+    align-items: center;
+}
+
+.image-preview-buttons {
+    display: flex;
+    flex-direction: column;
 }
 
 #image-previews {
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
     align-items: center;
     margin-top: 3vh;
 }

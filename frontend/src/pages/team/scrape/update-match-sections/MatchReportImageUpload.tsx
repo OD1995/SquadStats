@@ -45,6 +45,26 @@ export const MatchReportImageUpload = (props:OwnProps) => {
         props.setImages(props.images.filter((_, i) => i !== index));
     };
 
+    const changeImageOrder = (index:number, direction:"up"|"down") => {
+        console.log(`Index:${index} and Direction:${direction}`);
+        if (
+            ((index == 0) && (direction == "up")) ||
+            ((index == (props.images.length - 1)) && (direction == "down"))
+        ) {
+            return;
+        }
+        props.setImages(
+            (oldImages:UploadedImage[]) => {
+                var imgs = [...oldImages];
+                var img = imgs[index];
+                const newIndex = index + (direction == "up" ? -1 : 1);
+                imgs.splice(index, 1);
+                imgs.splice(newIndex, 0, img);
+                return imgs;
+            }
+        )
+    }
+
     return (
         <label className="cursor-pointer block p-4 border-2 border-dashed rounded-lg bg-white text-center">
             <input 
@@ -60,19 +80,30 @@ export const MatchReportImageUpload = (props:OwnProps) => {
                         {
                             props.images.map(
                                 (img, index) => (
-                                    <div key={index} className="match-report-image-preview-div">
+                                    <div
+                                        key={index}
+                                        className="match-report-image-preview-div"
+                                    >
                                         <img 
                                             src={img.preview} 
                                             alt="upload preview" 
                                             // className="w-full h-32 object-cover rounded-md" 
                                             className="image-preview"
                                         />
-                                        <button 
-                                            onClick={() => removeImage(index)}
-                                            className="image-remove-button"
-                                        >
-                                            ✕
-                                        </button>
+                                        <div className="image-preview-buttons">
+                                            <button onClick={() => changeImageOrder(index, "up")}>
+                                                ⇧
+                                            </button>
+                                            <button 
+                                                onClick={() => removeImage(index)}
+                                                className="image-remove-button"
+                                            >
+                                                ✕
+                                            </button>
+                                            <button onClick={() => changeImageOrder(index, "down")}>
+                                                ⇩
+                                            </button>
+                                        </div>
                                     </div>
                                 )
                             )

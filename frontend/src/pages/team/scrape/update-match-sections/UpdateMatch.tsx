@@ -283,7 +283,7 @@ export const UpdateMatch = () => {
             const id = uuidv4();
             const res = await ImageService.uploadImage(image.file, id);
             const imageId = `v${res.data.version}/${res.data.public_id}.${res.data.format}`;
-            imageIds.push(imageId);
+            imageIds.unshift(imageId);
         }
         MatchService.createMatch(
             match,
