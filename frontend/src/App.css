@@ -120,6 +120,7 @@
 
 .ss-table-head th {
 	font-weight: bold !important;
+	border-bottom: 0;
 }
 
 .page-parent {

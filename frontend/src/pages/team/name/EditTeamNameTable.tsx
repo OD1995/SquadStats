@@ -121,11 +121,13 @@ export const EditTeamNameTable = (props:EditTeamNameTableProps) => {
             />
             <div>
                 <button
+                    className='team-names-edit-button'
                     onClick={handleNewTeamNameClick}
                 >
                     Add New Team Name
                 </button>
                 <button
+                    className='team-names-edit-button'
                     onClick={handleSaveClick}
                 >
                     Save

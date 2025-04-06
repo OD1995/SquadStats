@@ -7,8 +7,28 @@
     align-items: center;
 }
 
-.teamn-name-cell {
+.teamn-name-name-cell {
     display: flex !important;
     flex-direction: row;
     align-items: center;
+}
+
+.team-name-cell {
+    border-bottom: 0 !important;
+    border-top: 0 !important;
+}
+
+.team-name-not-editable-table {
+    max-width: 1000px;
+    min-width: 50vw;
+}
+
+#team-names-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.team-names-edit-button {
+    margin-top: 5vh;
 }

@@ -58,7 +58,6 @@ const App = () => {
 						<Route path='/add-club' element={<AddClub includeHeirachy={false}/>}/>
 						<Route path='/my-clubs' element={<MyClubs/>}/>
 						<Route path='/club/:clubId/overview' element={<ClubOverview/>}/>
-						
 						<Route path='/club/:clubId/matches' element={<ClubMatches/>}/>
 						<Route path='/club/:clubId/player-leaderboards' element={<ClubPlayerLeaderboards/>}/>
 						<Route path='/club/:clubId/teams' element={<ClubTeamsOverviewSelector/>}/>
@@ -72,6 +71,7 @@ const App = () => {
 						<Route path='/team/:teamId/players-leaderboards' element={<TeamPlayers/>}/>
 						<Route path='/team/:teamId/players' element={<TeamPlayersOverviewSelector/>}/>
 						<Route path='/team/:teamId/team-names' element={<TeamNames/>}/>
+						
 						<Route path='/team/:teamId/match/:matchId' element={<MatchView/>}/>
 						<Route path='/team/:teamId/player-leaderboards' element={<TeamPlayerLeaderboards/>}/>
 						<Route path='/player/:playerId/overview' element={<PlayerOverview/>}/>

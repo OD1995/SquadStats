@@ -42,8 +42,8 @@ export const EditTeamNameTableRow = (props:EditTeamNameTableRow) => {
     )
 
     return (
-        <TableRow>
-            <TableCell className="teamn-name-cell">
+        <TableRow className="team-name-row">
+            <TableCell className="teamn-name-name-cell team-name-cell">
                 {
                     teamNameEditable ? (
                         <>
@@ -77,10 +77,15 @@ export const EditTeamNameTableRow = (props:EditTeamNameTableRow) => {
                     )
                 }
             </TableCell>
-            <TableCell>
+            <TableCell
+                className="team-name-cell"
+            >
                 <Switch
                     checked={props.is_default_name}
                     onChange={() => props.handleSwitchClick(props.ix)}
+                    sx={{
+                        // padding: "5px"
+                    }}
                 />
             </TableCell>
         </TableRow>

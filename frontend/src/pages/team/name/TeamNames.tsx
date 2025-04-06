@@ -91,7 +91,7 @@ export const TeamNames = () => {
                 team={team!}
                 clubId={team?.club_id!}
             />
-            <div id='club-overview-content'>
+            <div id='team-names-content'>
                 <div className="error-message">
                     {errorMessage}
                 </div>
@@ -111,8 +111,10 @@ export const TeamNames = () => {
                                 <Table
                                     headers={generateHeaders()}
                                     rows={teamNames.map((teamName:TeamName) => generateTeamNameRow(teamName))}
+                                    className="team-name-not-editable-table"
                                 />
                                 <button
+                                    className='team-names-edit-button'
                                     onClick={() => setEditMode(!editMode)}
                                 >
                                     Edit
