@@ -1,7 +1,7 @@
 import { Match } from "./Match"
 
 export interface LeagueSeason {
-    season_name:string
+    season_name:string|number
     season_id:string
     team_season:TeamSeason
 }

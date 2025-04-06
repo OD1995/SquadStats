@@ -58,7 +58,13 @@ export const SeasonSelection = (props:OwnProps) => {
                                     true : lgSsn.team_season.matches.length > 0
                             )
                         ).sort(
-                            (a:LeagueSeason, b:LeagueSeason) => a.season_name.localeCompare(b.season_name)
+                            (a:LeagueSeason, b:LeagueSeason) => {
+                                if (typeof a.season_name == "number") {
+                                    return (a.season_name as number) - (b.season_name as number)
+                                } else {
+                                    return (a.season_name as string).localeCompare(b.season_name as string)
+                                }
+                            }
                         ).map(
                             (season:LeagueSeason) => {
                                 return (

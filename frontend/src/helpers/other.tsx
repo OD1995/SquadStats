@@ -195,7 +195,7 @@ export const getImageSource = (imageId:string) => {
     return `https://res.cloudinary.com/${cloudName}/image/upload/${imageId}`
 }
 
-export const improveSeasonName = (seasonName:string) => {
+export const improveSeasonName = (seasonName:any) => {
     return isNumeric(seasonName) ? `Season ${seasonName}` : seasonName;
 }
 

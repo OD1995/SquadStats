@@ -189,7 +189,7 @@ export const ManualDataEntry = (props:OwnProps) => {
         navigate(`/team/${teamId}/update-match/${props.selectedLeagueSeason}/${props.selectedMatch}`);
     }
 
-    const checkIfElementExists = (el:string, arr:string[]) => {
+    const checkIfElementExists = (el:any, arr:any[]) => {
         for (const s of arr) {
             if (el.toLowerCase() == s.toLowerCase()) {
                 return true;
