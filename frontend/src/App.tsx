@@ -33,6 +33,7 @@ import { TeamPlayerLeaderboards } from './pages/team/TeamPlayerLeaderboards';
 // import { Test } from './pages/Test';
 import { ChangeLog } from './pages/change-log/ChangeLog';
 import { Contact } from './pages/contact/Contact';
+import { RouteChangeTracker } from './helpers/RouteChangeTracker';
 
 
 const App = () => {
@@ -45,6 +46,7 @@ const App = () => {
 			className='app-parent'
 		>
 			<Router>
+				<RouteChangeTracker/>
 				<NavigationBar/>
 				<div id={(isDesktop ? 'desktop-' : 'mobile-') + 'page-content'} className='page-content'>
 					<Routes>
