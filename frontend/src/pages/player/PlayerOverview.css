@@ -25,3 +25,7 @@
     flex-direction: column;
     align-items: center;
 }
+
+.player-overview-table-div {
+    min-width: 90vw !important;
+}

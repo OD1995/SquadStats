@@ -4,6 +4,7 @@ add upcoming milestones & "on this day" to club/team overview
 
 before/on launch, set change log text
 
+player overview page on mobile, tables way too thin
 
 
 alembic init alembic

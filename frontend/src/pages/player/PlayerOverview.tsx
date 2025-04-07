@@ -91,6 +91,7 @@ export const PlayerOverview = () => {
                                     {...data}
                                     rowsPerPage={2}
                                     titleClassName="small-caps-subtitle  sortable-table-title"
+                                    tableClassName="player-overview-table-div"
                                 />
                             </div>
                                 

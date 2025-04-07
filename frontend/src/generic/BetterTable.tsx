@@ -12,6 +12,7 @@ import { isWiderThanHigher } from "../helpers/windowDimensions";
 interface OwnProps extends GenericTableData {
     rowsPerPage:number
     titleClassName?:string
+    tableClassName?:string
 }
 
 export const BetterTable = (props:OwnProps) => {
@@ -118,7 +119,10 @@ export const BetterTable = (props:OwnProps) => {
     }
 
     return (
-        <div id='better-table-parent'>
+        <div
+            id='better-table-parent'
+            className={props.tableClassName ?? ""}
+        >
             <Box
                 sx={{
                     width: '100%',
