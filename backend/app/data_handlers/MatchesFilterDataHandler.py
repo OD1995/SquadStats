@@ -80,8 +80,6 @@ class MatchesFilterDataHandler:
     #     ]
 
     def get_players(self):
-        if self.is_players:
-            return []
         players_query = QueryBuilder(
             db.session.query(Player) \
             .join(PlayerMatchPerformance) \

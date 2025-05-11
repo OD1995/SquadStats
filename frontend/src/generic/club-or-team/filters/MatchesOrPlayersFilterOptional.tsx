@@ -95,23 +95,31 @@ export const MatchesOrPlayersFilterOptional = (props:OwnProps) => {
                         )
                     )}
                 />
-                {
-                    props.matches && (
-                        <GenericDropdownFilter
-                            title="Player"
-                            options={props.playerFilterOptions.map(
-                                (player:Player) => (
-                                    {
-                                        value:player.player_id,
-                                        label:player.better_player_name ?? player.player_name
-                                    } as GenericOption
-                                ))
-                            }
-                            setSelectedOption={props.setPlayerIdFilter}
-                            selectedOption={props.playerIdFilter}
-                        />
-                    )
-                }
+                <GenericDropdownFilter
+                    title='Year'
+                    selectedOption={props.selectedYear}
+                    options={props.yearOptions.map(stringMapper)}
+                    setSelectedOption={props.setSelectedYear}
+                />
+                <GenericDropdownFilter
+                    title='Month'
+                    selectedOption={props.selectedMonth}
+                    options={props.monthOptions.map(stringMapper)}
+                    setSelectedOption={props.setSelectedMonth}
+                />
+                <GenericDropdownFilter
+                    title="Player"
+                    options={props.playerFilterOptions.map(
+                        (player:Player) => (
+                            {
+                                value:player.player_id,
+                                label:player.better_player_name ?? player.player_name
+                            } as GenericOption
+                        ))
+                    }
+                    setSelectedOption={props.setPlayerIdFilter}
+                    selectedOption={props.playerIdFilter}
+                />
                 {
                     ((props.selectedSplitBy == SPLIT_BY_TYPE.OPPOSITION) || (props.players)) && (
                         <GenericDropdownFilter
@@ -130,18 +138,6 @@ export const MatchesOrPlayersFilterOptional = (props:OwnProps) => {
                         />
                     )
                 }
-                <GenericDropdownFilter
-                    title='Year'
-                    selectedOption={props.selectedYear}
-                    options={props.yearOptions.map(stringMapper)}
-                    setSelectedOption={props.setSelectedYear}
-                />
-                <GenericDropdownFilter
-                    title='Month'
-                    selectedOption={props.selectedMonth}
-                    options={props.monthOptions.map(stringMapper)}
-                    setSelectedOption={props.setSelectedMonth}
-                />
             </div>
         </div>
     );
