@@ -121,13 +121,12 @@ class Match(Base):
             result = self.notes
         else:
             result = 'n/a'            
-        dt = self.date.strftime("%d %b %y")
         row = deepcopy(
             GenericTableRow(
                 {
                     'Opposition' : opposition,
                     'Result' : result,
-                    'Date' : dt
+                    'Date' : self.date
                 }
             )
         )

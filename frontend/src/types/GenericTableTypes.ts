@@ -14,6 +14,7 @@ export interface GenericTableRow extends Record<string, GenericTableCell> {
 
 export interface GenericTableCell {
     value:string|number
+    value_for_sorting?:string|number
     link?:string
     class_name?:string
     styles?:Record<string,string>

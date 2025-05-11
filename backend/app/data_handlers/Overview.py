@@ -1,4 +1,5 @@
 from sqlalchemy import Row
+from app.helpers.misc import get_timestamp_from_date
 from app.models.Match import Match
 from app.models.Player import Player
 from app.types.GenericTableCell import GenericTableCell
@@ -31,7 +32,8 @@ class Overview:
                     value=f"{match.goals_for}-{match.goals_against}"
                 ),
                 'Date' : GenericTableCell(
-                    value=match.date.strftime("%d %b %y")
+                    value=match.date.strftime("%d %b %y"),
+                    value_for_sorting=get_timestamp_from_date(match.date)
                 )
             }
             rows.append(GenericTableRow(row_data=cells))

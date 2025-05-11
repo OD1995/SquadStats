@@ -7,11 +7,13 @@ class GenericTableCell:
     def __init__(
         self,
         value:str|int|float,
+        value_for_sorting:str|int|float=None,
         link:str=None,
         class_name:str=None,
         styles:dict={}
     ):
         self.value = value
+        self.value_for_sorting = value_for_sorting
         self.link = link
         self.class_name = class_name
         self.styles = styles
@@ -44,6 +46,7 @@ class GenericTableCell:
     def to_dict(self):
         return {
             'value' : self.value,
+            'value_for_sorting' : self.value_for_sorting,
             'link' : self.link,
             'class_name' : self.class_name,
             'styles' : self.styles

@@ -4,7 +4,7 @@ import {
     TableContainer, TableHead, TablePagination, 
     TableRow, TableSortLabel
 } from "@mui/material";
-import { GenericTableData, GenericTableRow } from "../types/GenericTableTypes";
+import { GenericTableCell, GenericTableData, GenericTableRow } from "../types/GenericTableTypes";
 import "./BetterTable.css"
 import { getFontSize, isNumeric } from "../helpers/other";
 import { isWiderThanHigher } from "../helpers/windowDimensions";
@@ -55,6 +55,10 @@ export const BetterTable = (props:OwnProps) => {
         setSortBy(columnToSortBy);
     }
 
+    const getValueForSorting = (cell:GenericTableCell) => {
+        return cell.value_for_sorting ?? cell.value;
+    }
+
     const descendingComparator = (
         a:GenericTableRow,
         b:GenericTableRow,
@@ -63,8 +67,8 @@ export const BetterTable = (props:OwnProps) => {
         if (!sortBy) {
             return 1;
         }
-        var aVal = a[sortBy].value;
-        var bVal = b[sortBy].value;
+        var aVal = getValueForSorting(a[sortBy]);
+        var bVal = getValueForSorting(b[sortBy]);
         if (isNumeric(aVal) && isNumeric(bVal)) {
             aVal = Number(aVal);
             bVal = Number(bVal);
