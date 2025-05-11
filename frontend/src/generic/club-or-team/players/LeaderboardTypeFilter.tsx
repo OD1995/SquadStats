@@ -42,6 +42,7 @@ export const LeaderboardTypeFilter = (props:OwnProps) => {
         SPLIT_BY_TYPE.SEASON,
         SPLIT_BY_TYPE.YEAR,
         SPLIT_BY_TYPE.MONTH,
+        SPLIT_BY_TYPE.OPPOSITION
     ];
 
     return (

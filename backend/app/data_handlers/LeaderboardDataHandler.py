@@ -600,6 +600,7 @@ class LeaderboardDataHandler(DataHandler):
             SplitByType.SEASON : LeagueSeason.data_source_season_name.label(SplitByType.SEASON.value),
             # SplitByType.MONTH : func.month(Match.date).label(SplitByType.MONTH.value),
             SplitByType.MONTH : func.date_format(Match.date, "%b").label(SplitByType.MONTH.value),
+            SplitByType.OPPOSITION : Match.opposition_team_name.label(SplitByType.OPPOSITION.value),
         }
         return split_by_lookup.get(self.split_by, None)
     
