@@ -1,7 +1,6 @@
 from datetime import datetime
 from typing import List
 from uuid import UUID
-from xmlrpc.client import boolean
 
 from sqlalchemy import extract, func
 from app.helpers.QueryBuilder import QueryBuilder
@@ -49,11 +48,7 @@ class DataHandler:
         ]
 
         self.split_column_dict = {
-            # SplitByType.OPPOSITION : self.OPPO,
-            # SplitByType.PLAYER_COUNT : self.PLAYER_COUNT,
-            # SplitByType.SEASON : self.SEASON,
             SplitByType.WITH_OR_WITHOUT : "",
-            # SplitByType.MONTH : SplitByType.
             None : ""
         }
         # print(q.statement.compile(compile_kwargs={"literal_binds": True}))
@@ -179,7 +174,7 @@ class DataHandler:
             return matches_query.query
         return matches_query.all()
     
-    def get_filters(self):
+    def get_filters(self, players=True):
         F = [
             ## Team/Club filtering
             self.get_team_or_club_filter(),
@@ -187,11 +182,12 @@ class DataHandler:
             self.get_season_filter(),
             ## Opposition filtering
             self.get_opposition_filter(),
-            ## Player filtering
-            self.get_player_filter(),
             ## Date filtering
             self.get_date_filter(),
         ]
+        if players:
+            ## Player filtering
+            F.append(self.get_player_filter())
         filters = []
         for f in F:
             if (f is not None):

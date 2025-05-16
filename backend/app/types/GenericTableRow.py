@@ -15,11 +15,12 @@ class GenericTableRow:
         self.row_data = {}
         self.row_data = row_data
         for k,v in init.items():
-            sfv = None
-            if (k == 'Date') and isinstance(v, date):
-                sfv = get_timestamp_from_date(v)
-                v = v.strftime("%d %b %y")
-            self.row_data[k] = deepcopy(GenericTableCell(value=v, value_for_sorting=sfv))
+            # sfv = None
+            # if (k == 'Date') and isinstance(v, date):
+            #     sfv = get_timestamp_from_date(v)
+            #     v = v.strftime("%d %b %y")
+            # self.row_data[k] = deepcopy(GenericTableCell(value=v, value_for_sorting=sfv))
+            self.row_data[k] = deepcopy(GenericTableCell(value=v))
 
     def increment_cell_value(
         self,

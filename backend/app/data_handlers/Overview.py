@@ -32,8 +32,7 @@ class Overview:
                     value=f"{match.goals_for}-{match.goals_against}"
                 ),
                 'Date' : GenericTableCell(
-                    value=match.date.strftime("%d %b %y"),
-                    value_for_sorting=get_timestamp_from_date(match.date)
+                    value=match.date
                 )
             }
             rows.append(GenericTableRow(row_data=cells))

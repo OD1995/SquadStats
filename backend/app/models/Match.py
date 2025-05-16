@@ -202,6 +202,8 @@ class Match(Base):
                 return self.date.strftime("%b")
             case SplitByType.YEAR:
                 return self.date.year
+            case SplitByType.KO_TIME:
+                return self.time.strftime("%H:%M")
             case None:
                 return ""
             case _:

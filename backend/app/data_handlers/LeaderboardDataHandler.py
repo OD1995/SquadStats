@@ -67,6 +67,9 @@ class LeaderboardDataHandler(DataHandler):
         self.FIRST_MATCH_DATE = "Streak Start"
         self.LAST_MATCH_DATE = "Streak End"
         self.GOALS_IN_STREAK = 'Goals In Streak'
+        self.GAP_START = 'Gap Start'
+        self.GAP_END = 'Gap End'
+        self.DAYS = 'Days'
 
         self.metric_lookup = {
             MetricEnum.GOALS : get_goal_metrics(),
@@ -110,8 +113,91 @@ class LeaderboardDataHandler(DataHandler):
                 )
             case MetricEnum.X_SHREK:
                 return self.get_xshrek_result()
+            case MetricEnum.DAYS_BETWEEN_APPS:
+                return self.get_days_between_apps_result()
 
         raise Exception('Unexpected metric')
+    
+    def get_days_between_apps_result(self):
+        ## Get data
+        (
+            match_id_list,
+            matches_by_id,
+            pmps_by_player_id
+        ) = self.get_consecutive_data()
+        gaps = []
+        unique_player_ids = {}
+        for player_id, player_match_dict in pmps_by_player_id.items():
+            match_list = [
+                matches_by_id[match_id]
+                for match_id in player_match_dict.keys()
+            ]
+            match_list.sort(key=lambda m: m.date)
+            for ix, match in enumerate(match_list):
+                if ix == 0:
+                    prev_match_date = match.date
+                    continue
+                days_passed = (match.date - prev_match_date).days
+                if days_passed >= 14:
+                    gaps.append(
+                        {
+                            'player_id' : player_id,
+                            'gap_start' : prev_match_date,
+                            'gap_end' : match.date,
+                            'days' : days_passed
+                        }
+                    )
+                    unique_player_ids[player_id] = 1
+                prev_match_date = match.date
+        return self.return_gap_table(
+            gaps=gaps,
+            player_ids=list(unique_player_ids.keys()),
+            metric=MetricEnum.DAYS_BETWEEN_APPS
+        )
+    
+    def return_gap_table(
+        self,
+        gaps,
+        player_ids,
+        metric
+    ):
+        player_list = db.session.query(Player) \
+            .filter(Player.player_id.in_([UUID(x) for x in player_ids])) \
+            .all()
+        players_by_player_id = {
+            str(p.player_id) : p
+            for p in player_list
+        }
+        rows = []
+        for gap in gaps:
+            player = players_by_player_id[gap['player_id']]
+            if player.get_best_name() == MiscStrings.OWN_GOALS:
+                continue
+            row_data = {
+                self.PLAYER : self.create_player_cell(player),
+                self.DAYS : GenericTableCell(value=gap['days']),
+                self.GAP_START : GenericTableCell(value=gap['gap_start']),
+                self.GAP_END : GenericTableCell(value=gap['gap_end']),
+            }
+            rows.append(GenericTableRow(row_data=row_data))
+
+        column_headers = [
+            self.PLAYER,
+            self.DAYS,
+            self.GAP_START,
+            self.GAP_END
+        ]
+        return [
+            GenericTableData(
+                column_headers=column_headers,
+                rows=rows,
+                title=metric.upper(),
+                is_ranked=True,
+                sort_by=self.DAYS,
+                sort_direction='desc',
+                column_ratio=[1,33,24,21,21]
+            ).to_dict()
+        ]
     
     def get_xshrek_result(self):
         rows = []
@@ -453,7 +539,7 @@ class LeaderboardDataHandler(DataHandler):
                 .join(TeamSeason) \
                 .join(Team)
         )
-        match_query.add_filters(self.get_filters())
+        match_query.add_filters(self.get_filters(players=False))
         if self.season_filter not in [None, ""]:
             match_query.add_join(LeagueSeason)
         match_query.order_by([Match.date])
@@ -481,11 +567,13 @@ class LeaderboardDataHandler(DataHandler):
         match_id_list, matches_by_id = self.get_match_data(skip_walkovers)
         ## Get all players involved in those matches
         goal_metrics = get_goal_metrics()
+        player_filter = self.get_player_filter()
         pmp_list = db.session.query(PlayerMatchPerformance) \
             .join(Metric) \
             .filter(
                 PlayerMatchPerformance.match_id.in_(match_id_list),
-                Metric.metric_name.in_([MetricEnum.APPEARANCES] + goal_metrics)
+                Metric.metric_name.in_([MetricEnum.APPEARANCES] + goal_metrics),
+                player_filter if player_filter is not None else player_filter
             ) \
             .all()
         pmps_by_player_id = {}
@@ -526,9 +614,12 @@ class LeaderboardDataHandler(DataHandler):
             row_data = {
                 self.PLAYER : self.create_player_cell(players_by_player_id[streak['player_id']]),
                 self.CONSECUTIVE_MATCHES : GenericTableCell(value=streak['streak_length']),
-                self.FIRST_MATCH_DATE : GenericTableCell(value=streak['first_game_date'].strftime("%d %b %y")),
-                self.LAST_MATCH_DATE : GenericTableCell(value="present" if streak['last_game_date'] is None else 
-                    streak['last_game_date'].strftime("%d %b %y")),
+                self.FIRST_MATCH_DATE : GenericTableCell(value=streak['first_game_date']),
+                self.LAST_MATCH_DATE : GenericTableCell(
+                    value="present"
+                    if streak['last_game_date'] is None else
+                    streak['last_game_date']
+                ),
             }
             if goals:
                 row_data[self.GOALS_IN_STREAK] = GenericTableCell(value=streak['goals_in_streak'])
@@ -601,6 +692,7 @@ class LeaderboardDataHandler(DataHandler):
             # SplitByType.MONTH : func.month(Match.date).label(SplitByType.MONTH.value),
             SplitByType.MONTH : func.date_format(Match.date, "%b").label(SplitByType.MONTH.value),
             SplitByType.OPPOSITION : Match.opposition_team_name.label(SplitByType.OPPOSITION.value),
+            SplitByType.KO_TIME : Match.time.label(SplitByType.KO_TIME.value)
         }
         return split_by_lookup.get(self.split_by, None)
     

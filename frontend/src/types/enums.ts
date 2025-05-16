@@ -19,7 +19,8 @@ export enum SPLIT_BY_TYPE {
     PLAYER_COUNT = 'Player Count',
     SEASON = 'Season',
     YEAR = 'Year',
-    MONTH = 'Month'
+    MONTH = 'Month',
+    KO_TIME = 'KO Time',
 }
 
 // export enum LEADERBOARD_TYPE {
@@ -45,6 +46,7 @@ export enum METRIC {
     GOAL_DIFFERENCE = 'Player Impact - Goal Difference',
     CLEAN_SHEETS = 'Clean Sheets',
     X_SHREK = 'xShrek',
+    DAYS_BETWEEN_APPS = 'Days Between Appearances',
 }
 
 export enum MANUAL_DATA_ENTRY_ACTION_TYPE {

@@ -49,7 +49,8 @@ class MatchesDataHandler(DataHandler):
             SplitByType.PLAYER_COUNT,
             SplitByType.SEASON,
             SplitByType.MONTH,
-            SplitByType.YEAR
+            SplitByType.YEAR,
+            SplitByType.KO_TIME
         ]:
             return self.get_split_by_result(
                 matches=self._get_matches()

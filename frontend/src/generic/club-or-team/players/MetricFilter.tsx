@@ -32,6 +32,7 @@ export const MetricFilter = (props:OwnProps) => {
         METRIC.GOALS_SCORED,
         METRIC.GOALS_CONCEDED,
         METRIC.GOAL_DIFFERENCE,
+        METRIC.DAYS_BETWEEN_APPS,
         ...((props.team?.team_id == import.meta.env.VITE_ORDOB_TEAM_ID) ? [METRIC.X_SHREK] : [])
     ];
 
