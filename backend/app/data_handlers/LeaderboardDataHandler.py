@@ -573,7 +573,7 @@ class LeaderboardDataHandler(DataHandler):
             .filter(
                 PlayerMatchPerformance.match_id.in_(match_id_list),
                 Metric.metric_name.in_([MetricEnum.APPEARANCES] + goal_metrics),
-                player_filter if player_filter is not None else player_filter
+                player_filter if player_filter is not None else True
             ) \
             .all()
         pmps_by_player_id = {}
