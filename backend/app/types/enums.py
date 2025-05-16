@@ -45,6 +45,7 @@ class Metric(str, Enum):
 
 class SplitByType(str, Enum):
     NA: str = 'N/A'
+    TOTAL: str = 'Total'
     OPPOSITION: str = 'Opposition'
     PLAYER_COUNT: str = 'Player Count'
     SEASON: str = 'Season'

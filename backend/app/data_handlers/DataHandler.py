@@ -49,7 +49,8 @@ class DataHandler:
 
         self.split_column_dict = {
             SplitByType.WITH_OR_WITHOUT : "",
-            None : ""
+            None : "",
+            SplitByType.TOTAL : "",
         }
         # print(q.statement.compile(compile_kwargs={"literal_binds": True}))
 

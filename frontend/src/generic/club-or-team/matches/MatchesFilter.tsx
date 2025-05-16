@@ -59,6 +59,7 @@ export const MatchesFilter = (props:OwnProps) => {
 
     const splitByOptions = [
         SPLIT_BY_TYPE.NA,
+        SPLIT_BY_TYPE.TOTAL,
         SPLIT_BY_TYPE.OPPOSITION,
         SPLIT_BY_TYPE.PLAYER_COUNT,
         SPLIT_BY_TYPE.SEASON,

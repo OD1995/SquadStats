@@ -45,6 +45,7 @@ class MatchesDataHandler(DataHandler):
         if self.split_by == SplitByType.NA:
             return self.get_all_matches_result()
         if self.split_by in [
+            SplitByType.TOTAL,
             SplitByType.OPPOSITION,
             SplitByType.PLAYER_COUNT,
             SplitByType.SEASON,

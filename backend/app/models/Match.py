@@ -204,6 +204,8 @@ class Match(Base):
                 return self.date.year
             case SplitByType.KO_TIME:
                 return self.time.strftime("%H:%M")
+            case SplitByType.TOTAL:
+                return "Total"
             case None:
                 return ""
             case _:

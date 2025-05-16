@@ -15,6 +15,7 @@ export enum PAGE_TYPE {
 
 export enum SPLIT_BY_TYPE {
     NA = 'N/A',
+    TOTAL = 'Total',
     OPPOSITION = 'Opposition',
     PLAYER_COUNT = 'Player Count',
     SEASON = 'Season',
