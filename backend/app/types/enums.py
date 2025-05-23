@@ -42,6 +42,7 @@ class Metric(str, Enum):
     CLEAN_SHEETS: str = 'Clean Sheets'
     X_SHREK: str = 'xShrek'
     DAYS_BETWEEN_APPS: str = 'Days Between Appearances'
+    IMPACT_GOALS: str = 'Impact Goals'
 
 class SplitByType(str, Enum):
     NA: str = 'N/A'

@@ -23,7 +23,8 @@ export const LeaderboardTypeFilter = (props:OwnProps) => {
         METRIC.HATTRICKS,
         METRIC.POTM,
         METRIC.CLEAN_SHEETS,
-        ...((props.team?.team_id == import.meta.env.VITE_ORDOB_TEAM_ID) ? [METRIC.X_SHREK] : [])
+        ...((props.team?.team_id == import.meta.env.VITE_ORDOB_TEAM_ID) ? [METRIC.X_SHREK] : []),
+        METRIC.IMPACT_GOALS,
     ].map(
         (met:METRIC) => met.valueOf()
     );
@@ -33,6 +34,7 @@ export const LeaderboardTypeFilter = (props:OwnProps) => {
         METRIC.GOALS,
         METRIC.HATTRICKS,
         METRIC.POTM,
+        METRIC.IMPACT_GOALS
     ].map(
         (met:METRIC) => met.valueOf()
     );

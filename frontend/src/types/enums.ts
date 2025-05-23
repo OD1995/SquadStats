@@ -24,14 +24,6 @@ export enum SPLIT_BY_TYPE {
     KO_TIME = 'KO Time',
 }
 
-// export enum LEADERBOARD_TYPE {
-//     APPEARANCES = 'Appearances',
-//     APPEARANCES_BY_SEASON = 'Appearances By Season',
-//     APPEARANCES_BY_YEAR = 'Appearances By Year',
-//     GOALS = 'Goals',
-//     GOALS_PER_GAME = 'Goals Per Game'
-// }
-
 export enum METRIC {
     APPEARANCES = 'Appearances',
     GOALS = 'Goals',
@@ -48,6 +40,7 @@ export enum METRIC {
     CLEAN_SHEETS = 'Clean Sheets',
     X_SHREK = 'xShrek',
     DAYS_BETWEEN_APPS = 'Days Between Appearances',
+    IMPACT_GOALS = 'Impact Goals',
 }
 
 export enum MANUAL_DATA_ENTRY_ACTION_TYPE {

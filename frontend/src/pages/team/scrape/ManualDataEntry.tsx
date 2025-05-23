@@ -1,6 +1,6 @@
 import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from "@mui/material";
 import { getUserLS } from "../../../authentication/auth";
-import { generateId, getBigTitle, getIsClubAdmin } from "../../../helpers/other";
+import { generateId, getBigTitle, getIsClubAdmin, isNumeric } from "../../../helpers/other";
 import { Team } from "../../../types/Team";
 import { TeamLinkBar } from "../generic/TeamLinkBar";
 import { ChangeEvent, useState } from "react";
@@ -190,10 +190,14 @@ export const ManualDataEntry = (props:OwnProps) => {
     }
 
     const checkIfElementExists = (el:any, arr:any[]) => {
-        for (const s of arr) {
-            if (el.toLowerCase() == s.toLowerCase()) {
-                return true;
-            }            
+        if (isNumeric(el)) {
+            return arr.includes(el);
+        } else {
+            for (const s of arr) {
+                if (el.toLowerCase() == s.toLowerCase()) {
+                    return true;
+                }            
+            }
         }
         return false;
     }

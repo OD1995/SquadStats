@@ -18,9 +18,6 @@ interface OwnProps {
 
 export const PlayersFilter = (props:OwnProps) => {
 
-    // const [isExpanded, setIsExpanded] = useState<boolean>(false);
-    // const [filtersErrorMessage, setFiltersErrorMessage] = useState<string>("");
-
     const [metric, setMetric] = useState<string>("");
     const [playersSplitBy, setPlayersSplitBy] = useState<string>(SPLIT_BY_TYPE.NA);
     const [perGame, setPerGame] = useState<boolean>(false);
@@ -44,6 +41,9 @@ export const PlayersFilter = (props:OwnProps) => {
             }
             if (searchParams.get("minApps")) {
                 setMinApps(Number(searchParams.get("minApps")));
+            }
+            if (searchParams.get("splitBy")) {
+                setPlayersSplitBy(searchParams.get("splitBy")!);
             }
         },
         []
@@ -85,13 +85,8 @@ export const PlayersFilter = (props:OwnProps) => {
         <MatchesOrPlayersFilter
             {...props}
             filterTitle="LEADERBOARD"
-            // handleSubmitClick={handleSubmitClick}
-            // isExpanded={isExpanded}
-            // setIsExpanded={setIsExpanded}
-            // filtersErrorMessage={filtersErrorMessage}
             firstSelector={firstSelector}
             selectedSplitBy={playersSplitBy}
-            // setSelectedSplitBy={setSplitBy}
             metric={metric}
             retrieveData={retrieveData}
             players

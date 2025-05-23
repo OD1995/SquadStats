@@ -1,7 +1,5 @@
-import traceback
 from uuid import UUID
 from flask import Blueprint, jsonify, request
-from flask.config import T
 import flask_praetorian
 from app import db
 from app.data_handlers.LeaderboardDataHandler import LeaderboardDataHandler

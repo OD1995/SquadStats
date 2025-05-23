@@ -228,7 +228,16 @@ class Match(Base):
             case Result.LOSS:
                 return 0
             case _:
-                raise ValueError(f"Unexpected result: {self.result}") 
+                raise ValueError(f"Unexpected result: {self.result}")
+    
+    def get_impact_goal_denominator(self):
+        if self.goal_difference > 0:
+            return min(self.goal_difference, 10)
+        if self.goal_difference == 0:
+            return 3
+        if self.goal_difference < 0:
+            return 10
+        raise ValueError("Unexpected goal difference")
 
     def to_dict(
         self,

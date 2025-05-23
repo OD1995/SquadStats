@@ -1,10 +1,10 @@
+from re import S
 from uuid import UUID
-from sqlalchemy import column, func, and_
+from sqlalchemy import func, and_
 from app.data_handlers.DataHandler import DataHandler
 from app import db
 from app.helpers.QueryBuilder import QueryBuilder
 from app.helpers.misc import get_goal_metrics, get_potm_metrics, normal_round
-from app.helpers.validators import is_valid_uuid
 from app.models.Club import Club
 from app.models.LeagueSeason import LeagueSeason
 from app.models.Match import Match
@@ -81,6 +81,8 @@ class LeaderboardDataHandler(DataHandler):
         match self.metric:
             case MetricEnum.APPEARANCES | MetricEnum.GOALS | MetricEnum.HATTRICKS | MetricEnum.POTM:
                 return self.get_standard_metric_result()
+            case MetricEnum.IMPACT_GOALS:
+                return self.get_impact_goals_result()
             case MetricEnum.CLEAN_SHEETS:
                 return self.get_clean_sheets_result()
             case MetricEnum.CONSECUTIVE_APPS:
@@ -117,6 +119,108 @@ class LeaderboardDataHandler(DataHandler):
                 return self.get_days_between_apps_result()
 
         raise Exception('Unexpected metric')
+    
+    def get_impact_goals_result(self):
+        ## Normal
+        ## Per Game
+        ## Split By
+        filters = [
+            Metric.metric_name.in_(self.metric_lookup[MetricEnum.GOALS] + [MetricEnum.APPEARANCES])
+        ] + self.get_filters()
+        ig_data = self.get_complicated_player_performances(
+            query_selectors=[PlayerMatchPerformance, Player, Match],
+            filters=filters
+        )
+        data = {}
+        for [pmp,player,match] in ig_data:
+            splitter = match.get_agg_data_key(
+                split_by=self.split_by
+            )
+            p_id = str(player.player_id)
+            if p_id not in data:
+                data[p_id] = {
+                    'player_obj' : player
+                }
+            if splitter not in data[p_id]:
+                data[p_id][splitter] = {
+                    MetricEnum.IMPACT_GOALS : 0,
+                    MetricEnum.APPEARANCES : 0
+                }
+            if pmp.metric.metric_name == MetricEnum.GOALS:
+                x = match.get_impact_goal_denominator()
+                goals = pmp.value
+                data[p_id][splitter][MetricEnum.IMPACT_GOALS] += goals/x
+                if player.data_source_player_name == MiscStrings.OWN_GOALS:
+                    data[p_id][splitter][MetricEnum.APPEARANCES] += 1
+            elif pmp.metric.metric_name == MetricEnum.APPEARANCES:
+                data[p_id][splitter][MetricEnum.APPEARANCES] += pmp.value
+        metric = MetricEnum.IMPACT_GOALS + (f" {self.PER_GAME}" if self.per_game else "")
+        column_headers = [
+            self.PLAYER,
+            *([self.split_by] if self.split_by is not None else []),
+            metric,
+            *([MetricEnum.APPEARANCES] if self.per_game else [])
+        ]
+        rows = []
+        for player_data in data.values():
+            if self.split_by is None:                
+                row = self.create_impact_goal_row(player_data,"")
+                if row:
+                    rows.append(row)
+            else:
+                for splitter in player_data.keys():
+                    if splitter in ["player_obj"]:
+                        continue
+                    row = self.create_impact_goal_row(player_data,splitter)
+                    if row:
+                        rows.append(row)
+
+        return [
+            GenericTableData(
+                column_headers=column_headers,
+                rows=rows,
+                title=metric.upper(),
+                is_ranked=True,
+                sort_by=metric,
+                sort_direction='desc',
+                column_ratio=self.get_generic_column_ratio()
+            ).to_dict()
+        ]
+    
+    def get_generic_column_ratio(self):
+        if self.per_game:
+            if self.split_by is not None:
+                column_ratio = [1,30,20,25,24]
+            else:
+                column_ratio = [1,30,35,34]
+        elif self.split_by is not None:
+            column_ratio = [1,30,35,34]
+        else:
+            column_ratio = [1,50,49]
+        return column_ratio
+    
+    def create_impact_goal_row(self, player_data, splitter):
+        impact_goals = player_data[splitter][MetricEnum.IMPACT_GOALS]
+        apps = player_data[splitter][MetricEnum.APPEARANCES]
+        if (
+            (impact_goals == 0) or 
+            ((self.min_apps is not None) and (apps < self.min_apps))
+        ):
+            return False
+        
+        row_data = {
+            self.PLAYER : self.create_player_cell(player_data['player_obj'])
+        }
+        if splitter != "":
+            row_data[self.split_by] = GenericTableCell(value=splitter)
+        if self.per_game:
+            metric = f"{MetricEnum.IMPACT_GOALS.value} {self.PER_GAME}"
+            per_game_val = normal_round(impact_goals/apps, 2)
+            row_data[metric] = GenericTableCell(value=per_game_val)
+            row_data[MetricEnum.APPEARANCES] = GenericTableCell(value=apps)
+        else:
+            row_data[MetricEnum.IMPACT_GOALS] = GenericTableCell(value=normal_round(impact_goals, 2))
+        return GenericTableRow(row_data=row_data)
     
     def get_days_between_apps_result(self):
         ## Get data
@@ -785,7 +889,8 @@ class LeaderboardDataHandler(DataHandler):
                 title=important_metric.upper(),
                 is_ranked=True,
                 sort_by=important_metric,
-                sort_direction='desc'
+                sort_direction='desc',
+                column_ratio=self.get_generic_column_ratio()
             ).to_dict()
         ]
     
