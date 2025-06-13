@@ -173,6 +173,7 @@ export const UpdateMatch = () => {
                         console.log("all done")
                     } else {
                         console.log("failure response")
+                        console.log(res.data.message)
                         setErrorMessage(res.data.message);
                     }
                     setLoading(false);

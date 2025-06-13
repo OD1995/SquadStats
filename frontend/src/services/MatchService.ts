@@ -68,6 +68,7 @@ class MatchService {
         leagueSeasonId:string
     ) {
         const url = this.base_url + `/get-match-edit-update-data-info/${leagueSeasonId}/${teamId}/${matchId}`
+        console.log(url);
         return makeGetRequest(url)
     }
 
