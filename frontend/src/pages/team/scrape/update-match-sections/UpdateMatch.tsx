@@ -123,13 +123,18 @@ export const UpdateMatch = () => {
 
     useEffect(
         () => {
+            console.log("useEffect starting")
             if (!user) {
+                console.log("not logged in")
                 navigate("/about");
             } else {
+                console.log("getting team")
                 const _team_ = getTeam(user, teamId);
+                console.log("got team")
                 setTeam(_team_!);
             }
             setLoading(true);
+            console.log("about to get match edit update info")
             MatchService.getMatchEditUpdateInfo(
                 teamId!,
                 matchId!,
@@ -137,6 +142,7 @@ export const UpdateMatch = () => {
             ).then(
                 (res:BackendResponse) => {
                     if (res.success) {
+                        console.log("successful response")
                         setLocations(res.data.locations as Record<string,string[]>);
                         setCompetitions(res.data.competitions as Competition[]);
                         const m = res.data.match as Match;
@@ -164,7 +170,9 @@ export const UpdateMatch = () => {
                         if (res.data.potm) {
                             setPotm(res.data.potm as string);
                         }
+                        console.log("all done")
                     } else {
+                        console.log("failure response")
                         setErrorMessage(res.data.message);
                     }
                     setLoading(false);
@@ -225,6 +233,7 @@ export const UpdateMatch = () => {
             //         player_name: 'Corey Kearney-Wellington'
             //     },
             // });
+            console.log("about to set match")
             setMatch(
                 (prevMatch:Match) => (
                     {
@@ -234,6 +243,7 @@ export const UpdateMatch = () => {
                     }
                 )
             );
+            console.log("useEffect done")
         },
         []
     )
@@ -246,6 +256,8 @@ export const UpdateMatch = () => {
     }
 
     const getNextSubtitle = () => {
+        console.log("getNextSubtitle - sectionArray")
+        console.log(sectionArray)
         if (sectionIndex == (sectionArray.length - 1)) {
             return null;
         }
