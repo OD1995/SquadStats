@@ -1,7 +1,3 @@
-interface OwnProps {
-    
-}
-
-export const PlayerApps = (props:OwnProps) => {
+export const PlayerApps = () => {
     return null;
 }
