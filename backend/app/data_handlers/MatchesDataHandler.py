@@ -51,7 +51,8 @@ class MatchesDataHandler(DataHandler):
             SplitByType.SEASON,
             SplitByType.MONTH,
             SplitByType.YEAR,
-            SplitByType.KO_TIME
+            SplitByType.KO_TIME,
+            SplitByType.MONTH_AND_YEAR,
         ]:
             return self.get_split_by_result(
                 matches=self._get_matches()

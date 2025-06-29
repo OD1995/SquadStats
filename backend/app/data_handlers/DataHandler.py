@@ -4,7 +4,7 @@ from uuid import UUID
 
 from sqlalchemy import extract, func
 from app.helpers.QueryBuilder import QueryBuilder
-from app.helpers.misc import get_colour
+from app.helpers.misc import get_colour, normal_round
 from app.helpers.validators import is_valid_uuid
 from app.models.LeagueSeason import LeagueSeason
 from app.models.Match import Match
@@ -307,7 +307,7 @@ class DataHandler:
         points = (wins * 3) + draws
         played = wins + draws + losses
         result[self.PLAYED] = played
-        ppg = round(points / played, 2)
+        ppg = normal_round(points / played)
         result[self.PPG] = ppg
         return result
     

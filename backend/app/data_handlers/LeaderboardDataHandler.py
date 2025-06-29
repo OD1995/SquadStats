@@ -4,7 +4,7 @@ from sqlalchemy import func, and_
 from app.data_handlers.DataHandler import DataHandler
 from app import db
 from app.helpers.QueryBuilder import QueryBuilder
-from app.helpers.misc import get_goal_metrics, get_potm_metrics, normal_round
+from app.helpers.misc import get_goal_metrics, get_potm_metrics, is_own_goal_player, normal_round
 from app.models.Club import Club
 from app.models.LeagueSeason import LeagueSeason
 from app.models.Match import Match
@@ -32,6 +32,7 @@ class LeaderboardDataHandler(DataHandler):
         player_id_filter:str|None,
         per_game:bool|None,
         min_apps:int|None,
+        min_goals:int|None,
         year_filter:int|None,
         month_filter:str|None,
     ):
@@ -60,6 +61,7 @@ class LeaderboardDataHandler(DataHandler):
         self.query_split_by = self.get_query_split_by()
         self.per_game = False if ((per_game == "False") or (per_game is None)) else True
         self.min_apps = None if (min_apps is None) else int(min_apps)
+        self.min_goals = None if (min_goals is None) else int(min_goals)
 
         self.PLAYER = 'Player'
         self.PER_GAME = 'Per Game'
@@ -83,6 +85,8 @@ class LeaderboardDataHandler(DataHandler):
                 return self.get_standard_metric_result()
             case MetricEnum.IMPACT_GOALS:
                 return self.get_impact_goals_result()
+            case MetricEnum.IMPACT_GOAL_RATIO:
+                return self.get_impact_goal_ratio_result()
             case MetricEnum.CLEAN_SHEETS:
                 return self.get_clean_sheets_result()
             case MetricEnum.CONSECUTIVE_APPS:
@@ -120,10 +124,7 @@ class LeaderboardDataHandler(DataHandler):
 
         raise Exception('Unexpected metric')
     
-    def get_impact_goals_result(self):
-        ## Normal
-        ## Per Game
-        ## Split By
+    def get_impact_goal_data(self):
         filters = [
             Metric.metric_name.in_(self.metric_lookup[MetricEnum.GOALS] + [MetricEnum.APPEARANCES])
         ] + self.get_filters()
@@ -144,16 +145,25 @@ class LeaderboardDataHandler(DataHandler):
             if splitter not in data[p_id]:
                 data[p_id][splitter] = {
                     MetricEnum.IMPACT_GOALS : 0,
-                    MetricEnum.APPEARANCES : 0
+                    MetricEnum.APPEARANCES : 0,
+                    MetricEnum.GOALS : 0,
                 }
             if pmp.metric.metric_name == MetricEnum.GOALS:
                 x = match.get_impact_goal_denominator()
                 goals = pmp.value
+                data[p_id][splitter][MetricEnum.GOALS] += goals
                 data[p_id][splitter][MetricEnum.IMPACT_GOALS] += goals/x
                 if player.data_source_player_name == MiscStrings.OWN_GOALS:
                     data[p_id][splitter][MetricEnum.APPEARANCES] += 1
             elif pmp.metric.metric_name == MetricEnum.APPEARANCES:
                 data[p_id][splitter][MetricEnum.APPEARANCES] += pmp.value
+        return data
+    
+    def get_impact_goals_result(self):
+        ## Normal
+        ## Per Game
+        ## Split By
+        data = self.get_impact_goal_data()
         metric = MetricEnum.IMPACT_GOALS + (f" {self.PER_GAME}" if self.per_game else "")
         column_headers = [
             self.PLAYER,
@@ -187,6 +197,46 @@ class LeaderboardDataHandler(DataHandler):
             ).to_dict()
         ]
     
+    def get_impact_goal_ratio_result(self):
+        ## Normal
+        ## Per Game
+        ## Split By
+        data = self.get_impact_goal_data()
+        metric = MetricEnum.IMPACT_GOAL_RATIO
+        column_headers = [
+            self.PLAYER,
+            *([self.split_by] if self.split_by is not None else []),
+            MetricEnum.IMPACT_GOALS,
+            MetricEnum.GOALS,
+            metric,
+        ]
+        rows = []
+        for player_data in data.values():
+            if self.split_by is None:                
+                row = self.create_impact_goal_ratio_row(player_data,"")
+                if row:
+                    rows.append(row)
+            else:
+                for splitter in player_data.keys():
+                    if splitter in ["player_obj"]:
+                        continue
+                    row = self.create_impact_goal_ratio_row(player_data,splitter)
+                    if row:
+                        rows.append(row)
+
+        return [
+            GenericTableData(
+                column_headers=column_headers,
+                rows=rows,
+                title=metric.upper(),
+                is_ranked=True,
+                sort_by=metric,
+                sort_direction='desc',
+                column_ratio=[1,30,20,20,30] if self.split_by is None else [1,30,15,15,15,25]
+            ).to_dict()
+        ]
+
+    
     def get_generic_column_ratio(self):
         if self.per_game:
             if self.split_by is not None:
@@ -200,6 +250,8 @@ class LeaderboardDataHandler(DataHandler):
         return column_ratio
     
     def create_impact_goal_row(self, player_data, splitter):
+        if is_own_goal_player(player_data['player_obj']):
+            return False
         impact_goals = player_data[splitter][MetricEnum.IMPACT_GOALS]
         apps = player_data[splitter][MetricEnum.APPEARANCES]
         if (
@@ -215,11 +267,29 @@ class LeaderboardDataHandler(DataHandler):
             row_data[self.split_by] = GenericTableCell(value=splitter)
         if self.per_game:
             metric = f"{MetricEnum.IMPACT_GOALS.value} {self.PER_GAME}"
-            per_game_val = normal_round(impact_goals/apps, 2)
+            per_game_val = normal_round(impact_goals/apps)
             row_data[metric] = GenericTableCell(value=per_game_val)
             row_data[MetricEnum.APPEARANCES] = GenericTableCell(value=apps)
         else:
-            row_data[MetricEnum.IMPACT_GOALS] = GenericTableCell(value=normal_round(impact_goals, 2))
+            row_data[MetricEnum.IMPACT_GOALS] = GenericTableCell(value=normal_round(impact_goals))
+        return GenericTableRow(row_data=row_data)
+    
+    def create_impact_goal_ratio_row(self, player_data, splitter):
+        if is_own_goal_player(player_data['player_obj']):
+            return False
+        impact_goals = player_data[splitter][MetricEnum.IMPACT_GOALS]
+        goals = player_data[splitter][MetricEnum.GOALS]
+        ratio = normal_round(impact_goals / goals) if goals != 0 else 0        
+        if (self.min_goals is not None) and (goals < self.min_goals):
+            return False
+        row_data = {
+            self.PLAYER : self.create_player_cell(player_data['player_obj'])
+        }
+        if splitter != "":
+            row_data[self.split_by] = GenericTableCell(value=splitter)
+        row_data[MetricEnum.IMPACT_GOALS] = GenericTableCell(value=normal_round(impact_goals))
+        row_data[MetricEnum.GOALS] = GenericTableCell(value=goals)
+        row_data[MetricEnum.IMPACT_GOAL_RATIO] = GenericTableCell(value=ratio)
         return GenericTableRow(row_data=row_data)
     
     def get_days_between_apps_result(self):
@@ -275,7 +345,7 @@ class LeaderboardDataHandler(DataHandler):
         rows = []
         for gap in gaps:
             player = players_by_player_id[gap['player_id']]
-            if player.get_best_name() == MiscStrings.OWN_GOALS:
+            if is_own_goal_player(player):
                 continue
             row_data = {
                 self.PLAYER : self.create_player_cell(player),
@@ -329,7 +399,7 @@ class LeaderboardDataHandler(DataHandler):
                     matches_query.add_filter(filter)
             match_list = matches_query.all()
             apps = len(match_list)
-            val = normal_round(val / apps, 2)
+            val = normal_round(val / apps)
         row_data = {
             self.PLAYER : self.create_player_cell(sam_sholli),
             metric : GenericTableCell(value=f'{val:,}')
@@ -397,13 +467,13 @@ class LeaderboardDataHandler(DataHandler):
             player_cell = GenericTableCell(value=player_id)
             if player_id in players_by_id:
                 player = players_by_id[player_id]
-                if player.get_best_name() == MiscStrings.OWN_GOALS:
+                if is_own_goal_player(player):
                     continue
                 player_cell = self.create_player_cell(player)
             # player_cell = self.create_player_cell(players_by_id[player_id]) \
             #     if player_id in players_by_id else \
             #     GenericTableCell(value=player_id)
-            val = normal_round(result['score'] / result['matches'], decimals=2)
+            val = normal_round(result['score'] / result['matches'])
             row_data = {
                 self.PLAYER : player_cell,
                 col : GenericTableCell(value=val),
@@ -450,7 +520,7 @@ class LeaderboardDataHandler(DataHandler):
             matches = result['matches']
             if (self.min_apps is not None) and (self.min_apps > matches):
                 continue
-            val = normal_round(clean_sheets / matches, 2) \
+            val = normal_round(clean_sheets / matches) \
                 if self.per_game else clean_sheets
             if val == 0:
                 continue
@@ -677,7 +747,8 @@ class LeaderboardDataHandler(DataHandler):
             .filter(
                 PlayerMatchPerformance.match_id.in_(match_id_list),
                 Metric.metric_name.in_([MetricEnum.APPEARANCES] + goal_metrics),
-                player_filter if player_filter is not None else True
+                player_filter if player_filter is not None else True,
+                Player.data_source_player_name != MiscStrings.OWN_GOALS
             ) \
             .all()
         pmps_by_player_id = {}
@@ -794,6 +865,7 @@ class LeaderboardDataHandler(DataHandler):
             SplitByType.YEAR : func.year(Match.date).label(SplitByType.YEAR.value),
             SplitByType.SEASON : LeagueSeason.data_source_season_name.label(SplitByType.SEASON.value),
             SplitByType.MONTH : func.date_format(Match.date, "%b").label(SplitByType.MONTH.value),
+            SplitByType.MONTH_AND_YEAR : func.date_format(Match.date, "%b-%y").label(SplitByType.MONTH_AND_YEAR.value),
             SplitByType.OPPOSITION : Match.opposition_team_name.label(SplitByType.OPPOSITION.value),
             SplitByType.KO_TIME : Match.time.label(SplitByType.KO_TIME.value),
         }
@@ -861,9 +933,8 @@ class LeaderboardDataHandler(DataHandler):
                     link=f"/player/{res.player_id}/overview"
                 )
                 row_data[f"{self.metric} {self.PER_GAME}"] = GenericTableCell(
-                    value=round(
-                        res_dict[self.metric] / res_dict[MetricEnum.APPEARANCES],
-                        2
+                    value=normal_round(
+                        res_dict[self.metric] / res_dict[MetricEnum.APPEARANCES]
                     )
                 )
                 row_data[MetricEnum.APPEARANCES] = GenericTableCell(

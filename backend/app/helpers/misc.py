@@ -1,7 +1,8 @@
 import colorsys
 import traceback
 from sentry_sdk import capture_message
-from app.types.enums import Metric
+from app.models.Player import Player
+from app.types.enums import Metric, MiscStrings
 import math
 from datetime import date, datetime
 
@@ -75,7 +76,7 @@ def do_error_handling(e):
         'message' : error_message
     }, 400
 
-def normal_round(n, decimals=0):
+def normal_round(n, decimals=2):
     expoN = n * 10 ** decimals
     if abs(expoN) - abs(math.floor(expoN)) < 0.5:
         return math.floor(expoN) / 10 ** decimals
@@ -86,3 +87,6 @@ def get_timestamp_from_date(d:date):
         date=d,
         time=datetime.min.time()
     ).timestamp()
+
+def is_own_goal_player(player:Player):
+    return player.get_best_name() == MiscStrings.OWN_GOALS

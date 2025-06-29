@@ -30,6 +30,7 @@ export const MetricFilter = (props:OwnProps) => {
         METRIC.POTM,
         METRIC.CLEAN_SHEETS,
         METRIC.IMPACT_GOALS,
+        METRIC.IMPACT_GOAL_RATIO,
         METRIC.CONSECUTIVE_APPS,
         METRIC.CONSECUTIVE_WINS,
         METRIC.CONSECUTIVE_GOALSCORING_MATCHES,
@@ -44,14 +45,28 @@ export const MetricFilter = (props:OwnProps) => {
 
     const impactGoalsContent = (
         <div>
-            <h2>Impact Goals</h2>
-            <h4>Description</h4>
+            <h2>Impact Goals / Impact Goal Ratio</h2>
+            <h3>Description</h3>
             <p>
-                A metric designed to track the impact of goals scored.
+                <b><i>Impact Goals</i></b> is a metric designed to track the impact of goals scored.
+            </p>
+            <p>
                 In short, goals scored in draws and narrow wins are valued
                 more highly than goals scored in losses and blowout wins.
             </p>
-            <h4>Calculation</h4>
+            <p>
+                <b><i>Impact Goal Ratio</i></b> is Impact Goals divided by (normal) Goals.
+            </p>
+            <p>
+                A higher score suggests the player scores more impactful goals on average.
+            </p>
+            <p>
+                For example, a score of 1 would mean every goal scored was the winner in a 1-0 victory.
+            </p>
+            <p>
+                While a score of 0.1 would mean every goal scored was during a loss or blowout (10+ goal) win.
+            </p>
+            <h3>Calculation</h3>
             <p>
                 Goals are valued based on the match's final result, using the formula 1/<i>x</i>,
                 where <i>x</i> is defined below:
@@ -109,7 +124,10 @@ export const MetricFilter = (props:OwnProps) => {
                         }
                     </Select>
                     {
-                        (props.metric == METRIC.IMPACT_GOALS) && (
+                        (
+                            (props.metric == METRIC.IMPACT_GOALS) ||
+                            (props.metric == METRIC.IMPACT_GOAL_RATIO)
+                        ) && (
                             <QuestionMark
                                 onClick={() => setShowMetricExplainerModal(true)}
                                 sx={{cursor:"pointer"}}

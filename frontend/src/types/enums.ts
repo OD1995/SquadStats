@@ -22,6 +22,7 @@ export enum SPLIT_BY_TYPE {
     YEAR = 'Year',
     MONTH = 'Month',
     KO_TIME = 'KO Time',
+    MONTH_AND_YEAR = 'Month & Year'
 }
 
 export enum METRIC {
@@ -41,6 +42,7 @@ export enum METRIC {
     X_SHREK = 'xShrek',
     DAYS_BETWEEN_APPS = 'Days Between Appearances',
     IMPACT_GOALS = 'Impact Goals',
+    IMPACT_GOAL_RATIO = 'Impact Goal Ratio',
 }
 
 export enum MANUAL_DATA_ENTRY_ACTION_TYPE {

@@ -220,3 +220,12 @@ export const minAppsRelevant = (perGame:any, metric:any) => {
     );
     return minAppsMetrics.includes(metric);
 }
+
+export const minGoalsRelevant = (metric:any) => {
+    const minAppsMetrics = [
+        METRIC.IMPACT_GOAL_RATIO
+    ].map(
+        (met:METRIC) => met.valueOf()
+    );
+    return minAppsMetrics.includes(metric);
+}

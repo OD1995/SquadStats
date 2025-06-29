@@ -34,7 +34,8 @@ export const LeaderboardTypeFilter = (props:OwnProps) => {
         METRIC.GOALS,
         METRIC.HATTRICKS,
         METRIC.POTM,
-        METRIC.IMPACT_GOALS
+        METRIC.IMPACT_GOALS,
+        METRIC.IMPACT_GOAL_RATIO
     ].map(
         (met:METRIC) => met.valueOf()
     );

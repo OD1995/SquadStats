@@ -43,6 +43,7 @@ class Metric(str, Enum):
     X_SHREK: str = 'xShrek'
     DAYS_BETWEEN_APPS: str = 'Days Between Appearances'
     IMPACT_GOALS: str = 'Impact Goals'
+    IMPACT_GOAL_RATIO: str = 'Impact Goal Ratio'
 
 class SplitByType(str, Enum):
     NA: str = 'N/A'
@@ -54,6 +55,7 @@ class SplitByType(str, Enum):
     MONTH: str = 'Month'
     WITH_OR_WITHOUT: str = ''
     KO_TIME: str = 'KO Time'
+    MONTH_AND_YEAR: str = 'Month & Year'
 
 class LeaderboardType(str, Enum):    
     APPEARANCES: str = 'Appearances'

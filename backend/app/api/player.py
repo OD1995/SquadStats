@@ -32,6 +32,7 @@ def get_leaderboard_data():
             opposition_filter=request.args.get("oppositionFilter"),
             per_game=request.args.get("perGame"),
             min_apps=request.args.get("minApps"),
+            min_goals=request.args.get("minGoals"),
             player_id_filter=request.args.get("playerIdFilter"),
             year_filter=request.args.get("yearFilter"),
             month_filter=request.args.get("monthFilter"),

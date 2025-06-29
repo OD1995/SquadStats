@@ -9,7 +9,7 @@ import { BackendResponse } from "../../../types/BackendResponse";
 import { MatchesOrPlayersFilterOptional } from "./MatchesOrPlayersFilterOptional";
 import { SPLIT_BY_TYPE } from "../../../types/enums";
 import { Player } from "../../../types/Player";
-import { minAppsRelevant } from "../../../helpers/other";
+import { minAppsRelevant, minGoalsRelevant } from "../../../helpers/other";
 
 
 interface OwnProps {
@@ -40,6 +40,8 @@ interface OwnProps {
     perGame?:boolean
     minApps?:number
     setMinApps?:Function
+    minGoals?:number
+    setMinGoals?:Function
 }
 
 export const MatchesOrPlayersFilter = (props:OwnProps) => {
@@ -143,6 +145,11 @@ export const MatchesOrPlayersFilter = (props:OwnProps) => {
             } else {
                 delete params['minApps'];
             }
+            if (minGoalsRelevant(props.metric)) {
+                params['minGoals'] = props.minGoals!.toString();
+            } else {
+                delete params['minGoals'];
+            }
         }
         if (props.metric) {
             params['metric'] = props.metric;
@@ -202,6 +209,8 @@ export const MatchesOrPlayersFilter = (props:OwnProps) => {
                 perGame={props.perGame}
                 minApps={props.minApps!}
                 setMinApps={props.setMinApps!}
+                minGoals={props.minGoals!}
+                setMinGoals={props.setMinGoals!}
                 playerIdFilter={playerIdFilter}
                 setPlayerIdFilter={setPlayerIdFilter}
                 playerFilterOptions={playerFilterOptions}

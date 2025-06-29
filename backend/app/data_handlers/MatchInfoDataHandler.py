@@ -3,6 +3,7 @@ from uuid import UUID
 
 from sqlalchemy import func
 from app import db
+from app.helpers.misc import is_own_goal_player
 from app.models.Club import Club
 from app.models.Competition import Competition
 from app.models.League import League
@@ -86,7 +87,7 @@ class MatchInfoDataHandler:
         available_players = {
             str(p.player_id) : p
             for p in player_list
-            if p.get_best_name() != MiscStrings.OWN_GOALS
+            if not is_own_goal_player(p)
         }
         ## Match
         match_ = db.session.query(Match) \

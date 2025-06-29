@@ -22,6 +22,7 @@ export const PlayersFilter = (props:OwnProps) => {
     const [playersSplitBy, setPlayersSplitBy] = useState<string>(SPLIT_BY_TYPE.NA);
     const [perGame, setPerGame] = useState<boolean>(false);
     const [minApps, setMinApps] = useState<number>(10);
+    const [minGoals, setMinGoals] = useState<number>(10);
 
     const [searchParams, _] = useSearchParams();
 
@@ -41,6 +42,9 @@ export const PlayersFilter = (props:OwnProps) => {
             }
             if (searchParams.get("minApps")) {
                 setMinApps(Number(searchParams.get("minApps")));
+            }
+            if (searchParams.get("minGoals")) {
+                setMinGoals(Number(searchParams.get("minGoals")));
             }
             if (searchParams.get("splitBy")) {
                 setPlayersSplitBy(searchParams.get("splitBy")!);
@@ -93,6 +97,8 @@ export const PlayersFilter = (props:OwnProps) => {
             perGame={perGame}
             minApps={minApps}
             setMinApps={setMinApps}
+            minGoals={minGoals}
+            setMinGoals={setMinGoals}
         />
     )
 }

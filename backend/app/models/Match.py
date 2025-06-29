@@ -4,7 +4,7 @@ from typing import List
 from uuid import UUID, uuid4
 from datetime import date as dateDT, time as timeDT
 from sqlalchemy import Enum, ForeignKey, String
-from app.helpers.misc import get_unappearance_metrics, is_other_result_type, none_of_list1_in_list2
+from app.helpers.misc import get_unappearance_metrics, is_other_result_type, is_own_goal_player, none_of_list1_in_list2
 from app.models import Base
 from app.models.Competition import Competition
 from app.models.MatchError import MatchError
@@ -171,7 +171,7 @@ class Match(Base):
     def get_player_count(self):
         player_count = 0
         for player_id, player_obj in self.get_active_player_dict().items():
-            if player_obj.get_best_name() != MiscStrings.OWN_GOALS:
+            if not is_own_goal_player(player_obj):
                 player_count += 1
         return player_count
     
@@ -202,6 +202,8 @@ class Match(Base):
                 return self.date.strftime("%b")
             case SplitByType.YEAR:
                 return self.date.year
+            case SplitByType.MONTH_AND_YEAR:
+                return self.date.strftime("%b-%y")
             case SplitByType.KO_TIME:
                 return self.time.strftime("%H:%M")
             case SplitByType.TOTAL:

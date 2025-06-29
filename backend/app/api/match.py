@@ -310,7 +310,7 @@ def get_matches_data():
         return do_error_handling(e)
     
 @match_bp.route("/get-match-edit-update-data-info/<league_season_id>/<team_id>/<match_id>", methods=['GET'])
-@flask_praetorian.auth_required
+# @flask_praetorian.auth_required
 def get_match_edit_update(league_season_id, team_id, match_id):
     try:
         match_info_data_handler = MatchInfoDataHandler(match_id)

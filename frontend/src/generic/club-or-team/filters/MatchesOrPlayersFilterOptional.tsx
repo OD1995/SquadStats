@@ -1,4 +1,4 @@
-import { minAppsRelevant } from "../../../helpers/other";
+import { minAppsRelevant, minGoalsRelevant } from "../../../helpers/other";
 import { isWiderThanHigher } from "../../../helpers/windowDimensions";
 import { Club } from "../../../types/Club";
 import { SPLIT_BY_TYPE } from "../../../types/enums";
@@ -8,6 +8,7 @@ import { LeagueSeason } from "../../../types/Season";
 import { Team } from "../../../types/Team";
 import { TeamFilter } from "../matches/TeamFilter";
 import { MinAppsFilter } from "../players/MinAppsFilter";
+import { MinGoalsFilter } from "../players/MinGoalsFilter";
 import { GenericDropdownFilter } from "./GenericDropdownFilter";
 
 interface OwnProps {
@@ -29,6 +30,8 @@ interface OwnProps {
     perGame?:boolean
     minApps:number
     setMinApps:Function
+    minGoals:number
+    setMinGoals:Function
     playerIdFilter:string
     setPlayerIdFilter:Function
     playerFilterOptions:Player[]
@@ -135,6 +138,14 @@ export const MatchesOrPlayersFilterOptional = (props:OwnProps) => {
                         <MinAppsFilter
                             minApps={props.minApps}
                             setMinApps={props.setMinApps}
+                        />
+                    )
+                }
+                {
+                    minGoalsRelevant(props.metric) && (
+                        <MinGoalsFilter
+                            minGoals={props.minGoals}
+                            setMinGoals={props.setMinGoals}
                         />
                     )
                 }
