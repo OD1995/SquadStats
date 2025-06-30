@@ -1,5 +1,4 @@
 import { LinkBar } from "../../generic/LinkBar"
-import { SPLIT_BY_TYPE } from "../../types/enums"
 import { LinkBarInfo } from "../../types/LinkBarInfo"
 
 interface OwnProps {
