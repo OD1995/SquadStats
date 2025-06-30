@@ -48,10 +48,20 @@ def get_player_info(player_id):
         player_data_handler = PlayerDataHandler(
             player_id=player_id
         )
-        return jsonify(player_data_handler.get_result())
+        return jsonify(player_data_handler.get_player_info_result())
     except Exception as e:
         return do_error_handling(e)
-
+    
+@player_bp.route("/get-player-apps-data/<player_id>", methods=['GET'])
+def get_player_apps_data(player_id):
+    try:
+        player_data_handler = PlayerDataHandler(
+            player_id=player_id
+        )
+        return jsonify(player_data_handler.get_player_apps_result())
+    except Exception as e:
+        return do_error_handling(e)
+    
 @player_bp.route("/update-better-player-name", methods=['POST'])
 @flask_praetorian.auth_required
 def update_better_player_name():

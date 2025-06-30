@@ -25,8 +25,8 @@ export const PlayerLinkBar = (props:OwnProps) => {
                 to: `/player/${props.playerId}/teams`
             },
             {
-                label: 'Player Matches',
-                to: `/club/${props.clubId}/matches?splitBy=${SPLIT_BY_TYPE.NA}&playerIdFilter=${props.playerId}`
+                label: 'Player Apps',
+                to: `/player/${props.playerId}/apps`
             },
             ...(
                 props.isClubAdmin ? [

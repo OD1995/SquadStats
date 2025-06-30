@@ -8,6 +8,9 @@ from app.models.Metric import Metric
 from app.models.Player import Player
 from app.models.PlayerMatchPerformance import PlayerMatchPerformance
 from app.models.TeamSeason import TeamSeason
+from app.types.GenericTableData import GenericTableData
+from app.types.GenericTableCell import GenericTableCell
+from app.types.GenericTableRow import GenericTableRow
 from app.types.enums import SplitByType
 
 
@@ -20,7 +23,61 @@ class PlayerDataHandler(DataHandler):
         DataHandler.__init__(self)
         self.player_id = UUID(player_id)
 
-    def get_result(self):
+    def get_player_apps_result(self):
+        player_match_data = db.session.query(Match, PlayerMatchPerformance, Metric) \
+            .select_from(Match) \
+            .join(PlayerMatchPerformance) \
+            .join(Metric) \
+            .filter(
+                PlayerMatchPerformance.player_id == self.player_id,
+                Metric.metric_name.not_in(get_unappearance_metrics())
+            ) \
+            .all()
+        row_data = {}
+        unique_metrics = {}
+        for match, pmp, metric in player_match_data:
+            if str(match.match_id) not in row_data:
+                if match.goal_difference > 0:
+                    res = 'win'
+                elif match.goal_difference == 0:
+                    res = 'draw'
+                else:
+                    res = 'loss'
+                row_data[str(match.match_id)] = {
+                    'Opposition' : GenericTableCell(
+                        value=f"{match.opposition_team_name} ({match.home_away_neutral.value[0]})",
+                        link=f"/team/{match.team_season.team_id}/match/{match.match_id}"
+                    ),
+                    'Result' : GenericTableCell(
+                        value=f"{match.goals_for}-{match.goals_against}",
+                        class_name=f'{res}-result'
+                    ),
+                    'Date' : GenericTableCell(
+                        value=match.date
+                    )
+                }
+            met_name = metric.get_best_metric_name()
+            unique_metrics[met_name] = 1
+            row_data[str(match.match_id)][met_name] = GenericTableCell(value=pmp.value)
+        player = self.get_player()
+        return {
+            'player_name' : player['player_name'],
+            'club_id' : player['club_id'],
+            'table_data' : GenericTableData(
+                column_headers=self.get_ordered_player_data_columns(
+                    unique_metrics=unique_metrics.keys(),
+                    is_match=False
+                ),
+                rows=[
+                    GenericTableRow(row_data=rd)
+                    for rd in row_data.values()
+                ],
+                sort_by="Date",
+                sort_direction="asc"
+            ).to_dict()
+        }
+
+    def get_player_info_result(self):
         player_matches1 = db.session.query(Match) \
             .join(PlayerMatchPerformance) \
             .join(Metric) \

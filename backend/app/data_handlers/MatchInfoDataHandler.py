@@ -220,29 +220,3 @@ class MatchInfoDataHandler:
                 row_data[metric_name] = new_cell
             rows.append(GenericTableRow(row_data=row_data))
         return rows
-    
-    def get_ordered_player_data_columns(
-        self,
-        unique_metrics:list[str]
-    ):
-        preferred_order = [
-            MetricEnum.GOALS,
-            MetricEnum.ASSISTS,
-            MetricEnum.PLAYER_OF_MATCH,
-            MetricEnum.POTM
-        ]
-        metric_dict = {}
-        for metric in unique_metrics:
-            if metric != MetricEnum.APPEARANCES:
-                metric_dict[metric] = False
-        return_array = [MetricEnum.FEATURED_PLAYER]
-        # Add existing metrics in preferred order
-        for metric in preferred_order:
-            if metric in metric_dict:
-                return_array.append(metric)
-                metric_dict[metric] = True
-        # Add the rest of the metrics
-        for metric in metric_dict.keys():
-            if metric_dict[metric] == False:
-                return_array.append(metric)
-        return return_array

@@ -226,12 +226,30 @@ export const BetterTable = (props:OwnProps) => {
                                                 {
                                                     props.column_headers.map(
                                                         (colHeader:string, colNum:number) => {
-                                                            var styles = row[colHeader].styles ?? {} as Record<string,string>;
+                                                            var styles = {} as Record<string,string>;
+                                                            var val = '';
+                                                            var cn = '';
+                                                            var link = '';
+                                                            if (row[colHeader]) {
+                                                                if (row[colHeader].styles) {
+                                                                    styles = row[colHeader].styles as Record<string,string>;
+                                                                }
+                                                                if (row[colHeader].value) {
+                                                                    val = row[colHeader].value.toString();
+                                                                }
+                                                                if (row[colHeader].class_name) {
+                                                                    cn = row[colHeader].class_name.toString();
+                                                                }
+                                                                if (row[colHeader].link) {
+                                                                    link = row[colHeader].link;
+                                                                }
+                                                            }
+                                                            // var styles = row[colHeader].styles ?? {} ;
                                                             styles['padding'] = "0";
                                                             styles['maxWidth'] = '20vw';
                                                             const fs1 = getBetterTableFontSize();
                                                             const fs2 = getFontSize(
-                                                                row[colHeader].value.toString(),
+                                                                val,
                                                                 fs1,
                                                                 10,
                                                                 0.013,
@@ -241,18 +259,18 @@ export const BetterTable = (props:OwnProps) => {
                                                             return (
                                                                 <TableCell
                                                                     key={`${rowNum}-${colNum}`}
-                                                                    className={row[colHeader].class_name}
+                                                                    className={cn}
                                                                     align="center"
                                                                     sx={styles}
                                                                 >
                                                                     {
-                                                                        (row[colHeader].link) ? (
-                                                                            <a href={row[colHeader].link}>
-                                                                                {row[colHeader].value}
+                                                                        (link) ? (
+                                                                            <a href={link}>
+                                                                                {val}
                                                                             </a>
                                                                         ) : (
                                                                             <>
-                                                                                {row[colHeader].value}
+                                                                                {val}
                                                                             </>
                                                                         )
                                                                     }

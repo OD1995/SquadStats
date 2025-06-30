@@ -1,3 +1,5 @@
+how to deploy -> flyctl auth login ---> flyctl deploy
+
 NEXT: go through every page on a desktop and mobile and make sure they both look ok
 
 add upcoming milestones & "on this day" to club/team overview

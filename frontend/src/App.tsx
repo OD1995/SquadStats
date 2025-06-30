@@ -34,6 +34,7 @@ import { TeamPlayerLeaderboards } from './pages/team/TeamPlayerLeaderboards';
 import { ChangeLog } from './pages/change-log/ChangeLog';
 import { Contact } from './pages/contact/Contact';
 import { RouteChangeTracker } from './helpers/RouteChangeTracker';
+import { PlayerApps } from './pages/player/PlayerApps';
 
 
 const App = () => {
@@ -78,6 +79,7 @@ const App = () => {
 						<Route path='/player/:playerId/overview' element={<PlayerOverview/>}/>
 						<Route path='/player/:playerId/teams' element={<PlayerTeamsOverviewSelector/>}/>
 						<Route path='/player/:playerId/edit-name' element={<EditPlayerName/>}/>
+						<Route path='/player/:playerId/apps' element={<PlayerApps/>}/>
 						<Route path='/change-log' element={<ChangeLog/>}/>
 						<Route path='/contact' element={<Contact/>}/>
 						{/* <Route path='/test' element={<Test/>}/> */}

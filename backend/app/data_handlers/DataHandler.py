@@ -16,7 +16,7 @@ from app.models.TeamSeason import TeamSeason
 from app.types.GenericTableCell import GenericTableCell
 from app.types.GenericTableData import GenericTableData
 from app.types.GenericTableRow import GenericTableRow
-from app.types.enums import SplitByType
+from app.types.enums import SplitByType, Metric as MetricEnum
 from app import db
 from copy import deepcopy
 
@@ -46,6 +46,9 @@ class DataHandler:
             self.GOAL_DIFFERENCE,
             self.PPG
         ]
+
+        self.RESULT = 'Result'
+        self.DATE = 'Date'
 
         self.split_column_dict = {
             SplitByType.WITH_OR_WITHOUT : "",
@@ -354,3 +357,36 @@ class DataHandler:
             value=player.get_best_name(),
             link=f"/player/{player.player_id}/overview"
         )
+    
+    def get_ordered_player_data_columns(
+        self,
+        unique_metrics:list[str],
+        is_match=True
+    ):
+        preferred_order = [
+            MetricEnum.GOALS,
+            MetricEnum.ASSISTS,
+            MetricEnum.PLAYER_OF_MATCH,
+            MetricEnum.POTM
+        ]
+        metric_dict = {}
+        for metric in unique_metrics:
+            if metric != MetricEnum.APPEARANCES:
+                metric_dict[metric] = False
+        return_array = [MetricEnum.FEATURED_PLAYER] \
+            if is_match \
+            else [
+                self.OPPO,
+                self.RESULT,
+                self.DATE
+            ]
+        # Add existing metrics in preferred order
+        for metric in preferred_order:
+            if metric in metric_dict:
+                return_array.append(metric)
+                metric_dict[metric] = True
+        # Add the rest of the metrics
+        for metric in metric_dict.keys():
+            if metric_dict[metric] == False:
+                return_array.append(metric)
+        return return_array

@@ -47,6 +47,14 @@ class PlayerService {
             this.base_url + `/get-player-teams/${playerId}`
         )
     }
+
+    getPlayerAppsData(
+        playerId:string
+    ) {
+        return makeGetRequest(
+            this.base_url + `/get-player-apps-data/${playerId}`
+        )
+    }
 }
 
 export default new PlayerService();
