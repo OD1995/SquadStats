@@ -26,6 +26,7 @@ class MatchInfoDataHandler(DataHandler):
         self,
         match_id:str
     ):
+        DataHandler.__init__(self)
         self.match_id = UUID(match_id)
 
     def get_edit_update_info(self, league_season_id, team_id):
