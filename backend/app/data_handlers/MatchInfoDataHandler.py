@@ -3,6 +3,7 @@ from uuid import UUID
 
 from sqlalchemy import func
 from app import db
+from app.data_handlers import DataHandler
 from app.helpers.misc import is_own_goal_player
 from app.models.Club import Club
 from app.models.Competition import Competition
@@ -19,7 +20,7 @@ from app.types.GenericTableData import GenericTableData
 from app.types.GenericTableRow import GenericTableRow
 from app.types.enums import Metric as MetricEnum, MiscStrings
 
-class MatchInfoDataHandler:
+class MatchInfoDataHandler(DataHandler):
 
     def __init__(
         self,
