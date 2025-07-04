@@ -1,4 +1,3 @@
-from re import S
 from uuid import UUID
 from sqlalchemy import func, and_
 from app.data_handlers.DataHandler import DataHandler
@@ -744,6 +743,7 @@ class LeaderboardDataHandler(DataHandler):
         player_filter = self.get_player_filter()
         pmp_list = db.session.query(PlayerMatchPerformance) \
             .join(Metric) \
+            .join(Player) \
             .filter(
                 PlayerMatchPerformance.match_id.in_(match_id_list),
                 Metric.metric_name.in_([MetricEnum.APPEARANCES] + goal_metrics),
