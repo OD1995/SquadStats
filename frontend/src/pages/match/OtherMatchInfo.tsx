@@ -30,7 +30,8 @@ export const OtherMatchInfo = (props:OwnProps) => {
         const [hours, minutes] = time.split(':').map(Number);
         const period = hours < 12 ? 'am' : 'pm';
         const formattedHours = hours % 12 === 0 ? 12 : hours % 12;
-        return minutes === 0 ? `${formattedHours}${period}` : `${formattedHours}.${minutes}${period}`;
+        const formattedMinutes = minutes.toString().padStart(2, "0");
+        return minutes === 0 ? `${formattedHours}${period}` : `${formattedHours}.${formattedMinutes}${period}`;
     }
 
     return (
