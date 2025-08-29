@@ -113,10 +113,19 @@ class MatchesFilterDataHandler:
                     'season_id' : ts['season_name'],
                     'season_name' : ts['season_name']
                 }
+        string_season_names = []
+        int_season_names = []
+        for season in unique_season_names.values():
+            if isinstance(season['season_name'], int):
+                int_season_names.append(season)
+            else:
+                string_season_names.append(season)
         result[''] = sorted(
-            unique_season_names.values(),
+            string_season_names,
             key=itemgetter('season_name'),
-            # reverse=True
+        ) + sorted(
+            int_season_names,
+            key=itemgetter('season_name'),
         )
         return result
     
