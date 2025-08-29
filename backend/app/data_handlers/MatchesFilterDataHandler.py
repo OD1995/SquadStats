@@ -176,6 +176,7 @@ class MatchesFilterDataHandler:
             .order_by(Match.opposition_team_name.asc())
         if self.club_id is not None:
             matches_query = matches_query \
+                .join(Club) \
                 .filter(Club.club_id == UUID(self.club_id))
         else:
             matches_query = matches_query \
