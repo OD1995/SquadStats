@@ -1,13 +1,12 @@
 import { isWiderThanHigher } from "../../helpers/windowDimensions"
 
 interface OwnProps {
-    competitionFullName:string
     time:string
     date:string
     location:string
 }
 
-export const OtherMatchInfo = (props:OwnProps) => {
+export const SchedulingInformation = (props:OwnProps) => {
 
     const isDesktop = isWiderThanHigher();
 
@@ -35,10 +34,9 @@ export const OtherMatchInfo = (props:OwnProps) => {
     }
 
     return (
-        <div id='other-match-info' className="match-info-div">            
-            <p>{props.competitionFullName}</p>
-            {getDateTimeElement()}
+        <div id='scheduling-info' className="match-info-div match-details">
             <p>{props.location}</p>
+            {getDateTimeElement()}
         </div>
     )
 }

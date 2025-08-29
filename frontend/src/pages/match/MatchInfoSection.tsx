@@ -1,16 +1,24 @@
 import { Match } from "../../types/Match"
+import { CompetitionDetails } from "./CompetitionDetails"
 import { MatchScore } from "./MatchScore"
-import { OtherMatchInfo } from "./OtherMatchInfo"
+import { SchedulingInformation } from "./SchedulingInformation"
 
 interface OwnProps {
     match:Match
     teamName:string
     competitionFullName:string
+    leagueName:string
+    seasonName:string
 }
 
 export const MatchInfoSection = (props:OwnProps) => {
     return (
         <div id='match-info-section'>
+            <CompetitionDetails
+                leagueName={props.leagueName}
+                seasonName={props.seasonName}
+                competitionFullName={props.competitionFullName}
+            />
             <MatchScore
                 teamName={props.teamName}
                 oppoTeamName={props.match.opposition_team_name}
@@ -20,8 +28,7 @@ export const MatchInfoSection = (props:OwnProps) => {
                 pensFor={props.match.pens_for}
                 pensAgainst={props.match.pens_against}
             />
-            <OtherMatchInfo
-                competitionFullName={props.competitionFullName}
+            <SchedulingInformation
                 date={props.match.date}
                 time={props.match.time}
                 location={props.match.location}

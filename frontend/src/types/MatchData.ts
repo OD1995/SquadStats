@@ -11,4 +11,6 @@ export interface MatchData {
     unique_metric_names:string[]
     team:Team
     league_season_id:string
+    league_name:string
+    season_name:string
 }

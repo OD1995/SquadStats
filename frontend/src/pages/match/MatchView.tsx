@@ -86,6 +86,8 @@ export const MatchView = () => {
                         match={matchData.match_info}
                         teamName={matchData.team_name}
                         competitionFullName={matchData.competition_full_name}
+                        leagueName={matchData.league_name}
+                        seasonName={matchData.season_name}
                     />
                     <div id='match-view-links'>
                         {

@@ -41,7 +41,7 @@
     text-align: center;
 }
 
-#other-match-info {
+.match-details {
     font-style: italic;
     display: flex;
     flex-direction: column;

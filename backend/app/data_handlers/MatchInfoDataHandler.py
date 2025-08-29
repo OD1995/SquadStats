@@ -195,7 +195,9 @@ class MatchInfoDataHandler(DataHandler):
             'team_name' : match.team_season.team.get_default_team_name(),
             'competition_full_name' : match.competition.competition_name,
             'league_season_id' : match.team_season.league_season_id,
-            'team' : match.team_season.team.get_team_info()
+            'team' : match.team_season.team.get_team_info(),
+            'league_name' : match.team_season.league_season.league.league_name,
+            'season_name' : match.team_season.league_season.data_source_season_name
         }
     
     def create_rows_from_pmp_dict(
